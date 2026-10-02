@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>七个分析模块方案</title>
+<meta name="description" content="策略中心业务价值分析框架（总览版 v5）第 4 章：七个分析模块的方案说明，附名词解释与图例。">
+<style>
+:root{
+  --bg:#f7f6f2; --surface:#ffffff; --surface-2:#f0eee8; --ink:#1d1d1b; --ink-2:#55534d; --ink-3:#8a877f;
+  --line:#dedbd2; --accent:#2f5bd3; --accent-soft:#e3eafb;
+  --f:#2f5bd3; --f-soft:#dfe7fb;          /* 框架策略 F */
+  --h:#c46a1c; --h-soft:#f8e6d4;          /* 人工 H */
+  --z3:#7a4fc4; --z3-soft:#ebe2f8;        /* 共同 */
+  --ok:#2e7d4f; --ok-soft:#dcefe3;
+  --warn:#b4541a; --warn-soft:#f7e3d6;
+  --bad:#b3261e; --bad-soft:#f6dcda;
+  --muted-fill:#e8e6df;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16171a; --surface:#1e2024; --surface-2:#262930; --ink:#ecebe6; --ink-2:#b4b2aa; --ink-3:#85837c;
+    --line:#34373e; --accent:#7ea0ff; --accent-soft:#25304a;
+    --f:#7ea0ff; --f-soft:#24304d; --h:#f0a35e; --h-soft:#43301f; --z3:#b896f0; --z3-soft:#33284a;
+    --ok:#6cc792; --ok-soft:#1f3a2a; --warn:#f0a35e; --warn-soft:#43301f; --bad:#f08a82; --bad-soft:#4a2421;
+    --muted-fill:#2c2f36;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16171a; --surface:#1e2024; --surface-2:#262930; --ink:#ecebe6; --ink-2:#b4b2aa; --ink-3:#85837c;
+  --line:#34373e; --accent:#7ea0ff; --accent-soft:#25304a;
+  --f:#7ea0ff; --f-soft:#24304d; --h:#f0a35e; --h-soft:#43301f; --z3:#b896f0; --z3-soft:#33284a;
+  --ok:#6cc792; --ok-soft:#1f3a2a; --warn:#f0a35e; --warn-soft:#43301f; --bad:#f08a82; --bad-soft:#4a2421;
+  --muted-fill:#2c2f36;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:0}.toc{display:none}}
+header.hero{max-width:1180px;margin:0 auto;padding:48px 16px 24px}
+.hero .kicker{font-size:13px;letter-spacing:.08em;color:var(--ink-3)}
+.hero h1{font-size:32px;line-height:1.3;margin:6px 0 10px;font-weight:700}
+.hero p{color:var(--ink-2);max-width:760px;margin:0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:8px;padding:4px 12px;font:inherit;font-size:13px;cursor:pointer}
+.btn:hover{color:var(--ink)}
+.toc{position:sticky;top:20px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;padding:8px 0 40px;font-size:13.5px}
+.toc a{display:block;color:var(--ink-2);text-decoration:none;padding:4px 10px;border-left:2px solid transparent}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--accent);border-left-color:var(--accent)}
+.toc .sub{padding-left:22px;font-size:12.5px}
+.toc .grp{font-size:11.5px;color:var(--ink-3);letter-spacing:.06em;margin:14px 10px 4px}
+main{min-width:0;padding-bottom:80px}
+section{margin:0 0 56px;scroll-margin-top:16px}
+h2{font-size:22px;margin:0 0 6px;line-height:1.4}
+h2 .tag{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:1px 8px;margin-right:8px;vertical-align:3px}
+h3{font-size:16.5px;margin:28px 0 8px}
+.lede{color:var(--ink-2);margin:0 0 16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:700px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.kv{display:grid;grid-template-columns:88px minmax(0,1fr);gap:6px 14px;margin:0}
+.kv dt{color:var(--ink-3);font-size:13px;padding-top:2px}
+.kv dd{margin:0}
+.table-wrap{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2);font-size:13px}
+tr:last-child td{border-bottom:0}
+.ev{display:inline-block;font-size:12px;font-weight:600;border-radius:5px;padding:0 6px;margin:0 2px;white-space:nowrap;font-family:var(--mono)}
+.ev-F{background:var(--ok-soft);color:var(--ok)}
+.ev-E1{background:var(--accent-soft);color:var(--accent)}
+.ev-E2{background:var(--warn-soft);color:var(--warn)}
+.ev-C{background:var(--surface-2);color:var(--ink-2)}
+.ev-NA{background:var(--bad-soft);color:var(--bad)}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:2px 10px}
+.note{border-left:3px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px}
+.note.info{border-color:var(--accent);background:var(--accent-soft)}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin:16px 0}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{font-size:13px;color:var(--ink-3);margin-top:10px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--ink-2);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.term{color:inherit;text-decoration:none;border-bottom:1px dashed var(--accent);cursor:help}
+.term:hover{color:var(--accent)}
+code,.mono{font-family:var(--mono);font-size:.92em;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+pre{font-family:var(--mono);font-size:13px;background:var(--surface-2);border-radius:10px;padding:14px 16px;overflow-x:auto;line-height:1.6;margin:12px 0}
+.step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;margin:12px 0}
+.step .n{width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--surface);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.step h4{margin:2px 0 4px;font-size:15px}
+.step p{margin:0;color:var(--ink-2);font-size:14.5px}
+ul.tight{margin:6px 0;padding-left:20px}
+ul.tight li{margin:3px 0}
+/* glossary */
+.gsearch{width:100%;max-width:420px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px}
+.gcat{font-size:12.5px;color:var(--ink-3);letter-spacing:.06em;margin:22px 0 6px}
+.gl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.gl{grid-template-columns:minmax(0,1fr)}}
+.g{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;scroll-margin-top:16px}
+.g:target{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.g b{font-size:14.5px}
+.g .en{font-size:12px;color:var(--ink-3);margin-left:6px}
+.g p{margin:4px 0 0;font-size:13.5px;color:var(--ink-2);line-height:1.65}
+.g.hide{display:none}
+/* svg text */
+svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif}
+@media (max-width:700px){.fig{overflow-x:auto}.fig svg[viewBox$="860 400"],.fig svg[viewBox$="860 360"],.fig svg[viewBox$="860 180"],.fig svg[viewBox$="860 250"],.fig svg[viewBox$="860 210"],.fig svg[viewBox$="860 220"],.fig svg[viewBox$="860 270"],.fig svg[viewBox$="860 120"]{min-width:680px}}
+.foot{font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">策略中心业务价值分析框架 · 总览版 v5 · 第 4 章</div>
+  <h1>七个分析模块：方案说明</h1>
+  <p>管理层要问的是“策略中心带来了多少业务增量”。七个模块从事实底座、增量证据、增量来源、分发隔离、效率、预测和质量围栏七个方面回答这个问题，每个模块都标明证据等级。页面里<span class="term">带虚线的词</span>可以点开，跳到文末的名词解释。</p>
+  <div class="toolbar">
+    <button class="btn" id="themeBtn" type="button">切换深浅色</button>
+    <a class="btn" href="#glossary" style="text-decoration:none">跳到名词解释 ↓</a>
+  </div>
+</header>
+
+<div class="wrap">
+<nav class="toc" id="toc">
+  <div class="grp">总览</div>
+  <a href="#overview">模块全景与证据等级</a>
+  <div class="grp">七个模块</div>
+  <a href="#mod-a">A 覆盖分区与承接</a>
+  <a href="#mod-b">B 找人增量：多阈值断点</a>
+  <a class="sub" href="#b1">① 任务下线</a>
+  <a class="sub" href="#b2">② 扩大 / 缩小人群</a>
+  <a class="sub" href="#b3">③ 交通周度产出</a>
+  <a class="sub" href="#b4">④ 随机桶内 RDD</a>
+  <a class="sub" href="#b5">⑤ 调优决策质量</a>
+  <a href="#mod-c">C 组合质量</a>
+  <a href="#mod-d">D 分发层隔离</a>
+  <a href="#mod-e">E 效率</a>
+  <a href="#mod-f">F 预测确定性</a>
+  <a href="#mod-g">G 质量围栏</a>
+  <div class="grp">附录</div>
+  <a href="#summary">模块对照表</a>
+  <a href="#glossary">名词解释</a>
+</nav>
+
+<main>
+
+<!-- ============ 总览 ============ -->
+<section id="overview">
+  <h2>模块全景与证据等级</h2>
+  <p class="lede">七个模块分工明确：B 给出增量的主证据，C 解释增量从哪来，D 把推荐算法和权重的影响划出去，A、E、F 提供事实和管理价值，G 只负责否决。</p>
+
+  <figure class="fig">
+    <svg viewBox="0 0 860 400" role="img" aria-label="七个分析模块与管理层主问题的关系图">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-3)"/></marker>
+      </defs>
+      <!-- top question -->
+      <rect x="230" y="12" width="400" height="54" rx="10" fill="var(--accent)"/>
+      <text x="430" y="36" text-anchor="middle" fill="var(--surface)" font-size="15" font-weight="700">管理层主问题：策略中心带来了多少业务增量？</text>
+      <text x="430" y="55" text-anchor="middle" fill="var(--surface)" font-size="12" opacity=".85">交易用户 · 交易笔数 · 交易金额 三个口径，给区间不给单点</text>
+
+      <!-- B core -->
+      <rect x="300" y="110" width="260" height="70" rx="10" fill="var(--f-soft)" stroke="var(--f)" stroke-width="2"/>
+      <text x="430" y="138" text-anchor="middle" fill="var(--ink)" font-size="15" font-weight="700">B 找人增量：多阈值断点</text>
+      <text x="430" y="160" text-anchor="middle" fill="var(--ink-2)" font-size="12.5">增量主证据 · 阈值处 E1 + 外推</text>
+      <line x1="430" y1="110" x2="430" y2="70" stroke="var(--f)" stroke-width="2.5" marker-end="url(#arr)"/>
+      <text x="440" y="94" fill="var(--f)" font-size="12">直接回答</text>
+
+      <!-- C explains -->
+      <rect x="610" y="110" width="230" height="70" rx="10" fill="var(--z3-soft)" stroke="var(--z3)" stroke-width="1.5"/>
+      <text x="725" y="138" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">C 组合质量</text>
+      <text x="725" y="160" text-anchor="middle" fill="var(--ink-2)" font-size="12.5">随机桶内比较 · E1</text>
+      <line x1="610" y1="145" x2="563" y2="145" stroke="var(--z3)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+      <text x="586" y="200" text-anchor="middle" fill="var(--z3)" font-size="12">解释增量来源，不相加</text>
+
+      <!-- D isolates -->
+      <rect x="20" y="110" width="230" height="70" rx="10" fill="var(--surface-2)" stroke="var(--ink-3)" stroke-width="1.5"/>
+      <text x="135" y="138" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">D 分发层隔离</text>
+      <text x="135" y="160" text-anchor="middle" fill="var(--ink-2)" font-size="12.5">算法桶 vs 随机桶 · E1</text>
+      <line x1="250" y1="145" x2="297" y2="145" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+      <text x="274" y="200" text-anchor="middle" fill="var(--ink-3)" font-size="12">划出推荐算法与权重</text>
+
+      <!-- foundation A -->
+      <rect x="20" y="250" width="820" height="46" rx="10" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="1.5"/>
+      <text x="430" y="279" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">A 覆盖分区与承接（事实底座 · F）：谁被覆盖、谁被曝光、承接多少、与人工重叠多少</text>
+      <line x1="430" y1="250" x2="430" y2="184" stroke="var(--ok)" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- E F G -->
+      <rect x="20" y="330" width="260" height="56" rx="10" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+      <text x="150" y="354" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">E 效率</text>
+      <text x="150" y="373" text-anchor="middle" fill="var(--ink-2)" font-size="12">人日、周期、自动化占比 · F/E2</text>
+      <rect x="300" y="330" width="260" height="56" rx="10" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+      <text x="430" y="354" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">F 预测确定性</text>
+      <text x="430" y="373" text-anchor="middle" fill="var(--ink-2)" font-size="12">能否承诺 · P10/P50/P90</text>
+      <rect x="580" y="330" width="260" height="56" rx="10" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.5"/>
+      <text x="710" y="354" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">G 质量围栏</text>
+      <text x="710" y="373" text-anchor="middle" fill="var(--ink-2)" font-size="12">只用来否决价值主张</text>
+      <line x1="430" y1="330" x2="430" y2="300" stroke="var(--ink-3)" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="150" y1="330" x2="150" y2="300" stroke="var(--ink-3)" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="710" y1="330" x2="710" y2="300" stroke="var(--bad)" stroke-width="1" marker-end="url(#arr)"/>
+      <text x="565" y="318" fill="var(--ink-3)" font-size="11">B 的历史效应 → F 的增量预测</text>
+    </svg>
+    <figcaption>图 0　七个模块的关系。实线箭头表示“直接支撑”，虚线箭头表示“解释或隔离，不相加”。</figcaption>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--f)"></i>增量主证据</span>
+      <span><i class="sw" style="background:var(--z3)"></i>解释性证据</span>
+      <span><i class="sw" style="background:var(--ink-3)"></i>分发层（不归策略中心）</span>
+      <span><i class="sw" style="background:var(--ok)"></i>事实底座</span>
+      <span><i class="sw" style="background:var(--bad)"></i>否决机制</span>
+    </div>
+  </figure>
+
+  <h3>证据等级图例</h3>
+  <div class="table-wrap"><table>
+    <tr><th>标记</th><th>名称</th><th>含义</th><th>能怎么写</th><th>能否对外承诺</th></tr>
+    <tr><td><span class="ev ev-F">F</span></td><td>事实</td><td>系统日志直接计数，可以复核和复算</td><td>可以给单点数字</td><td>可以（注明口径）</td></tr>
+    <tr><td><span class="ev ev-E1">E1</span></td><td>准实验估算</td><td>有可信的近似随机来源（阈值断点、随机分发），前提可以检验</td><td>只给区间</td><td>可以（附前提）</td></tr>
+    <tr><td><span class="ev ev-E2">E2</span></td><td>观测估算</td><td>匹配、双重差分等方法，存在未观测混杂</td><td>参考区间，注明可能高估</td><td>不可以，仅内部</td></tr>
+    <tr><td><span class="ev ev-C">C</span></td><td>相关性</td><td>趋势、同期变化、描述性对比</td><td>只说方向</td><td>不可以</td></tr>
+    <tr><td><span class="ev ev-NA">N/A</span></td><td>无法可靠计算</td><td>缺数据、缺口径或缺识别条件</td><td>直接写“当前无法可靠计算”</td><td>不可以</td></tr>
+  </table></div>
+  <div class="note info"><b>一条贯穿全章的规则：</b><a class="term" href="#g-chengjie">承接</a>不等于<a class="term" href="#g-zengliang">增量</a>。框架任务曝光后发生的转化是事实，但不是策略中心的净贡献。净贡献只能由 B（以及作为解释的 C）估算。</div>
+</section>
+
+<!-- ============ A ============ -->
+<section id="mod-a">
+  <h2><span class="tag">模块 A</span>覆盖分区与承接</h2>
+  <p class="lede">事实底座。回答框架任务覆盖了谁、曝光了谁、承接了多少，以及和人工重叠多少。</p>
+
+  <div class="card"><dl class="kv">
+    <dt>问题</dt><dd>框架任务覆盖了谁、曝光了谁、承接了多少；与人工重叠多少。</dd>
+    <dt>方法</dt><dd>按周期初的<a class="term" href="#g-renqunbao">人群包</a>成员关系（<a class="term" href="#g-zigeceng">资格层</a>）分四个区。用户层互斥；任务层承接同时报去重值。</dd>
+    <dt>等级</dt><dd><span class="ev ev-F">F</span></dd>
+    <dt>状态</dt><dd><span class="status">✓ 可以做</span>　P5（结果指标）、P6（任务来源字段）、P7（历史人群包）影响细节</dd>
+  </dl></div>
+
+  <figure class="fig">
+    <svg viewBox="0 0 860 360" role="img" aria-label="覆盖分区示意图：Z1 仅框架、Z2 仅人工、Z3 共同覆盖、Z4 均未覆盖">
+      <rect x="10" y="10" width="560" height="340" rx="14" fill="var(--muted-fill)" stroke="var(--line)"/>
+      <text x="30" y="38" fill="var(--ink-2)" font-size="13" font-weight="600">U 可投放用户全集</text>
+      <text x="30" y="338" fill="var(--ink-2)" font-size="13" font-weight="700">Z4 均未覆盖</text>
+      <circle cx="205" cy="190" r="140" fill="var(--f-soft)" stroke="var(--f)" stroke-width="2" fill-opacity=".9"/>
+      <circle cx="390" cy="190" r="140" fill="var(--h-soft)" stroke="var(--h)" stroke-width="2" fill-opacity=".75"/>
+      <path d="M297.5,85 A140,140 0 0 1 297.5,295 A140,140 0 0 1 297.5,85 Z" fill="var(--z3-soft)" stroke="var(--z3)" stroke-width="2"/>
+      <line x1="72" y1="190" x2="250" y2="190" stroke="var(--f)" stroke-dasharray="4 4"/>
+      <text x="160" y="152" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">Z1a 真新覆盖</text>
+      <text x="160" y="171" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">近 6 个月未进人工人群</text>
+      <text x="160" y="216" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">Z1b 替代覆盖</text>
+      <text x="160" y="235" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">曾被人工覆盖，现仅框架</text>
+      <text x="297" y="186" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">Z3</text>
+      <text x="297" y="204" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">共同覆盖</text>
+      <text x="440" y="186" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="700">Z2 仅人工</text>
+      <text x="440" y="204" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">H1 / H2 / H3</text>
+      <text x="160" y="100" text-anchor="middle" fill="var(--f)" font-size="13" font-weight="700">F 框架人群</text>
+      <text x="440" y="100" text-anchor="middle" fill="var(--h)" font-size="13" font-weight="700">人工人群</text>
+
+      <!-- right panel: what each zone is for -->
+      <g font-size="12.5">
+        <rect x="590" y="10" width="260" height="340" rx="14" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="606" y="38" fill="var(--ink)" font-size="13.5" font-weight="700">每个分区用来做什么</text>
+        <rect x="606" y="56" width="10" height="10" rx="2" fill="var(--f)"/><text x="624" y="66" fill="var(--ink)" font-weight="600">Z1 仅框架</text>
+        <text x="624" y="85" fill="var(--ink-2)">覆盖扩展；增量估算主战场</text>
+        <rect x="606" y="110" width="10" height="10" rx="2" fill="var(--z3)"/><text x="624" y="120" fill="var(--ink)" font-weight="600">Z3 共同覆盖</text>
+        <text x="624" y="139" fill="var(--ink-2)">组合比较主战场（模块 C）</text>
+        <text x="624" y="157" fill="var(--ink-2)">结果整体标“共同”，不拆分</text>
+        <rect x="606" y="182" width="10" height="10" rx="2" fill="var(--h)"/><text x="624" y="192" fill="var(--ink)" font-weight="600">Z2 仅人工</text>
+        <text x="624" y="211" fill="var(--ink-2)">归运营 / BI / 供给</text>
+        <text x="624" y="229" fill="var(--ink-2)">不与 Z1 比较转化率</text>
+        <rect x="606" y="254" width="10" height="10" rx="2" fill="var(--ink-3)"/><text x="624" y="264" fill="var(--ink)" font-weight="600">Z4 均未覆盖</text>
+        <text x="624" y="283" fill="var(--ink-2)">“无定向干预”的参照分布</text>
+        <text x="624" y="301" fill="var(--ink-2)">不能当自然转化盘做减法</text>
+      </g>
+    </svg>
+    <figcaption>图 A　覆盖分区（资格层）。每个用户只属于一个分区，各分区结果相加等于 U 的总结果。Z1 的 a/b 拆分需要历史人群包留存（P7）。</figcaption>
+  </figure>
+
+  <h3>统计与去重规则</h3>
+  <ul class="tight">
+    <li><b>用户层互斥</b>：每个用户只属于一个分区，相加不重复。</li>
+    <li><b>任务层承接同时报去重值</b>：例如“F 承接 X 万人，H 承接 Y 万人，二者在 Z3 中重叠 Z 万人，去重合计 W 万人”。</li>
+    <li><b>Z3 不拆分</b>：可以按曝光来源做描述性拆分，但只能标 <span class="ev ev-C">C</span>。</li>
+    <li><b>窗口统一</b>：F 和人工的承接使用相同的 N 日窗口和首次曝光规则。</li>
+    <li><b>为什么按资格层分区</b>：曝光由推荐算法决定，并且和用户活跃度高度相关。资格层在分发之前确定，受分发层的污染最少。</li>
+  </ul>
+</section>
+
+<!-- ============ B ============ -->
+<section id="mod-b">
+  <h2><span class="tag">模块 B</span>找人增量：多阈值断点</h2>
+  <p class="lede">增量主证据。用<a class="term" href="#g-rdd">断点回归（RDD）</a>比较阈值两侧几乎一样的用户：阈值上方被选中，下方没被选中，结果差就是“被选中”的效果。</p>
+
+  <div class="card"><dl class="kv">
+    <dt>运行变量</dt><dd>选人分数 − 该子人群阈值（交通用<a class="term" href="#g-fenwei">周内分位数</a>）</dd>
+    <dt>结果</dt><dd>用户在结果窗口内是否发生目标行为（或笔数、金额），<b>不论有没有被曝光</b>，也就是<a class="term" href="#g-itt">意向处理效应 ITT</a></dd>
+    <dt>分析单位</dt><dd>子人群 × 周期</dd>
+    <dt>等级</dt><dd>阈值处 <span class="ev ev-E1">E1</span>；外推 <span class="ev ev-E1">E1 + 假设</span>；扩大决策 <span class="ev ev-E1">E1</span>；调优功能整体价值 <span class="ev ev-C">C</span></dd>
+    <dt>状态</dt><dd><span class="status">✓ 可以做</span>　P1、P2、P3 确认后定稿</dd>
+  </dl></div>
+
+  <div class="grid2">
+  <figure class="fig" style="margin:0">
+    <svg viewBox="0 0 420 300" role="img" aria-label="断点回归示意：阈值处结果出现跳变">
+      <line x1="50" y1="250" x2="400" y2="250" stroke="var(--ink-3)"/>
+      <line x1="50" y1="250" x2="50" y2="20" stroke="var(--ink-3)"/>
+      <text x="225" y="285" text-anchor="middle" fill="var(--ink-2)" font-size="12">选人分数 − 阈值（运行变量）</text>
+      <text x="18" y="135" fill="var(--ink-2)" font-size="12" transform="rotate(-90 18 135)" text-anchor="middle">结果窗口内转化率</text>
+      <!-- bandwidth -->
+      <rect x="185" y="20" width="90" height="230" fill="var(--accent-soft)" opacity=".7"/>
+      <text x="230" y="36" text-anchor="middle" fill="var(--accent)" font-size="11.5">带宽</text>
+      <!-- threshold -->
+      <line x1="230" y1="20" x2="230" y2="250" stroke="var(--ink)" stroke-dasharray="5 4"/>
+      <text x="230" y="266" text-anchor="middle" fill="var(--ink)" font-size="12" font-weight="700">c₀</text>
+      <!-- dots below -->
+      <g fill="var(--ink-3)" opacity=".75">
+        <circle cx="70" cy="222" r="3"/><circle cx="90" cy="216" r="3"/><circle cx="110" cy="212" r="3"/><circle cx="130" cy="203" r="3"/><circle cx="150" cy="199" r="3"/><circle cx="170" cy="190" r="3"/><circle cx="190" cy="186" r="3"/><circle cx="210" cy="178" r="3"/><circle cx="222" cy="176" r="3"/>
+      </g>
+      <g fill="var(--f)">
+        <circle cx="238" cy="132" r="3"/><circle cx="252" cy="128" r="3"/><circle cx="270" cy="122" r="3"/><circle cx="290" cy="115" r="3"/><circle cx="310" cy="110" r="3"/><circle cx="330" cy="101" r="3"/><circle cx="350" cy="96" r="3"/><circle cx="370" cy="88" r="3"/><circle cx="390" cy="82" r="3"/>
+      </g>
+      <line x1="60" y1="224" x2="230" y2="174" stroke="var(--ink-3)" stroke-width="2"/>
+      <line x1="230" y1="134" x2="395" y2="80" stroke="var(--f)" stroke-width="2"/>
+      <!-- jump -->
+      <line x1="240" y1="174" x2="240" y2="136" stroke="var(--bad)" stroke-width="2" marker-end="url(#arr)"/>
+      <text x="248" y="160" fill="var(--bad)" font-size="12" font-weight="700">跳变 = 阈值处效应</text>
+      <text x="70" y="60" fill="var(--ink-3)" font-size="12">● 未入选（对照）</text>
+      <text x="70" y="78" fill="var(--f)" font-size="12">● 入选（框架选中）</text>
+    </svg>
+    <figcaption>图 B-1　单个阈值的断点。只有带宽内的用户可以直接比较。</figcaption>
+  </figure>
+
+  <figure class="fig" style="margin:0">
+    <svg viewBox="0 0 420 300" role="img" aria-label="效应分数曲线：多个阈值的效应点连成曲线，带宽外部分为外推">
+      <line x1="50" y1="250" x2="400" y2="250" stroke="var(--ink-3)"/>
+      <line x1="50" y1="250" x2="50" y2="20" stroke="var(--ink-3)"/>
+      <text x="225" y="285" text-anchor="middle" fill="var(--ink-2)" font-size="12">绝对分数（交通用周内分位数）</text>
+      <text x="18" y="135" fill="var(--ink-2)" font-size="12" transform="rotate(-90 18 135)" text-anchor="middle">阈值处边际效应 (pp)</text>
+      <!-- observed range -->
+      <rect x="110" y="20" width="200" height="230" fill="var(--f-soft)" opacity=".55"/>
+      <text x="210" y="36" text-anchor="middle" fill="var(--f)" font-size="11.5">观测到的阈值范围</text>
+      <!-- confidence band -->
+      <path d="M110,185 C160,160 220,130 310,110 L310,70 C220,90 160,120 110,145 Z" fill="var(--accent)" opacity=".15"/>
+      <path d="M110,165 C160,140 220,110 310,90" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+      <!-- beyond range: flat -->
+      <line x1="310" y1="90" x2="395" y2="90" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="352" y="80" text-anchor="middle" fill="var(--ink-2)" font-size="11">超出范围：用最近一段</text>
+      <!-- threshold points with CI -->
+      <g stroke="var(--ink)" stroke-width="1.5">
+        <line x1="120" y1="140" x2="120" y2="190"/><line x1="160" y1="125" x2="160" y2="170"/><line x1="200" y1="105" x2="200" y2="150"/><line x1="245" y1="95" x2="245" y2="135"/><line x1="295" y1="78" x2="295" y2="118"/>
+      </g>
+      <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2">
+        <circle cx="120" cy="165" r="5"/><circle cx="160" cy="146" r="5"/><circle cx="200" cy="128" r="5"/><circle cx="245" cy="114" r="5"/><circle cx="295" cy="98" r="5"/>
+      </g>
+      <text x="130" y="222" fill="var(--ink-2)" font-size="11.5">每个点 = 一个“子人群 × 周期”的阈值处效应</text>
+    </svg>
+    <figcaption>图 B-2　效应-分数曲线。不同子人群、不同周期的阈值落在不同分数上，连起来就能沿曲线外推到远离阈值的入选用户。</figcaption>
+  </figure>
+  </div>
+
+  <h3>计算方法（三步）</h3>
+  <div class="step"><div class="n">1</div><div><h4>每个“子人群 × 周期”做一次断点估计</h4><p>运行变量 = 选人分数 − 阈值；结果看 ITT。K2（未入选者不会被其他子人群选中）保证每个子人群都是一个“干净”的断点。</p></div></div>
+  <div class="step"><div class="n">2</div><div><h4>合并估计并分层</h4><p>带<a class="term" href="#g-fe">子人群固定效应</a>合并；按“是否同时被人工覆盖”分层；把各阈值处的效应拼成效应-分数曲线；扩大部分在相似度分上单独估计；交通按上周是否入选分层。</p></div></div>
+  <div class="step"><div class="n">3</div><div><h4>按“直接证据 + 外推”汇总</h4><p>只在观测到的阈值范围内沿曲线外推；区间同时反映<a class="term" href="#g-bootstrap">自助抽样</a>误差和曲线置信带。每月报告外推占比，作为可信度标签。</p></div></div>
+<pre>业务增量 = 初始入选部分 + 扩大新增部分
+
+初始入选部分 = Σ 子人群 Σ 分层 [ 入选人数 × 对应效应 ]
+            = 直接证据（带宽内入选用户 × 阈值处效应）       ← E1
+            + 外推（带宽外入选用户 × 曲线上的效应）          ← E1 + 外推假设
+扩大新增部分 = 同样结构，用相似度分和相似度阈值单独计算       ← E1 + 外推假设</pre>
+
+  <figure class="fig">
+    <svg viewBox="0 0 860 120" role="img" aria-label="虚构示例：增量构成条形图">
+      <text x="10" y="22" fill="var(--ink)" font-size="13" font-weight="700">【虚构】交通某月：420 万入选用户的增量构成（区间中点，万人）</text>
+      <!-- total midpoint ≈ 5.45; parts midpoints: 0.56,0.175,3.7,1.05 => 5.485 -->
+      <g transform="translate(10,40)">
+        <rect x="0" y="0" width="85" height="34" fill="var(--f)"/>
+        <rect x="85" y="0" width="27" height="34" fill="var(--z3)"/>
+        <rect x="112" y="0" width="560" height="34" fill="var(--f)" opacity=".35"/>
+        <rect x="672" y="0" width="159" height="34" fill="var(--z3)" opacity=".35"/>
+        <text x="42" y="22" text-anchor="middle" fill="var(--surface)" font-size="11.5" font-weight="700">0.56</text>
+        <text x="392" y="22" text-anchor="middle" fill="var(--ink)" font-size="12" font-weight="600">外推 · 未被人工覆盖 3.7</text>
+        <text x="751" y="22" text-anchor="middle" fill="var(--ink)" font-size="12" font-weight="600">外推 · 人工已覆盖 1.05</text>
+        <text x="0" y="56" fill="var(--ink-2)" font-size="11.5">◀ 直接证据（阈值附近）约 0.74 万，只占约 1/7</text>
+        <text x="831" y="56" text-anchor="end" fill="var(--ink-2)" font-size="11.5">合计约 3.1–7.8 万【E1，含外推】</text>
+      </g>
+    </svg>
+    <figcaption>图 B-3　虚构示例的增量构成。深色为阈值附近的直接证据，浅色为外推。蓝色为未被人工覆盖的用户，紫色为同时被人工覆盖的用户。大部分增量来自外推，所以需要第 3 章的定期校准留出来验证。</figcaption>
+  </figure>
+
+  <p>针对实际运营方式，模块 B 还要做五项处理：</p>
+
+  <h3 id="b1">① 任务下线（K6）</h3>
+  <ul class="tight">
+    <li>下线不改变“谁被选中”，只降低入选用户实际得到的干预，所以 <a class="term" href="#g-itt">ITT</a> 仍然有效。它估的是“在真实运营决策下（包括下线）被选中的效果”，<b>作为主口径</b>。</li>
+    <li>下线发生在任务或子人群层面，同一子人群内阈值两侧的比较不受影响。</li>
+    <li>诊断：分别报告“有下线”和“未下线”子人群的效应。<b>只看未下线的子人群会挑出表现好的那些，高估平均效果</b>，只作内部诊断。</li>
+  </ul>
+
+  <h3 id="b2">② 按效果扩大或缩小人群（K7、K12）</h3>
+  <figure class="fig">
+    <svg viewBox="0 50 860 180" role="img" aria-label="自适应调优时间线：初始阈值选人，扩大，缩小，下线">
+      <line x1="40" y1="120" x2="830" y2="120" stroke="var(--ink-3)" stroke-width="2" marker-end="url(#arr)"/>
+      <text x="830" y="145" text-anchor="end" fill="var(--ink-3)" font-size="12">周期内时间</text>
+      <!-- nodes -->
+      <g>
+        <circle cx="90" cy="120" r="12" fill="var(--f)"/>
+        <text x="90" y="125" text-anchor="middle" fill="var(--surface)" font-size="12" font-weight="700">c₀</text>
+        <text x="90" y="88" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700">初始阈值选人</text>
+        <text x="90" y="160" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">主口径一律</text>
+        <text x="90" y="176" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">按 c₀ 分组</text>
+      </g>
+      <g>
+        <circle cx="300" cy="120" r="12" fill="var(--ok)"/>
+        <text x="300" y="125" text-anchor="middle" fill="var(--surface)" font-size="12" font-weight="700">c₁</text>
+        <text x="300" y="70" text-anchor="middle" fill="var(--ok)" font-size="12">效果好</text>
+        <text x="300" y="88" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700">扩大：种子找相似人群</text>
+        <text x="300" y="160" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">相似度分上的新断点</text>
+        <text x="300" y="176" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">单独估计、单独外推</text>
+        <text x="300" y="192" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">可叠加随机分批</text>
+      </g>
+      <g>
+        <circle cx="530" cy="120" r="12" fill="var(--warn)"/>
+        <text x="530" y="125" text-anchor="middle" fill="var(--surface)" font-size="12" font-weight="700">c₂</text>
+        <text x="530" y="70" text-anchor="middle" fill="var(--warn)" font-size="12">效果不好</text>
+        <text x="530" y="88" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700">缩小人群</text>
+        <text x="530" y="160" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">按分数提阈值 → 诊断性断点</text>
+        <text x="530" y="176" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">按个人表现剔除 → 只做描述</text>
+      </g>
+      <g>
+        <rect x="718" y="108" width="24" height="24" rx="4" fill="var(--bad)"/>
+        <text x="730" y="125" text-anchor="middle" fill="var(--surface)" font-size="13" font-weight="700">×</text>
+        <text x="730" y="70" text-anchor="middle" fill="var(--bad)" font-size="12">仍然不好</text>
+        <text x="730" y="88" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700">下线</text>
+        <text x="730" y="160" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">只降低处理强度</text>
+        <text x="730" y="176" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">ITT 仍有效</text>
+      </g>
+      <rect x="40" y="200" width="790" height="22" rx="6" fill="var(--f-soft)"/>
+      <text x="435" y="216" text-anchor="middle" fill="var(--f)" font-size="12">结果窗口覆盖整个周期：估的是“在初始版本被选中，并经历后续全部调优和下线”的效果</text>
+    </svg>
+    <figcaption>图 B-4　自适应调优流程与对应的估计方式。</figcaption>
+  </figure>
+  <div class="table-wrap"><table>
+    <tr><th style="width:24%">问题</th><th>处理</th></tr>
+    <tr><td>主口径怎么分组</td><td><b>一律以初始阈值 c₀ 分组</b>，结果窗口覆盖整个周期，衡量策略中心这套自适应流程的真实效果 <span class="ev ev-E1">E1</span></td></tr>
+    <tr><td>扩大（相似人群重新打分）</td><td><b>单独估计</b>：<a class="term" href="#g-xiangsidu">相似度分</a>的阈值处是新断点（只用生效后的结果），单独外推、单独汇总，不并入初始分数的曲线</td></tr>
+    <tr><td>扩大把 c₀ 下方的人拉进来</td><td>c₀ 处变成<a class="term" href="#g-fuzzy">模糊断点</a>：用“初始是否超过 c₀”作为<a class="term" href="#g-iv">工具变量</a>、“周期内入选天数”作为实际处理来修正；或直接报告初始部分偏保守。每期报告“c₀ 下方被扩大选中的比例”</td></tr>
+    <tr><td>缩小（P3）</td><td>按分数提高阈值：比较的是“继续入选 vs 停止入选”，和主口径不同，只作诊断。按个人前几天表现剔除：依据已受干预影响，<b>不能做断点</b>，只做描述</td></tr>
+    <tr><td>不能做的事</td><td><b>不能用周期内基于新行为重算的分数作为初始人群的运行变量</b>：入选用户的新分数已经受到前几天干预的影响</td></tr>
+  </table></div>
+
+  <h3 id="b3">③ 交通周度产出（K8、K13）</h3>
+  <ul class="tight">
+    <li>每周一个分析单位，结果窗口 7 天、不跨周；周内 3–5 天的调优照 ② 以周初阈值分组。</li>
+    <li>分数每周重算、连续入选率高。上周被选中的人因为干预多交易，本周分数更高，所以上周入选状态在本周阈值处<b>一定会跳变</b>。<b>必须</b>按上周入选状态分层；曲线横轴用<a class="term" href="#g-fenwei">周内分位数</a>。</li>
+    <li>“上周未入选”层在阈值附近人数少，至少合并 4 周；用<a class="term" href="#g-lujing">入选路径法</a>和<a class="term" href="#g-holdout">校准留出</a>交叉检查。</li>
+    <li>缴费按月产出，单周期样本较多，跨周期问题较小。</li>
+  </ul>
+  <figure class="fig">
+    <svg viewBox="0 0 860 250" role="img" aria-label="交通周度：按上周是否入选分层，再按月汇总">
+      <g font-size="12.5">
+        <text x="20" y="28" fill="var(--ink)" font-size="13.5" font-weight="700">本周候选用户</text>
+        <!-- two strata -->
+        <rect x="20" y="44" width="360" height="72" rx="10" fill="var(--surface-2)" stroke="var(--line)"/>
+        <text x="36" y="70" fill="var(--ink)" font-weight="700">层 1：上周未入选</text>
+        <text x="36" y="92" fill="var(--ink-2)">估“新进入”的效应 · 人少，至少合并 4 周</text>
+        <rect x="20" y="130" width="360" height="72" rx="10" fill="var(--f-soft)" stroke="var(--f)"/>
+        <text x="36" y="156" fill="var(--ink)" font-weight="700">层 2：上周已入选</text>
+        <text x="36" y="178" fill="var(--ink-2)">估“继续入选”的额外效应 · 人多</text>
+        <!-- arrows to week sum -->
+        <line x1="380" y1="80" x2="458" y2="120" stroke="var(--ink-3)" marker-end="url(#arr)"/>
+        <line x1="380" y1="166" x2="458" y2="128" stroke="var(--ink-3)" marker-end="url(#arr)"/>
+        <rect x="462" y="94" width="160" height="60" rx="10" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="542" y="118" text-anchor="middle" fill="var(--ink)" font-weight="700">本周增量</text>
+        <text x="542" y="138" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">Σ 层人数 × 层效应</text>
+        <line x1="622" y1="124" x2="668" y2="124" stroke="var(--ink-3)" marker-end="url(#arr)"/>
+        <rect x="672" y="94" width="168" height="60" rx="10" fill="var(--accent)"/>
+        <text x="756" y="118" text-anchor="middle" fill="var(--surface)" font-weight="700">月度增量</text>
+        <text x="756" y="138" text-anchor="middle" fill="var(--surface)" font-size="11.5">= Σ 当月各周增量</text>
+        <text x="756" y="178" text-anchor="middle" fill="var(--warn)" font-size="11.5">不含跨周遗留效应 → 偏保守</text>
+        <text x="756" y="196" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">入选路径法结果应 ≥ 此值</text>
+        <text x="20" y="232" fill="var(--ink-3)" font-size="11.5">上周入选状态发生在本周分组之前，分层后的估计仍然有效；分别乘人数再相加，不会把上周效应重复算进本周。</text>
+      </g>
+    </svg>
+    <figcaption>图 B-5　交通周度产出的分层与月度汇总。</figcaption>
+  </figure>
+
+  <h3 id="b4">④ 随机桶内的 RDD（诊断）</h3>
+  <p>在 5% <a class="term" href="#g-bucket">随机桶</a>内单独做一次 RDD，得到“没有推荐算法放大时”的选人效应。和算法桶内的 RDD 对比，可以看出推荐算法对框架任务是放大还是抑制。样本小，只作内部诊断，<b>不计入任何一方的价值</b>。</p>
+
+  <h3 id="b5">⑤ 调优决策质量（新增诊断）</h3>
+  <div class="table-wrap"><table>
+    <tr><th>指标</th><th>定义</th><th>等级</th></tr>
+    <tr><td>扩大决策的边际增量</td><td>扩大生效后 c₁ 处的断点效应：&gt; 0 说明扩大值得</td><td><span class="ev ev-E1">E1</span></td></tr>
+    <tr><td>缩小决策的边际增量</td><td>c₂ 处“继续入选 vs 停止入选”的效应：≈ 0 或 &lt; 0 说明缩小是对的</td><td><span class="ev ev-E1">E1</span> 诊断</td></tr>
+    <tr><td>下线决策的正确率</td><td>被下线子人群在下线前的阈值处效应，是否确实低于未下线子人群</td><td><span class="ev ev-E2">E2</span></td></tr>
+    <tr><td>调优信号与真实增量的一致性</td><td>调优时用的“效果好坏”信号，和事后估出的增量是否同方向</td><td><span class="ev ev-F">F</span> 对比结果</td></tr>
+  </table></div>
+
+  <p><b>调优信号的基线（K14、P1）。</b>现在的信号是“该策略针对自身目标，相对基线是否更优”，方向是对的。它能不能反映增量，取决于<a class="term" href="#g-jixian">基线</a>是什么：</p>
+  <figure class="fig">
+    <svg viewBox="0 0 860 210" role="img" aria-label="四种基线接近增量程度的对比">
+      <g font-size="12.5">
+        <text x="20" y="24" fill="var(--ink-2)" font-size="12">越靠右越接近真实增量 →</text>
+        <line x1="20" y1="40" x2="840" y2="40" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>
+        <!-- 4 cards -->
+        <g>
+          <rect x="20" y="60" width="190" height="136" rx="10" fill="var(--bad-soft)" stroke="var(--bad)"/>
+          <text x="34" y="86" fill="var(--ink)" font-weight="700">行业线大盘平均</text>
+          <text x="34" y="108" fill="var(--bad)" font-weight="700">否</text>
+          <text x="34" y="130" fill="var(--ink-2)" font-size="11.5">入选人群本来就比大盘好</text>
+          <text x="34" y="148" fill="var(--ink-2)" font-size="11.5">会系统性判定“效果好”</text>
+          <text x="34" y="166" fill="var(--ink-2)" font-size="11.5">偏向不断扩大</text>
+        </g>
+        <g>
+          <rect x="230" y="60" width="190" height="136" rx="10" fill="var(--warn-soft)" stroke="var(--warn)"/>
+          <text x="244" y="86" fill="var(--ink)" font-weight="700">上线前历史表现</text>
+          <text x="244" y="108" fill="var(--warn)" font-weight="700">部分</text>
+          <text x="244" y="130" fill="var(--ink-2)" font-size="11.5">混入季节和趋势</text>
+          <text x="244" y="148" fill="var(--ink-2)" font-size="11.5">交通受节假日、天气影响大</text>
+          <text x="244" y="166" fill="var(--ink-2)" font-size="11.5">需要季节调整</text>
+        </g>
+        <g>
+          <rect x="440" y="60" width="190" height="136" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/>
+          <text x="454" y="86" fill="var(--ink)" font-weight="700">模型预测的自然转化</text>
+          <text x="454" y="108" fill="var(--accent)" font-weight="700">取决于预测准不准</text>
+          <text x="454" y="130" fill="var(--ink-2)" font-size="11.5">可用</text>
+          <text x="454" y="148" fill="var(--ink-2)" font-size="11.5">需用校准留出检查</text>
+          <text x="454" y="166" fill="var(--ink-2)" font-size="11.5">预测偏差</text>
+        </g>
+        <g>
+          <rect x="650" y="60" width="190" height="136" rx="10" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="2"/>
+          <text x="664" y="86" fill="var(--ink)" font-weight="700">未被选中的相似用户</text>
+          <text x="664" y="108" fill="var(--ok)" font-weight="700">是 · 推荐</text>
+          <text x="664" y="130" fill="var(--ink-2)" font-size="11.5">例如阈值下方的人</text>
+          <text x="664" y="148" fill="var(--ink-2)" font-size="11.5">与评估口径同一把尺子</text>
+          <text x="664" y="166" fill="var(--ink-2)" font-size="11.5">调优和评估不各说各话</text>
+        </g>
+      </g>
+    </svg>
+    <figcaption>图 B-6　调优信号基线的选择。</figcaption>
+  </figure>
+  <div class="note info"><b>建议：</b>调优信号改用（或至少加上）<b>阈值两侧的实时差</b>，它在周期内就能算出来。3–5 天的数据噪声较大，可以先向该子人群的历史效应<a class="term" href="#g-shrink">收缩</a>再用。这样调优优化的目标和管理层考核的“业务增量”是同一个东西。</div>
+</section>
+
+<!-- ============ C ============ -->
+<section id="mod-c">
+  <h2><span class="tag">模块 C</span>组合质量：随机桶内比较</h2>
+  <p class="lede">给同一类用户看框架任务还是人工任务，哪个转化更好？用来解释 B 的增量是“组合好”还是“找人准”。</p>
+
+  <div class="card"><dl class="kv">
+    <dt>方法</dt><dd>在随机桶内的 Z3 用户中，按“周期内第一次定向曝光是 F 任务还是人工任务”分组（等概率随机，K4），比较结果窗口内的转化。分别和 H1、H2 比较（随机桶内权重不生效，H2 可以直接比）。</dd>
+    <dt>定位</dt><dd><b>解释</b>模块 B 的增量从哪里来，<b>不与模块 B 相加</b>。</dd>
+    <dt>限制</dt><dd>结论只代表随机分发条件；测不了人群识别价值（随机桶不改变谁进入人群）。</dd>
+    <dt>等级</dt><dd><span class="ev ev-E1">E1</span></dd>
+    <dt>状态</dt><dd><span class="status">✓ 可以做</span></dd>
+  </dl></div>
+
+  <figure class="fig">
+    <svg viewBox="0 0 860 220" role="img" aria-label="随机桶内 Z3 用户按首次曝光任务来源随机分组比较">
+      <g font-size="12.5">
+        <rect x="20" y="70" width="180" height="80" rx="10" fill="var(--z3-soft)" stroke="var(--z3)" stroke-width="2"/>
+        <text x="110" y="102" text-anchor="middle" fill="var(--ink)" font-weight="700">随机桶 × Z3 用户</text>
+        <text x="110" y="124" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">同时在 F 和人工人群里</text>
+        <path d="M200,110 L260,110" stroke="var(--ink-3)" marker-end="url(#arr)"/>
+        <circle cx="290" cy="110" r="26" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+        <text x="290" y="106" text-anchor="middle" fill="var(--ink)" font-size="11">等概率</text>
+        <text x="290" y="121" text-anchor="middle" fill="var(--ink)" font-size="11">随机</text>
+        <path d="M316,100 L400,54" stroke="var(--ink-3)" marker-end="url(#arr)"/>
+        <path d="M316,120 L400,166" stroke="var(--ink-3)" marker-end="url(#arr)"/>
+        <rect x="404" y="24" width="220" height="60" rx="10" fill="var(--f-soft)" stroke="var(--f)"/>
+        <text x="514" y="50" text-anchor="middle" fill="var(--ink)" font-weight="700">首次定向曝光 = F 任务</text>
+        <text x="514" y="70" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">框架组合（货品 + 渠道）</text>
+        <rect x="404" y="136" width="220" height="60" rx="10" fill="var(--h-soft)" stroke="var(--h)"/>
+        <text x="514" y="162" text-anchor="middle" fill="var(--ink)" font-weight="700">首次定向曝光 = 人工任务</text>
+        <text x="514" y="182" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">分别对 H1、H2 比较</text>
+        <path d="M624,54 L700,104" stroke="var(--ink-3)" marker-end="url(#arr)"/>
+        <path d="M624,166 L700,118" stroke="var(--ink-3)" marker-end="url(#arr)"/>
+        <rect x="704" y="80" width="140" height="60" rx="10" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="774" y="106" text-anchor="middle" fill="var(--ink)" font-weight="700">转化率之差</text>
+        <text x="774" y="126" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">= 组合质量差</text>
+      </g>
+    </svg>
+    <figcaption>图 C　随机桶内的组合比较。两组用户相同、分发随机，差异只来自任务内容（组合）。</figcaption>
+  </figure>
+  <div class="note">单周期“不显著”不等于“没差别”：5% 桶样本有限，虚构量级下单周期可检测差异约 0.8pp，合并 3 个周期约 0.5pp。</div>
+</section>
+
+<!-- ============ D ============ -->
+<section id="mod-d">
+  <h2><span class="tag">模块 D</span>分发层隔离</h2>
+  <p class="lede">把推荐算法和权重标签带来的提升划出去，归分发层，不计入策略中心。</p>
+
+  <div class="grid2">
+    <figure class="fig" style="margin:0">
+      <svg viewBox="0 0 420 250" role="img" aria-label="按 user_id hash 分为算法桶和随机桶">
+        <g font-size="12.5">
+          <rect x="140" y="12" width="140" height="44" rx="10" fill="var(--surface-2)" stroke="var(--line)"/>
+          <text x="210" y="32" text-anchor="middle" fill="var(--ink)" font-weight="700">统一任务池</text>
+          <text x="210" y="48" text-anchor="middle" fill="var(--ink-2)" font-size="11">F / H1 / H2 / H3</text>
+          <line x1="210" y1="56" x2="210" y2="80" stroke="var(--ink-3)" marker-end="url(#arr)"/>
+          <text x="220" y="74" fill="var(--ink-3)" font-size="11">user_id hash</text>
+          <rect x="20" y="88" width="230" height="80" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/>
+          <text x="135" y="114" text-anchor="middle" fill="var(--ink)" font-weight="700">算法桶 95%</text>
+          <text x="135" y="134" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">召回 + 排序</text>
+          <text x="135" y="152" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">权重标签生效</text>
+          <rect x="270" y="88" width="130" height="80" rx="10" fill="var(--surface-2)" stroke="var(--ink-3)"/>
+          <text x="335" y="114" text-anchor="middle" fill="var(--ink)" font-weight="700">随机桶 5%</text>
+          <text x="335" y="134" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">所属人群任务内</text>
+          <text x="335" y="152" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">等概率 · 无权重</text>
+          <path d="M135,168 L135,196 L335,196 L335,168" fill="none" stroke="var(--ink-3)"/>
+          <rect x="110" y="204" width="200" height="36" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="210" y="227" text-anchor="middle" fill="var(--ink)" font-weight="700">差值 → 推荐团队</text>
+        </g>
+      </svg>
+      <figcaption>图 D　两个桶的分流结构。</figcaption>
+    </figure>
+    <div>
+      <div class="table-wrap" style="margin-top:0"><table style="min-width:0">
+        <tr><th>比较</th><th>结论归属</th></tr>
+        <tr><td>算法桶 − 随机桶（结果）</td><td>推荐算法价值，归推荐团队</td></tr>
+        <tr><td>某类任务在两桶中的曝光份额差</td><td>权重和算法对该类任务的影响，归分发层</td></tr>
+        <tr><td>两桶在分发前月份的指标</td><td><a class="term" href="#g-aa">A/A 平衡检验</a></td></tr>
+      </table></div>
+      <div class="card"><dl class="kv"><dt>等级</dt><dd><span class="ev ev-E1">E1</span></dd><dt>状态</dt><dd><span class="status">✓ 可以做</span></dd></dl></div>
+      <div class="note"><b>禁止的口径：</b>“框架任务在算法桶的转化率高于人工任务在随机桶的转化率”这类跨桶比较。推荐算法的提升<b>不与</b>策略中心增量相加：两者的反事实不同，相加会重复计算交互部分。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ E ============ -->
+<section id="mod-e">
+  <h2><span class="tag">模块 E</span>效率</h2>
+  <p class="lede">在同等或更少人力下，更快、更广、更稳定地生产可上线的任务。效率和业务结果分开报，不合并成一个“总 ROI”。</p>
+  <div class="table-wrap"><table>
+    <tr><th>指标</th><th>定义</th><th>等级</th><th>可否货币化</th></tr>
+    <tr><td>自动化任务占比</td><td>F 任务上线数 ÷ 定向任务上线总数（另按曝光份额算一版）</td><td><span class="ev ev-F">F</span></td><td>否</td></tr>
+    <tr><td>目标到上线周期</td><td>目标录入 → 首个任务上线（中位数、P90）</td><td><span class="ev ev-F">F</span>；人工“想法 → 创建”段 <span class="ev ev-E2">E2</span></td><td>否</td></tr>
+    <tr><td>运营 / BI 人日</td><td>每月定向投放相关人日，按 H1/H2/H3/审核拆分</td><td>登记 <span class="ev ev-F">F</span>；问卷 <span class="ev ev-E2">E2</span></td><td><b>可以</b>，注明前提</td></tr>
+    <tr><td>定向覆盖去重人数</td><td>定向覆盖的去重用户数；Z1、Z1a 人数</td><td><span class="ev ev-F">F</span></td><td>否</td></tr>
+    <tr><td>供给盘活率</td><td>有 ≥ 1 个任务的可投货品数 ÷ 可投货品总数</td><td><span class="ev ev-F">F</span>（无统一货品池时 <span class="ev ev-NA">N/A</span>）</td><td>否</td></tr>
+    <tr><td>生产稳定性</td><td>按时产出率、生产失败 / 人工回退次数、任务数变异系数</td><td><span class="ev ev-F">F</span></td><td>否</td></tr>
+  </table></div>
+  <div class="note">人日可以货币化（人日 × 人力成本），但要注明：<b>只有释放出来的人力被重新配置时，节约才是真实的。</b>人日精度取决于 P8（工时是否登记）。<span class="status" style="margin-left:6px">✓ 可以做</span></div>
+</section>
+
+<!-- ============ F ============ -->
+<section id="mod-f">
+  <h2><span class="tag">模块 F</span>预测确定性</h2>
+  <p class="lede">让增长可预测、可承诺。按周期自下而上预测，不再从业务目标倒推。</p>
+
+  <div class="grid2">
+    <div class="card" style="margin:0">
+      <b>承接预测</b>（每个周期）
+<pre style="margin:8px 0">Σ 子人群 ( 入选人数 × 可投放率
+          × 曝光率 × 转化率 )</pre>
+      <p style="margin:0;font-size:14px;color:var(--ink-2)">输出 <a class="term" href="#g-pq">P10/P50/P90</a>。稀疏格子向行业线均值<a class="term" href="#g-shrink">收缩</a>。</p>
+    </div>
+    <div class="card" style="margin:0">
+      <b>增量预测</b>（管理层最关心的“可承诺增量”）
+<pre style="margin:8px 0">入选人数 × 模块 B 的历史效应
+          （含外推）</pre>
+      <p style="margin:0;font-size:14px;color:var(--ink-2)">模块 B 连续 ≥ 3 个周期稳定后启用；对外承诺用 P25。</p>
+    </div>
+  </div>
+
+  <figure class="fig">
+    <svg viewBox="0 0 860 270" role="img" aria-label="偏差拆解瀑布图（虚构）：规模、可投放、曝光、转化、调优和下线">
+      <g font-size="12">
+        <text x="20" y="22" fill="var(--ink)" font-size="13" font-weight="700">【虚构】偏差拆解（连环替代法）：预测 P50 → 实际</text>
+        <line x1="60" y1="230" x2="840" y2="230" stroke="var(--line)"/>
+        <text x="840" y="22" text-anchor="end" fill="var(--ink-3)" font-size="11">纵轴从 80 开始，放大差异</text>
+        <rect x="70" y="70" width="80" height="160" fill="var(--ink-3)"/>
+        <text x="110" y="62" text-anchor="middle" fill="var(--ink)" font-weight="700">100</text>
+        <text x="110" y="248" text-anchor="middle" fill="var(--ink-2)">预测 P50</text>
+        <rect x="175" y="70" width="80" height="48" fill="var(--bad)"/>
+        <text x="215" y="134" text-anchor="middle" fill="var(--bad)" font-weight="700">−6</text>
+        <text x="215" y="248" text-anchor="middle" fill="var(--ink-2)">规模</text>
+        <rect x="280" y="102" width="80" height="16" fill="var(--ok)"/>
+        <text x="320" y="96" text-anchor="middle" fill="var(--ok)" font-weight="700">+2</text>
+        <text x="320" y="248" text-anchor="middle" fill="var(--ink-2)">可投放</text>
+        <rect x="385" y="102" width="80" height="64" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-dasharray="3 2"/>
+        <text x="425" y="182" text-anchor="middle" fill="var(--ink-2)" font-weight="700">−8</text>
+        <text x="425" y="248" text-anchor="middle" fill="var(--ink-2)">曝光</text>
+        <text x="425" y="262" text-anchor="middle" fill="var(--ink-3)" font-size="11">归分发层</text>
+        <rect x="490" y="126" width="80" height="40" fill="var(--ok)"/>
+        <text x="530" y="120" text-anchor="middle" fill="var(--ok)" font-weight="700">+5</text>
+        <text x="530" y="248" text-anchor="middle" fill="var(--ink-2)">转化</text>
+        <rect x="595" y="126" width="80" height="24" fill="var(--bad)"/>
+        <text x="635" y="166" text-anchor="middle" fill="var(--bad)" font-weight="700">−3</text>
+        <text x="635" y="248" text-anchor="middle" fill="var(--ink-2)">调优和下线</text>
+        <rect x="700" y="150" width="80" height="80" fill="var(--accent)"/>
+        <text x="740" y="142" text-anchor="middle" fill="var(--ink)" font-weight="700">90</text>
+        <text x="740" y="248" text-anchor="middle" fill="var(--ink-2)">实际</text>
+        <g stroke="var(--ink-3)" stroke-dasharray="2 3"><line x1="150" y1="70" x2="175" y2="70"/><line x1="255" y1="118" x2="280" y2="118"/><line x1="360" y1="102" x2="385" y2="102"/><line x1="465" y1="166" x2="490" y2="166"/><line x1="570" y1="126" x2="595" y2="126"/><line x1="675" y1="150" x2="700" y2="150"/></g>
+      </g>
+    </svg>
+    <figcaption>图 F　偏差拆解示意（数字均为虚构）。按“规模 → 可投放 → 曝光 → 转化 → 调优和下线”顺序依次用实际值替换预测值。曝光偏差由分发层决定，不算策略中心的预测失误，但要说明。</figcaption>
+  </figure>
+  <ul class="tight">
+    <li>调优会改变周期内的策略：预测以<b>初始版本</b>为准，调优的影响在偏差拆解中单列一项。</li>
+    <li>确定性指标：WAPE、偏差方向、区间覆盖率（接近 80%）、承诺完成率（用 P25）。</li>
+    <li><span class="status">✓ 可以做</span>　需要 ≥ 3 个周期。</li>
+  </ul>
+</section>
+
+<!-- ============ G ============ -->
+<section id="mod-g">
+  <h2><span class="tag">模块 G</span>质量围栏</h2>
+  <p class="lede">围栏不证明价值，只用来<b>否决</b>价值主张：确认效率提升或覆盖扩大没有以牺牲质量为代价。</p>
+  <div class="grid3">
+    <div class="card" style="margin:0"><b>补贴效率</b><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-2)">补贴 ÷ 承接转化；高于历史 P75 告警</p></div>
+    <div class="card" style="margin:0"><b>用户打扰</b><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-2)">人均曝光频次；退订、关闭、投诉率</p></div>
+    <div class="card" style="margin:0"><b>后续留存</b><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-2)">承接用户 30 日复购或留存（交通：次月乘车率）</p></div>
+    <div class="card" style="margin:0"><b>货品集中度</b><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-2)">F 任务曝光货品的 <a class="term" href="#g-hhi">HHI</a>；长尾货品占比</p></div>
+    <div class="card" style="margin:0"><b>H3 曝光达成率</b><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-2)">人工独有任务是否被挤压</p></div>
+    <div class="card" style="margin:0"><b>风控</b><p style="margin:4px 0 0;font-size:13.5px;color:var(--ink-2)">风险交易、异常领券比例</p></div>
+  </div>
+  <p style="margin-top:14px"><span class="status">✓ 可以做</span></p>
+</section>
+
+<!-- ============ 对照表 ============ -->
+<section id="summary">
+  <h2>模块对照表</h2>
+  <p class="lede">七个模块的等级、状态、主要风险和定位一览（主要风险摘自第 6.1 节）。</p>
+  <div class="table-wrap"><table>
+    <tr><th>模块</th><th>回答的问题</th><th>等级</th><th>主要风险</th><th>定位</th></tr>
+    <tr><td><b>A</b> 覆盖分区</td><td>覆盖、曝光、承接、重叠</td><td><span class="ev ev-F">F</span></td><td>被当成贡献引用</td><td>事实底座，单独使用会误导</td></tr>
+    <tr><td><b>B</b> 阈值处效应</td><td>边际用户的增量</td><td><span class="ev ev-E1">E1</span></td><td>自适应调优让 c₀ 处变成模糊断点；周度跨周影响</td><td><b>增量主证据</b></td></tr>
+    <tr><td><b>B</b> 外推部分</td><td>远离阈值的入选用户增量</td><td><span class="ev ev-E1">E1</span>+假设</td><td>阈值集中时曲线覆盖窄</td><td>管理层数字的主要不确定来源，靠定期校准</td></tr>
+    <tr><td><b>C</b> 组合质量</td><td>增量从哪来</td><td><span class="ev ev-E1">E1</span></td><td>“不显著”被误读为“没差别”</td><td>解释，不相加</td></tr>
+    <tr><td><b>D</b> 分发隔离</td><td>推荐算法和权重的贡献</td><td><span class="ev ev-E1">E1</span></td><td>两个桶不平衡</td><td>划出边界</td></tr>
+    <tr><td><b>E</b> 效率</td><td>人力和周期</td><td><span class="ev ev-F">F</span>/<span class="ev ev-E2">E2</span></td><td>人力未真正释放</td><td>需注明口径</td></tr>
+    <tr><td><b>F</b> 预测</td><td>能否承诺</td><td><span class="ev ev-F">F</span></td><td>调优让初始预测失去意义</td><td>起效慢（≥ 3 周期）</td></tr>
+    <tr><td><b>G</b> 围栏</td><td>有没有牺牲质量</td><td>—</td><td>阈值主观</td><td>否决机制</td></tr>
+  </table></div>
+</section>
+
+<!-- ============ 名词解释 ============ -->
+<section id="glossary">
+  <h2>名词解释</h2>
+  <p class="lede">按主题分组。可以输入关键词筛选。</p>
+  <input class="gsearch" id="gsearch" type="search" placeholder="搜索名词，例如：断点、ITT、随机桶">
+
+  <div class="gcat">业务结构与角色</div>
+  <div class="gl">
+    <div class="g" id="g-fh"><b>F / H1 / H2 / H3</b><span class="en">task source</span><p>任务来源。F = 框架策略任务（目标 → Agent 分析 → 选人 → 拆分 → 算法配货 / 渠道）；H1 = 人工经验任务，和 F 最可比；H2 = BI 半自动任务，可能带货品权重；H3 = 人工独有任务（临时活动、BD 合作），不可比，也不应被替代。</p></div>
+    <div class="g" id="g-subgroup"><b>子人群</b><span class="en">sub-segment</span><p>框架策略选人的基本单元，每个子人群一个阈值（K2）。分析单位是“子人群 × 周期”。</p></div>
+    <div class="g" id="g-renqunbao"><b>人群包</b><span class="en">audience package</span><p>任务定向投放的用户列表。框架人群包额外留存候选标识、选人分数、是否入选、子人群 ID。</p></div>
+    <div class="g" id="g-zigeceng"><b>资格层 / 曝光层</b><p>资格层 = 用户是否在某任务的人群包里，分发之前就确定；曝光层 = 用户是否真的看到了任务，受推荐算法影响。分区按资格层划分，以避开分发层的污染。</p></div>
+    <div class="g" id="g-zone"><b>Z1 / Z2 / Z3 / Z4 覆盖分区</b><p>Z1 仅框架覆盖（Z1a 真新覆盖：过去 6 个月没进过人工人群；Z1b 替代覆盖：过去被人工覆盖、本月只有框架）；Z2 仅人工；Z3 共同覆盖；Z4 均未覆盖。用户层互斥。</p></div>
+    <div class="g" id="g-quanzhong"><b>权重标签</b><span class="en">boost weight</span><p>H2 任务货品上可带的排序加权，会提高曝光和胜出率，所以这两个指标跨来源比较时会被“污染”。随机桶内权重不生效。</p></div>
+    <div class="g" id="g-tiaoyou"><b>调优 / 下线</b><p>周期内基于效果的自适应调整：调货品、渠道；效果好就扩大人群，不好就缩小，仍然不好就让任务下线。运营不能删人，但可以下线任务。</p></div>
+    <div class="g" id="g-xiangsidu"><b>相似度分</b><span class="en">look-alike score</span><p>扩大人群时，以当前入选人群为种子，对其他用户计算的相似程度分。它和初始选人分数不在同一条轴上，所以扩大部分单独估计。</p></div>
+  </div>
+
+  <div class="gcat">结果与口径</div>
+  <div class="gl">
+    <div class="g" id="g-zengliang"><b>业务增量</b><span class="en">incrementality</span><p>在其他一切照常（人工照常投放、推荐算法照常分发、供给不变）的前提下，框架策略选中这批用户带来的额外目标行为。不包含推荐算法价值、自然转化、新供给。</p></div>
+    <div class="g" id="g-chengjie"><b>承接 / 承接转化</b><p>框架任务首次曝光后 N 日内发生的目标行为（交通暂定 N = 7）。是事实，说明框架任务“参与了”，但不说明“带来了”，不等于增量。</p></div>
+    <div class="g" id="g-koujing"><b>三个口径</b><p>增量交易用户（0/1，最稳定，管理层第一口径）、增量交易笔数、增量交易金额（波动最大，同时列补贴成本）。笔数和金额按 P99 截尾。</p></div>
+    <div class="g" id="g-jiewei"><b>P99 截尾</b><span class="en">winsorize</span><p>把超过第 99 百分位的极端值压到 P99，降低少数大额用户对均值和方差的影响。</p></div>
+    <div class="g" id="g-pp"><b>pp（百分点）</b><span class="en">percentage point</span><p>两个百分比之差的单位。转化率从 17% 升到 18.6% 是 +1.6pp，而不是 +1.6%。</p></div>
+    <div class="g" id="g-evidence"><b>证据等级 F / E1 / E2 / C / N/A</b><p>事实 / 准实验估算 / 观测估算 / 相关性 / 当前无法可靠计算。只有 F 能给单点数字；E1、E2 必须给区间；C 只说方向。</p></div>
+  </div>
+
+  <div class="gcat">因果推断方法</div>
+  <div class="gl">
+    <div class="g" id="g-rdd"><b>断点回归（RDD）</b><span class="en">Regression Discontinuity Design</span><p>当是否接受处理由“分数是否超过阈值”决定时，阈值两侧紧挨着的用户几乎一样，只是一侧被选中、一侧没有。比较两侧结果的跳变，就得到阈值处的因果效应。</p></div>
+    <div class="g" id="g-yunxing"><b>运行变量 / 阈值 / 带宽</b><span class="en">running variable / cutoff / bandwidth</span><p>运行变量 = 决定分组的分数（这里是“分数 − 阈值”）；阈值 c₀ 是分界点；带宽是阈值两侧参与比较的分数范围，越窄越可比，但样本越少。</p></div>
+    <div class="g" id="g-itt"><b>意向处理效应（ITT）</b><span class="en">Intention-to-Treat</span><p>按“是否被分到处理组”比较，不管用户最后有没有真的看到任务。包含了下线、未曝光等真实运营损耗，是管理层要的口径。</p></div>
+    <div class="g" id="g-fuzzy"><b>模糊断点</b><span class="en">fuzzy RDD</span><p>超过阈值后被处理的概率跳变，但不是从 0 跳到 1。例如扩大把 c₀ 下方的人也拉进来了。需要用工具变量修正，否则直接比较会低估效应。</p></div>
+    <div class="g" id="g-iv"><b>工具变量</b><span class="en">instrumental variable</span><p>一个只通过“处理”影响结果的变量。这里用“初始是否超过 c₀”作为工具，“周期内入选天数”作为实际处理强度，估计每单位处理的效应。</p></div>
+    <div class="g" id="g-fe"><b>固定效应</b><span class="en">fixed effects</span><p>合并多个子人群估计时，给每个子人群一个独立截距，吸收子人群之间的基础差异，只用子人群内部阈值两侧的比较来估效应。</p></div>
+    <div class="g" id="g-curve"><b>效应-分数曲线 / 外推</b><p>不同阈值落在不同分数上，每个阈值给出一个“该分数处的边际效应”，连成曲线。外推 = 用曲线估计远离阈值的入选用户效应，依赖“效应随分数平滑变化”的假设（A4）。</p></div>
+    <div class="g" id="g-fenwei"><b>周内分位数</b><p>分数在当周候选用户中的百分位。交通每周重算分数，原始分数尺度可能漂移，所以曲线横轴改用分位数。</p></div>
+    <div class="g" id="g-yiliu"><b>遗留效应</b><span class="en">carry-over</span><p>本周入选对下周交易的影响。周度结果窗口看不到它，所以按周累加的月度增量偏保守。</p></div>
+    <div class="g" id="g-lujing"><b>入选路径法</b><p>以用户第一次入选的那一周为起点，比较该周阈值两侧用户在随后 4 周内的总结果，估“进入周度投放流”的完整效果（含连续入选和遗留效应）。它应不低于周度分层累加的结果。</p></div>
+    <div class="g" id="g-holdout"><b>校准留出</b><span class="en">calibration holdout</span><p>定期（例如交通每月 1 周）在每个子人群内按分数分位随机留出 5% 入选用户，不下发框架任务，直接测总增量，用来校准 RDD 的外推曲线。</p></div>
+    <div class="g" id="g-did"><b>匹配 / 双重差分（DiD）</b><span class="en">matching / difference-in-differences</span><p>观测数据上的估计方法，存在未观测混杂，等级为 E2。框架里作为 RDD 的三角互证。</p></div>
+  </div>
+
+  <div class="gcat">分发与实验</div>
+  <div class="gl">
+    <div class="g" id="g-bucket"><b>算法桶 / 随机桶</b><p>按 user_id hash 分流。随机桶占 5%，只在用户所属人群的任务中等概率随机分发，权重不生效；其余为算法桶，由推荐算法召回和排序。</p></div>
+    <div class="g" id="g-hash"><b>hash 分流</b><p>用 user_id 的哈希值决定分桶。结果稳定、与用户行为无关（假设 A8），可以用 A/A 检验验证。</p></div>
+    <div class="g" id="g-aa"><b>A/A 检验</b><p>在两组本应没有差别的时期（例如分发策略上线前）比较指标，确认分组本身是平衡的。</p></div>
+    <div class="g" id="g-jixian"><b>调优信号的基线</b><p>判断“效果好坏”时用来对比的参照。只有“未被选中的相似用户”这类基线接近增量；用大盘平均会系统性偏向扩大。</p></div>
+    <div class="g" id="g-tingchu"><b>胜出率 / 挤出</b><p>胜出率 = 任务进入候选后最终被曝光的比例；挤出 = 框架任务胜出导致其他任务（尤其是 H3）失去曝光。判断挤出看用户层总结果，不看任务层承接之和。</p></div>
+  </div>
+
+  <div class="gcat">统计与预测</div>
+  <div class="gl">
+    <div class="g" id="g-bootstrap"><b>自助抽样</b><span class="en">bootstrap</span><p>从样本中有放回地反复抽样、重算估计值，用估计值的分布得到置信区间。</p></div>
+    <div class="g" id="g-pq"><b>P10 / P25 / P50 / P90</b><p>预测分布的分位数。P50 为中位预测；[P10, P90] 为 80% 区间；对外承诺建议用 P25（较保守）。</p></div>
+    <div class="g" id="g-shrink"><b>收缩（经验贝叶斯）</b><span class="en">shrinkage</span><p>样本少的估计值向更大群体的均值（行业线均值、子人群历史效应）拉近，降低噪声。例如用 Beta 先验处理稀疏的转化率格子。</p></div>
+    <div class="g" id="g-lianhuan"><b>连环替代法</b><p>按固定顺序依次把预测因子替换成实际值，每一步的变化就是该因子造成的偏差，所以总偏差可以拆成几段。</p></div>
+    <div class="g" id="g-wape"><b>WAPE</b><span class="en">Weighted Absolute Percentage Error</span><p>Σ|实际 − P50| ÷ Σ实际，衡量预测误差；初期参考 ≤ 15%。</p></div>
+    <div class="g" id="g-mde"><b>统计功效 / MDE</b><span class="en">minimum detectable effect</span><p>在给定样本量下能可靠检测到的最小差异。用 <code>tools/power_calc.py</code> 计算；虚构量级下 RDD 单周期约 0.6pp。</p></div>
+    <div class="g" id="g-hhi"><b>HHI</b><span class="en">Herfindahl–Hirschman Index</span><p>集中度指数 = 各货品曝光份额的平方和。越接近 1 越集中，过度集中可能挤压其他供给。</p></div>
+    <div class="g" id="g-placebo"><b>安慰剂检验 / 密度检验</b><p>安慰剂：在不该有效应的地方（上线前周期、假阈值）套用 RDD，结果应为 0。密度检验：阈值两侧人数分布应连续，有跳变说明可能有人“挤过”阈值。</p></div>
+  </div>
+</section>
+
+<p class="foot">内容来源：<code>docs/strategy-center-value-framework-overview.md</code>（总览版 v5）第 4 章，名词口径参考 <code>docs/strategy-center-value-framework.md</code>。图中所有数字均为【虚构】，仅用于说明方法。</p>
+</main>
+</div>
+
+<script>
+(function(){
+  // theme toggle
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  try{var t=localStorage.getItem('theme'); if(t) root.setAttribute('data-theme',t);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme');
+    if(!cur){cur=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+    var next=cur==='dark'?'light':'dark';
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+  });
+  // glossary filter
+  var q=document.getElementById('gsearch');
+  q.addEventListener('input',function(){
+    var v=q.value.trim().toLowerCase();
+    document.querySelectorAll('.g').forEach(function(el){
+      el.classList.toggle('hide', v && el.textContent.toLowerCase().indexOf(v)<0);
+    });
+  });
+  // term tooltip from glossary text
+  document.querySelectorAll('a.term').forEach(function(a){
+    var id=a.getAttribute('href').slice(1), g=document.getElementById(id);
+    if(g){var p=g.querySelector('p'); if(p) a.title=p.textContent;}
+  });
+  // toc highlight
+  var links=[].slice.call(document.querySelectorAll('.toc a'));
+  var targets=links.map(function(l){return document.getElementById(l.getAttribute('href').slice(1));});
+  function onScroll(){
+    var y=window.scrollY+80, idx=0;
+    targets.forEach(function(t,i){ if(t && t.offsetTop<=y) idx=i; });
+    links.forEach(function(l,i){l.classList.toggle('on',i===idx);});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
+</script>
+</body>
+</html>
