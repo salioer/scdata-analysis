@@ -107,7 +107,8 @@ ul.tight{margin:6px 0;padding-left:20px} ul.tight li{margin:4px 0}
 ol.flow{list-style:none;padding:0;margin:16px 0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;counter-reset:none}
 ol.flow li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--ink-2);line-height:1.5}
 ol.flow li b{display:block;color:var(--accent);font-size:12px}
-@media (max-width:800px){ol.flow{grid-template-columns:repeat(3,minmax(0,1fr))}}
+ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:800px){ol.flow,ol.flow.flow4{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .stepno{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--surface);font-size:14px;margin-right:8px;vertical-align:1px}
 .foot{font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:16px}
 </style>
@@ -227,13 +228,20 @@ ol.flow li b{display:block;color:var(--accent);font-size:12px}
 
 <!-- ================= A ================= -->
 <section id="a">
-  <h2><span class="tag">模块 A</span>谁被覆盖了</h2>
-  <div class="trio">
-    <div class="q"><div class="lab">要回答的问题</div><p>框架任务覆盖了哪些人？其中有多少人人工也覆盖了？</p></div>
-    <div class="m"><div class="lab">打个比方</div><p>两位老师（框架、人工）各自点名一批学生去补课。先数清楚：只被框架老师点到的、只被人工老师点到的、两位都点到的、谁都没点到的。</p></div>
-    <div class="w"><div class="lab">得到什么</div><p>一张“分组表”。后面所有模块都在这张表上做。它本身是事实，<b>不代表功劳</b>。</p></div>
-  </div>
+  <h2><span class="tag">模块 A</span>谁被覆盖了：先把人分好组</h2>
+  <p class="lede">模块 A 只回答一个问题：<b>框架任务覆盖了哪些人？其中多少人，人工也覆盖了？</b>它不算功劳，只是给后面所有模块打底。分 4 步看。</p>
+  <ol class="flow flow4">
+    <li><b>第 1 步</b>点名分四组</li>
+    <li><b>第 2 步</b>“只有框架”再拆两种</li>
+    <li><b>第 3 步</b>两个不能做的事</li>
+    <li><b>第 4 步</b>为什么按名单分组</li>
+  </ol>
 
+  <h3><span class="stepno">1</span>点名：每个人只放进一个组</h3>
+  <div class="story">
+    <div class="who">打个比方</div>
+    两位老师（框架老师、人工老师）各自点名一批学生去补课。先不管补课效果，只数清楚：只被框架老师点到的、只被人工老师点到的、两位都点到的、谁都没点到的，各有多少人。
+  </div>
   <figure class="fig">
     <svg class="wide" viewBox="0 0 860 330" role="img" aria-label="虚构示例：1000 万用户分为四组">
       <rect x="10" y="10" width="560" height="310" rx="14" fill="var(--muted-fill)" stroke="var(--line)"/>
@@ -268,14 +276,32 @@ ol.flow li b{display:block;color:var(--accent);font-size:12px}
     </svg>
     <figcaption>四个组在原方案里叫 Z1（只有框架）、Z2（只有人工）、Z3（两边都有）、Z4（谁都没覆盖）。</figcaption>
   </figure>
+  <p>四组加起来正好是 1000 万，<b>每个人只在一个组里</b>，不会重复。这张分组表是事实，谁来数都一样。</p>
 
-  <h3>两条容易踩的坑</h3>
-  <ul class="tight">
-    <li><b>“两边都有”的 180 万人，功劳不能拆给任何一方。</b>小李同时被框架和人工选中，他坐车了，说不清是谁的券起的作用，所以这一组的结果整体记为“共同”。</li>
-    <li><b>不能简单相加。</b>“框架承接 40 万 + 人工承接 30 万 = 70 万”是错的，因为两边都有的人被算了两次。必须同时报一个去重后的数。</li>
-    <li><b>为什么按“被圈进名单”分组，而不是按“看到了任务”分组？</b>谁能看到任务是推荐算法决定的，越活跃的人越容易看到。按“看到”分组，会把“这人本来就活跃”误当成策略的效果。</li>
-  </ul>
+  <h3><span class="stepno">2</span>“只有框架”的 240 万，再拆成两种</h3>
+  <div class="grid2">
+    <div class="card" style="margin:0;border-color:var(--f)"><b>真新覆盖：150 万</b><p style="margin:4px 0 0;font-size:14.5px;color:var(--ink-2)">过去半年，人工从来没圈过这些人。说明框架<b>找到了人工没发现的用户</b>，这是“找人”的价值。</p></div>
+    <div class="card" style="margin:0"><b>替代覆盖：90 万</b><p style="margin:4px 0 0;font-size:14.5px;color:var(--ink-2)">以前人工圈过，现在改由框架来圈。价值主要是<b>替人工干了活、省了人力</b>（见模块 E），前提是效果没变差。</p></div>
+  </div>
+  <p class="pro">要拆这两种，需要保留过去半年的人工人群名单。如果没有，只能报“本月只有框架覆盖”，并注明里面可能混了替代覆盖。</p>
+
+  <h3><span class="stepno">3</span>两个不能做的事</h3>
+  <div class="story">
+    <div class="who">不能做 ① · “两边都有”的人，功劳不拆</div>
+    小李同时被框架和人工选中，这个月坐车了。是框架的券起作用，还是人工的券起作用？说不清。所以这 180 万人的结果整体记为“共同”，不拆给任何一方。
+  </div>
+  <div class="story">
+    <div class="who">不能做 ② · 两边的数不能直接相加</div>
+    框架任务承接了 40 万坐车用户，人工任务承接了 30 万。直接加是 70 万吗？<b>不是。</b>其中有 15 万人两边的任务都看过，被算了两次。正确的说法是：“框架 40 万，人工 30 万，重叠 15 万，<b>去重后合计 55 万</b>。”
+  </div>
+
+  <h3><span class="stepno">4</span>为什么按“被圈进名单”分组，不按“看到了任务”分组</h3>
+  <p>谁能看到任务，是推荐算法决定的，<b>越活跃的人越容易看到</b>。如果按“看到了”分组，“看到框架任务的人坐车更多”里，有一大块只是“这人本来就活跃”。按名单分组，名单在推荐之前就定好了，不受这个影响。</p>
+
+  <div class="note ok"><b>一句话记住模块 A：</b>先把所有人按“谁圈了他”分成四组，数清楚人数和重叠。这是事实，不是功劳；功劳要到模块 B 去算。</div>
+  <p class="pro">原方案里：四组叫 Z1（只有框架）、Z2（只有人工）、Z3（两边都有）、Z4（谁都没覆盖）；真新覆盖叫 Z1a，替代覆盖叫 Z1b；“被圈进名单”叫资格层，“看到了任务”叫曝光层；“承接”是指看到任务后成交。</p>
 </section>
+
 
 <!-- ================= B ================= -->
 <section id="b">
@@ -630,110 +656,318 @@ ol.flow li b{display:block;color:var(--accent);font-size:12px}
 
 <!-- ================= C ================= -->
 <section id="c">
-  <h2><span class="tag">模块 C</span>任务内容好不好</h2>
-  <div class="trio">
-    <div class="q"><div class="lab">问题</div><p>同一个人，给他看框架配的任务（货品 + 渠道），还是人工配的任务，哪个更容易成交？</p></div>
-    <div class="m"><div class="lab">打个比方</div><p>同一位顾客，随机端上 A 厨师或 B 厨师的菜，看哪道菜吃得更干净。顾客是同一类人，端哪道是随机的，差别只能来自菜本身。</p></div>
-    <div class="w"><div class="lab">得到什么</div><p>解释模块 B 的增量是因为“任务配得好”，还是因为“人找得准”。</p></div>
+  <h2><span class="tag">模块 C</span>任务内容好不好：同一个人，看哪种任务更容易成交</h2>
+  <p class="lede">模块 B 算出了“被选中带来了多少”。模块 C 进一步问：<b>这些效果里，有多少是因为框架配的任务（货品 + 渠道）本身更好？</b>分 4 步看。</p>
+  <ol class="flow flow4">
+    <li><b>第 1 步</b>为什么要用随机组</li>
+    <li><b>第 2 步</b>怎么比</li>
+    <li><b>第 3 步</b>结果怎么用</li>
+    <li><b>第 4 步</b>三个注意</li>
+  </ol>
+
+  <h3><span class="stepno">1</span>为什么不能在平时直接比</h3>
+  <p>平时，一个人看到哪条任务，是推荐算法挑的。算法会把它觉得更容易成交的任务推给更容易成交的人。这时候比“看框架任务的人”和“看人工任务的人”，比出来的差别里混着算法的挑选，不公平。</p>
+  <p>好在推荐系统本来就留了一个 <b>5% 的随机组</b>：这部分用户看到哪条任务，是<b>随机</b>的，算法不插手。</p>
+  <div class="story">
+    <div class="who">打个比方</div>
+    想知道 A 厨师和 B 厨师谁的菜更受欢迎。如果让服务员挑着上菜，服务员会把招牌菜端给熟客，不公平。所以找一桌客人，<b>抛硬币决定</b>端 A 的菜还是 B 的菜，再看哪盘吃得更干净。
   </div>
-  <p>推荐系统本来就有一个 5% 的“随机组”：这部分用户看到哪条任务完全随机，不经过算法挑选。在随机组里，找出<b>框架和人工都选中的用户</b>，比较他们第一次看到的是哪种任务：</p>
-  <div class="calc">
-    <div class="row"><span>随机先看到框架任务的 1 万人</span><b>转化 19.2%</b></div>
-    <div class="row"><span>随机先看到人工经验任务的 1 万人</span><b>转化 18.4%</b></div>
-    <div class="row tot"><span>框架任务的内容好了</span><b>0.8 个百分点</b></div>
-  </div>
-  <div class="note"><b>注意 1：这 0.8 个百分点不能加到模块 B 上。</b>B 算出的总增量里已经包含了“任务配得好”的部分，C 只是拆开看看增量从哪来。加起来就算了两遍。<br><b>注意 2：</b>随机组只有 5% 的用户，样本小。单周差 0.8 个百分点，可能分不清是真差别还是运气，要攒几周一起看。“这周不显著”不等于“没差别”。</div>
+
+  <h3><span class="stepno">2</span>怎么比</h3>
+  <p>在随机组里，只挑<b>框架和人工都选中的人</b>（模块 A 里“两边都有”的那组），看他们第一次看到的是哪种任务：</p>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 210" role="img" aria-label="随机组里两边都选中的人，随机先看到框架任务或人工任务，比较成交比例">
+      <g font-size="12.5">
+        <rect x="20" y="70" width="190" height="72" rx="10" fill="var(--z3-soft)" stroke="var(--z3)" stroke-width="2"/>
+        <text x="115" y="100" text-anchor="middle" fill="var(--ink)" font-weight="700">随机组里</text>
+        <text x="115" y="120" text-anchor="middle" fill="var(--ink-2)">框架和人工都选中的人</text>
+        <path d="M210,106 L262,106" stroke="var(--ink-3)"/>
+        <circle cx="292" cy="106" r="28" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+        <text x="292" y="103" text-anchor="middle" fill="var(--ink)" font-size="12">抛硬币</text>
+        <text x="292" y="119" text-anchor="middle" fill="var(--ink-3)" font-size="11">随机</text>
+        <path d="M318,94 L398,52" stroke="var(--ink-3)"/><path d="M318,118 L398,160" stroke="var(--ink-3)"/>
+        <rect x="402" y="20" width="240" height="64" rx="10" fill="var(--f-soft)" stroke="var(--f)"/>
+        <text x="522" y="46" text-anchor="middle" fill="var(--ink)" font-weight="700">先看到框架的任务 · 1 万人</text>
+        <text x="522" y="68" text-anchor="middle" fill="var(--f)" font-weight="700">成交 19.2%</text>
+        <rect x="402" y="128" width="240" height="64" rx="10" fill="var(--h-soft)" stroke="var(--h)"/>
+        <text x="522" y="154" text-anchor="middle" fill="var(--ink)" font-weight="700">先看到人工的任务 · 1 万人</text>
+        <text x="522" y="176" text-anchor="middle" fill="var(--h)" font-weight="700">成交 18.4%</text>
+        <path d="M642,52 L708,98" stroke="var(--ink-3)"/><path d="M642,160 L708,114" stroke="var(--ink-3)"/>
+        <rect x="712" y="72" width="134" height="68" rx="10" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="779" y="100" text-anchor="middle" fill="var(--ink)" font-weight="700">差 0.8 个百分点</text>
+        <text x="779" y="122" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">= 任务内容的差别</text>
+      </g>
+    </svg>
+    <figcaption>两组是同一类人，看到哪种任务是随机的，所以成交比例的差别只能来自任务内容本身。数字为虚构。</figcaption>
+  </figure>
+  <p>结论：<b>同样的人，看框架配的任务，每 100 人多成交 0.8 人。</b>人工任务还要分开比：凭经验做的人工任务比一次，BI 半自动任务比一次。</p>
+
+  <h3><span class="stepno">3</span>这个结果怎么用：拆来源，不相加</h3>
+  <p>模块 B 告诉我们“被选中一共多带来了多少”，这里面包含两部分：<b>人找得准</b>，和<b>任务配得好</b>。模块 C 量的是后一部分。</p>
+  <div class="note"><b>不能把 C 加到 B 上。</b>B 的总数里已经包含了“任务配得好”的那部分，C 只是把它拆出来看看。加起来就算了两遍。</div>
+
+  <h3><span class="stepno">4</span>三个注意</h3>
+  <ul class="tight">
+    <li><b>人少，要多攒几期。</b>随机组只有 5% 的用户。单周 0.8 个百分点的差别，可能分不清是真差别还是运气，要合并几周再下结论。“这周不显著”不等于“没差别”。</li>
+    <li><b>只代表“随机展示”时的情况。</b>平时有算法挑选，框架任务可能更好用也可能更不好用，这一点目前拆不开。</li>
+    <li><b>量不了“人找得准”。</b>两组都是已经被选中的同一批人，比的只是任务内容。人找得准不准，只能靠模块 B。</li>
+  </ul>
+
+  <div class="note ok"><b>一句话记住模块 C：</b>在随机组里，让同样的人随机看到框架任务或人工任务，比出来的差别就是任务内容的好坏。它用来解释 B 的效果从哪来，不能和 B 相加。</div>
+  <p class="pro">原方案里：随机组叫随机桶；“框架和人工都选中的人”是 Z3；凭经验的人工任务叫 H1，BI 半自动任务叫 H2；这个模块的结论可信度是 E1。</p>
 </section>
 
 <!-- ================= D ================= -->
 <section id="d">
-  <h2><span class="tag">模块 D</span>推荐算法的功劳不算我们的</h2>
-  <div class="trio">
-    <div class="q"><div class="lab">问题</div><p>任务被谁看到、排第几，是推荐算法决定的。这部分提升该算谁的？</p></div>
-    <div class="m"><div class="lab">打个比方</div><p>菜做得好是厨师（策略中心）的功劳；服务员把好菜推荐给对的客人，是服务员（推荐算法）的功劳。两份功劳要分开记。</p></div>
-    <div class="w"><div class="lab">做法</div><p>比较“算法挑选”的 95% 用户和“随机展示”的 5% 用户，差距归推荐团队。</p></div>
+  <h2><span class="tag">模块 D</span>推荐算法的功劳，不算我们的</h2>
+  <p class="lede">任务被谁看到、排第几，是推荐算法决定的。模块 D 只做一件事：<b>把推荐算法带来的那部分提升划出去，记在推荐团队名下。</b>分 4 步看。</p>
+  <ol class="flow flow4">
+    <li><b>第 1 步</b>分两个组</li>
+    <li><b>第 2 步</b>比一比</li>
+    <li><b>第 3 步</b>两个不能做的事</li>
+    <li><b>第 4 步</b>先查两组一不一样</li>
+  </ol>
+
+  <div class="story">
+    <div class="who">打个比方</div>
+    一家餐厅生意好，有厨师的功劳（菜做得好，相当于策略中心生产的任务），也有服务员的功劳（把对的菜推荐给对的客人，相当于推荐算法）。两份功劳要分开记，不能都算在厨师头上。
   </div>
-  <div class="calc">
-    <div class="row"><span>算法组（推荐算法挑选展示什么）</span><b>转化 18.0%</b></div>
-    <div class="row"><span>随机组（随机展示）</span><b>转化 15.0%</b></div>
-    <div class="row tot"><span>推荐算法的功劳，<b>归推荐团队</b></span><b>3.0 个百分点</b></div>
+
+  <h3><span class="stepno">1</span>分两个组</h3>
+  <p>按用户 ID 把用户分成两组：<b>95% 的算法组</b>，看到什么由推荐算法挑；<b>5% 的随机组</b>，看到什么随机定。两组的人是按 ID 分的，和用户爱不爱坐车无关。</p>
+
+  <h3><span class="stepno">2</span>比一比</h3>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 170" role="img" aria-label="算法组与随机组成交比例比较">
+      <g font-size="12.5">
+        <rect x="20" y="52" width="170" height="64" rx="10" fill="var(--surface-2)" stroke="var(--line)"/>
+        <text x="105" y="80" text-anchor="middle" fill="var(--ink)" font-weight="700">全部用户</text>
+        <text x="105" y="100" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">按用户 ID 分组</text>
+        <path d="M190,74 L300,40" stroke="var(--ink-3)"/><path d="M190,94 L300,128" stroke="var(--ink-3)"/>
+        <rect x="304" y="10" width="290" height="60" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="449" y="35" text-anchor="middle" fill="var(--ink)" font-weight="700">算法组 95%：算法挑着展示</text>
+        <text x="449" y="56" text-anchor="middle" fill="var(--accent)" font-weight="700">成交 18.0%</text>
+        <rect x="304" y="98" width="290" height="60" rx="10" fill="var(--surface-2)" stroke="var(--ink-3)"/>
+        <text x="449" y="123" text-anchor="middle" fill="var(--ink)" font-weight="700">随机组 5%：随机展示</text>
+        <text x="449" y="144" text-anchor="middle" fill="var(--ink-2)" font-weight="700">成交 15.0%</text>
+        <path d="M594,40 L664,76" stroke="var(--ink-3)"/><path d="M594,128 L664,92" stroke="var(--ink-3)"/>
+        <rect x="668" y="52" width="176" height="64" rx="10" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="756" y="80" text-anchor="middle" fill="var(--ink)" font-weight="700">差 3.0 个百分点</text>
+        <text x="756" y="100" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">记在推荐团队名下</text>
+      </g>
+    </svg>
+    <figcaption>两组任务池一样，唯一的区别是“算法挑”还是“随机放”，所以差别就是推荐算法的功劳。数字为虚构。</figcaption>
+  </figure>
+
+  <h3><span class="stepno">3</span>两个不能做的事</h3>
+  <div class="story">
+    <div class="who">不能做 ① · 不能把两份功劳直接相加</div>
+    策略中心说“我们多带来了 1.87 万人”，推荐团队说“我们多带来了若干万人”。两个数不能加起来当总提升。好任务被推荐给对的人时效果特别好，这一块<b>两边都会各算一次</b>，相加就重复了。
   </div>
-  <ul class="tight">
-    <li><b>不能把策略中心的增量和推荐算法的提升相加。</b>两者回答的是不同问题（“没选中这些人会怎样” vs “没有推荐算法会怎样”），中间有重叠，直接相加会多算。</li>
-    <li><b>不能跨组比较。</b>“框架任务在算法组的转化率比人工任务在随机组的高”这种比法没有意义，因为差距里混着推荐算法的功劳。</li>
-    <li>BI 任务带的“权重标签”会让任务排得更靠前，这也是展示层面的优势，不算人群选得好。</li>
-  </ul>
+  <div class="story">
+    <div class="who">不能做 ② · 不能跨组比</div>
+    “框架任务在算法组成交 20%，人工任务在随机组成交 15%，所以框架好 5 个百分点”：这种比法不成立。差别里混着推荐算法那 3 个百分点的功劳。要比任务好坏，只能像模块 C 那样，在同一个组里比。
+  </div>
+  <p>另外，BI 任务可以带“权重标签”，让任务排得更靠前、被更多人看到。这也是<b>展示上的优势</b>，属于推荐这一层，不能算成“人选得好”。</p>
+
+  <h3><span class="stepno">4</span>先查两组本来一不一样</h3>
+  <p>在推荐策略生效之前的月份，比一比两个组的成交比例。两组只是按 ID 分的，那时应该没有差别；如果有差别，说明分组本身有问题，要先修正。</p>
+
+  <div class="note ok"><b>一句话记住模块 D：</b>算法组和随机组的差别是推荐算法的功劳，记给推荐团队；它不能和策略中心的增量相加，也不能拿两个组的数交叉比。</div>
+  <p class="pro">原方案里：算法组叫算法桶，随机组叫随机桶，按用户 ID 分组叫 hash 分流，第 4 步叫 A/A 检验；“记在推荐团队名下”对应“分发层隔离”。</p>
 </section>
 
 <!-- ================= E ================= -->
 <section id="e">
   <h2><span class="tag">模块 E</span>省了多少人力和时间</h2>
-  <p class="lede">这部分最直白：都是系统里能数出来的事实。</p>
+  <p class="lede">这个模块最直白：<b>以前做一批定向任务要多少人、多少天，现在要多少。</b>这些数基本都能从系统里直接数出来。分 3 步看。</p>
+
+  <h3><span class="stepno">1</span>看哪几个数（数字为虚构）</h3>
   <div class="kpi">
-    <div><div class="s">自动化任务占比【虚构】</div><div class="big">35% → 62%</div><div class="s">框架任务数 ÷ 全部定向任务数</div></div>
-    <div><div class="s">从定目标到任务上线【虚构】</div><div class="big">5 天 → 1 天</div><div class="s">中位数</div></div>
-    <div><div class="s">运营 + BI 投入【虚构】</div><div class="big">−40 人日/月</div><div class="s">需要工时登记，否则靠问卷估</div></div>
+    <div><div class="s">框架任务占全部定向任务的比例</div><div class="big">35% → 62%</div><div class="s">越高说明越多的活交给了自动化</div></div>
+    <div><div class="s">从定下目标到任务上线</div><div class="big">5 天 → 1 天</div><div class="s">取中间值；也看最慢的那 10%</div></div>
+    <div><div class="s">运营 + BI 每月投入</div><div class="big">−40 人日</div><div class="s">一个人干一天 = 1 人日</div></div>
   </div>
-  <div class="note">省下的人日可以折算成钱，但要说明前提：<b>只有省下来的人去做了别的事，这笔钱才是真的省了。</b>如果人还在、只是闲着，就不算真节约。效率和业务增量分开报，不合成一个“总 ROI”。</div>
+  <div class="table-wrap"><table>
+    <tr><th style="width:26%">其他几个数</th><th>大白话</th></tr>
+    <tr><td>覆盖了多少不同的人</td><td>所有定向任务加起来，去重后圈了多少人；其中框架找到的新人有多少（模块 A 的“真新覆盖”）</td></tr>
+    <tr><td>货品用起来了多少</td><td>能投放的货品里，本月有多少至少被一个任务用上了</td></tr>
+    <tr><td>生产稳不稳</td><td>框架任务有没有按时产出、有没有失败后要人工补救</td></tr>
+  </table></div>
+
+  <h3><span class="stepno">2</span>省下的人力能不能折成钱</h3>
+  <div class="calc">
+    <div class="row"><span>每月少投入的人日</span><b>40 人日</b></div>
+    <div class="row"><span>× 每人日的人力成本【虚构】</span><b>1,500 元</b></div>
+    <div class="row tot"><span>= 每月节约</span><b>6 万元</b></div>
+  </div>
+  <div class="note"><b>前提：省下来的人真的去做别的事了。</b>如果人还在、只是闲下来了，这 6 万元并没有真正省下来，只能算“释放了产能”。</div>
+
+  <h3><span class="stepno">3</span>和业务数字分开报</h3>
+  <p>效率数字是事实，业务增量是一个估计范围。两者性质不同，<b>不合成一个“总投入产出比”</b>，分开写在月报里。</p>
+  <p class="pro">人日最好来自工时登记；没有登记的话只能靠抽样问卷估算，可信度会低一档。</p>
+
+  <div class="note ok"><b>一句话记住模块 E：</b>数清楚“少用了多少人、快了多少天、多覆盖了多少人”。折成钱的前提是人力真的被用到了别处。</div>
 </section>
 
 <!-- ================= F ================= -->
 <section id="f">
-  <h2><span class="tag">模块 F</span>预测准不准，能不能承诺</h2>
-  <div class="trio">
-    <div class="q"><div class="lab">问题</div><p>月初能不能说准“这个月能带来多少”？说不准的话差在哪？</p></div>
-    <div class="m"><div class="lab">打个比方</div><p>天气预报不说“明天 25 度”，而是说“23–27 度，最可能 25 度”。预报得多了，就知道它靠不靠谱。</p></div>
-    <div class="w"><div class="lab">做法</div><p>月初给三个数：保守、最可能、乐观。月底对账，拆开看差在哪一步。</p></div>
-  </div>
-  <div class="calc">
-    <div class="row"><span>预测交易用户 = 选中人数 × 能触达的比例 × 被看到的比例 × 看到后成交的比例</span><b></b></div>
-    <div class="row"><span>例：100 万 × 90% × 50% × 22%</span><b>≈ 9.9 万</b></div>
-    <div class="row"><span>给出范围：保守 8.5 万 / 最可能 9.9 万 / 乐观 11.2 万</span><b></b></div>
-    <div class="row tot"><span>对外承诺用“比较保守”的数（原方案用 P25）</span><b>约 9.2 万</b></div>
-  </div>
-  <p class="pro">原方案里的 P10 / P50 / P90 分别对应保守 / 最可能 / 乐观；P25 是“四次里大概有三次能做到”的数。</p>
+  <h2><span class="tag">模块 F</span>预测准不准：月初说的数，月底能不能兑现</h2>
+  <p class="lede">管理层不只想知道“上个月带来了多少”，还想知道<b>“下个月能带来多少，能不能拍板承诺”</b>。模块 F 就是在月初做预测、月底对账。分 6 步看。</p>
+  <ol class="flow">
+    <li><b>第 1 步</b>预测怎么算</li>
+    <li><b>第 2 步</b>给范围不给一个数</li>
+    <li><b>第 3 步</b>月底对账</li>
+    <li><b>第 4 步</b>差在哪一关</li>
+    <li><b>第 5 步</b>预测靠不靠谱</li>
+    <li><b>第 6 步</b>什么时候能承诺</li>
+  </ol>
 
-  <h3>月底对账：预测 100，实际 90，差在哪？</h3>
+  <h3><span class="stepno">1</span>预测怎么算：四道关卡，一关一关往下乘</h3>
+  <p>一个人要成为“坐车用户”，要连过四关：<b>先被选中 → 能联系上 → 真的看到了任务 → 看到后坐车了</b>。每一关都会掉一些人。月初按过去 3 个月的经验，估计每一关能留下多少：</p>
   <figure class="fig">
-    <svg class="wide" viewBox="0 0 860 280" role="img" aria-label="虚构偏差拆解：预测 100，实际 90">
-      <g font-size="12.5">
-        <line x1="60" y1="230" x2="840" y2="230" stroke="var(--line)"/>
-        <text x="840" y="22" text-anchor="end" fill="var(--ink-3)" font-size="11">纵轴从 80 开始，放大差异</text>
-        <rect x="70" y="70" width="80" height="160" fill="var(--ink-3)"/><text x="110" y="62" text-anchor="middle" fill="var(--ink)" font-weight="700">100</text><text x="110" y="248" text-anchor="middle" fill="var(--ink-2)">月初预测</text>
-        <rect x="175" y="70" width="80" height="48" fill="var(--bad)"/><text x="215" y="134" text-anchor="middle" fill="var(--bad)" font-weight="700">−6</text><text x="215" y="248" text-anchor="middle" fill="var(--ink-2)">选中的人少了</text>
-        <rect x="280" y="102" width="80" height="16" fill="var(--ok)"/><text x="320" y="96" text-anchor="middle" fill="var(--ok)" font-weight="700">+2</text><text x="320" y="248" text-anchor="middle" fill="var(--ink-2)">能触达的多了</text>
-        <rect x="385" y="102" width="80" height="64" fill="var(--muted-fill)" stroke="var(--ink-2)" stroke-dasharray="3 2"/><text x="425" y="182" text-anchor="middle" fill="var(--ink-2)" font-weight="700">−8</text><text x="425" y="248" text-anchor="middle" fill="var(--ink-2)">被看到的少了</text><text x="425" y="264" text-anchor="middle" fill="var(--ink-3)" font-size="11">推荐算法的事</text>
-        <rect x="490" y="126" width="80" height="40" fill="var(--ok)"/><text x="530" y="120" text-anchor="middle" fill="var(--ok)" font-weight="700">+5</text><text x="530" y="248" text-anchor="middle" fill="var(--ink-2)">成交率高了</text>
-        <rect x="595" y="126" width="80" height="24" fill="var(--bad)"/><text x="635" y="166" text-anchor="middle" fill="var(--bad)" font-weight="700">−3</text><text x="635" y="248" text-anchor="middle" fill="var(--ink-2)">中途调整/下线</text>
-        <rect x="700" y="150" width="80" height="80" fill="var(--accent)"/><text x="740" y="142" text-anchor="middle" fill="var(--ink)" font-weight="700">90</text><text x="740" y="248" text-anchor="middle" fill="var(--ink-2)">月底实际</text>
-        <g stroke="var(--ink-3)" stroke-dasharray="2 3"><line x1="150" y1="70" x2="175" y2="70"/><line x1="255" y1="118" x2="280" y2="118"/><line x1="360" y1="102" x2="385" y2="102"/><line x1="465" y1="166" x2="490" y2="166"/><line x1="570" y1="126" x2="595" y2="126"/><line x1="675" y1="150" x2="700" y2="150"/></g>
+    <svg class="wide" viewBox="0 0 860 150" role="img" aria-label="月初预计：四道关卡逐层减少">
+      <g font-size="12.5" text-anchor="middle">
+        <text x="20" y="22" text-anchor="start" fill="var(--ink)" font-size="13" font-weight="700">月初预计【虚构】</text>
+        <rect x="20" y="44" width="170" height="80" rx="10" fill="var(--f)"/>
+        <text x="105" y="72" fill="var(--surface)">① 被选中</text><text x="105" y="102" fill="var(--surface)" font-size="20" font-weight="700">100 万</text>
+        <rect x="240" y="52" width="150" height="64" rx="10" fill="var(--f)" opacity=".8"/>
+        <text x="315" y="76" fill="var(--surface)">② 能联系上</text><text x="315" y="102" fill="var(--surface)" font-size="18" font-weight="700">90 万</text>
+        <rect x="440" y="60" width="140" height="48" rx="10" fill="var(--f)" opacity=".6"/>
+        <text x="510" y="80" fill="var(--surface)">③ 看到了任务</text><text x="510" y="100" fill="var(--surface)" font-size="15" font-weight="700">45 万</text>
+        <rect x="630" y="66" width="130" height="36" rx="10" fill="var(--accent)"/>
+        <text x="695" y="89" fill="var(--surface)" font-weight="700">④ 坐车 9.9 万</text>
+        <g fill="var(--ink-2)" font-size="12"><text x="215" y="40">× 90%</text><text x="415" y="44">× 50%</text><text x="605" y="52">× 22%</text></g>
+        <g stroke="var(--ink-3)"><line x1="192" y1="84" x2="236" y2="84"/><line x1="392" y1="84" x2="436" y2="84"/><line x1="582" y1="84" x2="626" y2="84"/></g>
+        <text x="800" y="89" fill="var(--ink-3)" font-size="11.5">预测值</text>
       </g>
     </svg>
-    <figcaption>一步一步把预测值换成实际值，每一步的变化就是那个环节造成的偏差（原方案叫连环替代法）。“被看到的少了”由推荐算法决定，不算策略中心预测失误，但要写出来。数字为虚构。</figcaption>
+    <figcaption>100 万 × 90% × 50% × 22% ≈ 9.9 万。每一关的比例都用同一个人群过去 3 个月的数据估计。</figcaption>
   </figure>
-  <p>至少积累 3 个月数据后，才能判断预测稳不稳；稳定之后，才能用“增量预测”（选中人数 × 模块 B 算出的历史效果）对业务方做承诺。</p>
+  <div class="table-wrap"><table>
+    <tr><th style="width:20%">关卡</th><th>大白话</th><th style="width:26%">主要由谁决定</th></tr>
+    <tr><td>① 被选中</td><td>月初圈了多少人</td><td>策略中心（选人）</td></tr>
+    <tr><td>② 能联系上</td><td>圈中的人里，有多少能发得出去：渠道可达、没被风控或“打扰太多”拦下</td><td>策略中心 + 渠道 / 风控</td></tr>
+    <tr><td>③ 看到了任务</td><td>能发的人里，有多少真的刷到了这条任务</td><td><b>推荐算法</b></td></tr>
+    <tr><td>④ 坐车了</td><td>看到的人里，有多少去坐车了</td><td>策略中心（任务内容）+ 季节、天气等外部因素</td></tr>
+  </table></div>
+
+  <h3><span class="stepno">2</span>给一个范围，而不是一个数</h3>
+  <div class="story">
+    <div class="who">打个比方</div>
+    天气预报不会说“明天正好 25 度”，而是说“23 到 27 度，最可能 25 度”。预测业务也一样：每一关的比例都会上下浮动，乘出来的结果也是一个范围。
+  </div>
+  <div class="kpi">
+    <div><div class="s">保守</div><div class="big">8.5 万</div><div class="s">大概 10 次里有 9 次能超过</div></div>
+    <div style="border-color:var(--accent)"><div class="s">最可能</div><div class="big">9.9 万</div><div class="s">一半可能高、一半可能低</div></div>
+    <div><div class="s">乐观</div><div class="big">11.2 万</div><div class="s">大概 10 次里只有 1 次能超过</div></div>
+  </div>
+  <p><b>对外承诺用“比较保守”的数，约 9.2 万</b>：大概 4 次里有 3 次能做到。用“最可能”的 9.9 万当内部目标。</p>
+
+  <h3><span class="stepno">3</span>月底对账：每一关实际是多少</h3>
+  <p>月底，四道关卡都有了实际数。把预计和实际<b>一关一关对齐</b>：</p>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 220" role="img" aria-label="月初预计与月底实际的四道关卡对比">
+      <g font-size="12.5">
+        <text x="20" y="22" fill="var(--ink)" font-size="13" font-weight="700">月初预计 vs 月底实际【虚构】</text>
+        <g text-anchor="middle" font-weight="700">
+          <text x="235" y="48" fill="var(--ink-2)">① 被选中</text><text x="415" y="48" fill="var(--ink-2)">② 能联系上</text><text x="595" y="48" fill="var(--ink-2)">③ 看到了任务</text><text x="775" y="48" fill="var(--ink-2)">④ 坐车</text>
+        </g>
+        <text x="20" y="92" fill="var(--f)" font-weight="700">月初预计</text>
+        <text x="20" y="152" fill="var(--ink)" font-weight="700">月底实际</text>
+        <g text-anchor="middle">
+          <rect x="160" y="66" width="150" height="40" rx="8" fill="var(--f-soft)"/><text x="235" y="92" fill="var(--ink)" font-weight="700">100 万</text>
+          <rect x="340" y="66" width="150" height="40" rx="8" fill="var(--f-soft)"/><text x="415" y="92" fill="var(--ink)">90 万（90%）</text>
+          <rect x="520" y="66" width="150" height="40" rx="8" fill="var(--f-soft)"/><text x="595" y="92" fill="var(--ink)">45 万（50%）</text>
+          <rect x="700" y="66" width="150" height="40" rx="8" fill="var(--accent)"/><text x="775" y="92" fill="var(--surface)" font-weight="700">9.90 万（22%）</text>
+          <rect x="160" y="126" width="150" height="40" rx="8" fill="var(--bad-soft)"/><text x="235" y="152" fill="var(--ink)" font-weight="700">94 万 ↓</text>
+          <rect x="340" y="126" width="150" height="40" rx="8" fill="var(--ok-soft)"/><text x="415" y="152" fill="var(--ink)">86.5 万（92% ↑）</text>
+          <rect x="520" y="126" width="150" height="40" rx="8" fill="var(--bad-soft)"/><text x="595" y="152" fill="var(--ink)">39.8 万（46% ↓）</text>
+          <rect x="700" y="126" width="150" height="40" rx="8" fill="var(--surface-2)" stroke="var(--ink-3)"/><text x="775" y="152" fill="var(--ink)" font-weight="700">9.15 万（23% ↑）</text>
+        </g>
+        <text x="20" y="200" fill="var(--ink-2)">红色：比预计差；绿色：比预计好。最后少了 0.75 万，但四道关卡有好有坏，不能只看最后一个数。</text>
+      </g>
+    </svg>
+  </figure>
+
+  <h3><span class="stepno">4</span>差在哪一关：一次只换一个数</h3>
+  <p>少了 7,500 人，各关卡要负多少责任？做法很简单：<b>从预测出发，每次只把一关换成实际值，其他关卡不动</b>，看结果变了多少。变化的那部分，就是这一关造成的。</p>
+  <div class="table-wrap"><table>
+    <tr><th style="width:30%">这一次换了什么</th><th>算式</th><th style="width:14%">结果</th><th style="width:14%">这一关造成</th><th style="width:16%">归谁</th></tr>
+    <tr><td>起点：全用月初预计</td><td>100 万 × 90% × 50% × 22%</td><td>99,000</td><td>—</td><td>—</td></tr>
+    <tr><td>把 ① 人数换成实际 94 万</td><td><b>94 万</b> × 90% × 50% × 22%</td><td>93,060</td><td style="color:var(--bad);font-weight:700">−5,940</td><td>策略中心（选人）</td></tr>
+    <tr><td>再把 ② 换成实际 92%</td><td>94 万 × <b>92%</b> × 50% × 22%</td><td>95,130</td><td style="color:var(--ok);font-weight:700">+2,070</td><td>策略中心 + 渠道 / 风控</td></tr>
+    <tr><td>再把 ③ 换成实际 46%</td><td>94 万 × 92% × <b>46%</b> × 22%</td><td>87,520</td><td style="color:var(--bad);font-weight:700">−7,610</td><td><b>推荐算法</b></td></tr>
+    <tr><td>再把 ④ 换成实际 23%</td><td>94 万 × 92% × 46% × <b>23%</b></td><td>91,500</td><td style="color:var(--ok);font-weight:700">+3,980</td><td>策略中心 + 季节等</td></tr>
+    <tr style="font-weight:700"><td>合计</td><td>四关加起来</td><td>91,500</td><td style="color:var(--bad)">−7,500</td><td></td></tr>
+  </table></div>
+  <p>一眼就能看出：<b>少的 7,500 人里，最大的一块（7,610）是“看到任务的人变少了”，这是推荐算法那一关的事</b>，不算策略中心预测失误，但要在月报里写清楚。策略中心自己这边，选的人少了一些，但成交率比预计好，部分抵消了。</p>
+  <p class="pro">每一关的变化加起来正好等于总差额，不会多也不会少。换的顺序固定为“人数 → 能联系上 → 看到 → 坐车”，每个月都用同一个顺序，结果才能前后比较。周期中途的扩大、缩小、下线会改变实际的人数和比例；预测只按第 1 天的版本做，这些调整的影响在月报里单独列一行说明。</p>
+
+  <h3><span class="stepno">5</span>预测靠不靠谱：看一年里落进范围几次</h3>
+  <p>一次说准不算本事。要看很多个月：<b>实际值有几次落在“保守到乐观”这个范围里。</b></p>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 244" role="img" aria-label="10 个月的预测范围与实际值，8 次落在范围内">
+      <g font-size="12">
+        <text x="20" y="20" fill="var(--ink)" font-size="13" font-weight="700">连续 10 个月：灰条是月初给的范围，圆点是月底实际【虚构】</text>
+        <g id="fband"></g>
+        <text x="440" y="238" text-anchor="middle" fill="var(--ink-2)">10 次里有 8 次落在范围里（绿色），2 次在范围外（红色）</text>
+      </g>
+    </svg>
+  </figure>
+  <div class="table-wrap"><table>
+    <tr><th style="width:30%">10 个月里落进范围的次数</th><th>说明</th></tr>
+    <tr><td>大约 8 次</td><td><b>刚好</b>：范围定得合适</td></tr>
+    <tr><td>10 次全中</td><td>范围<b>定得太宽</b>了，比如“5 万到 15 万”，永远说中，但没有参考价值</td></tr>
+    <tr><td>只有 5 次</td><td>范围<b>定得太窄、太自信</b>，要放宽</td></tr>
+  </table></div>
+  <p>另外再看两件事：<b>整体差多少</b>（平均每月偏离实际大概多少，初期希望在 15% 以内），以及<b>是不是总往一个方向偏</b>（如果每个月都“说多了”或都“说少了”，说明预测有系统性问题；故意压低预测来保证达成，也会在这里暴露出来）。</p>
+
+  <h3><span class="stepno">6</span>什么时候能对外承诺</h3>
+  <div class="table-wrap"><table>
+    <tr><th style="width:22%">阶段</th><th>可以做什么</th></tr>
+    <tr><td>第 1–2 个月</td><td>只做试运行：给范围，注明“不用于承诺”</td></tr>
+    <tr><td>第 3–5 个月</td><td>如果落进范围的次数达标，内部可以用“比较保守”的数当承诺</td></tr>
+    <tr><td>第 6 个月起</td><td>连续稳定后，才能对业务方正式承诺（承诺值仍用比较保守的数）</td></tr>
+  </table></div>
+  <p>上面预测的是<b>坐车用户总数</b>（承接），其中包括本来就会坐车的人。管理层更关心的是<b>“能多带来多少”</b>：等模块 B 的效果连续 3 个月以上都比较稳定后，就可以用“选中人数 × 模块 B 算出的效果”来预测增量，同样给范围、同样月底对账。新接入的业务线要重新开始计算，不借用别的业务线的记录。</p>
+
+  <div class="note ok"><b>一句话记住模块 F：</b>月初把“被选中 → 能联系上 → 看到 → 坐车”四关乘起来，给出一个范围；月底一关一关换成实际值，看差在哪一关、该归谁；连续多个月大多落在范围里，才可以拿来承诺。</div>
+  <p class="pro">原方案里：“保守 / 最可能 / 乐观”叫 P10 / P50 / P90，“比较保守”叫 P25；“一次只换一个数”叫连环替代法（偏差拆解）；“落进范围的次数”叫区间覆盖率；“平均偏离多少”叫 WAPE；“是不是总往一个方向偏”叫 Bias。原来那张从 100 一路加减到 90 的瀑布图，表达的就是第 4 步这张表。</p>
 </section>
 
 <!-- ================= G ================= -->
 <section id="g">
-  <h2><span class="tag">模块 G</span>有没有副作用</h2>
-  <div class="trio">
-    <div class="q"><div class="lab">问题</div><p>增长是不是靠多发补贴、骚扰用户、挤掉别的活动换来的？</p></div>
-    <div class="m"><div class="lab">打个比方</div><p>体检报告。成绩再好，有一项指标不合格就要先处理。围栏只能“否决”，不能“加分”。</p></div>
-    <div class="w"><div class="lab">得到什么</div><p>一组告警灯，亮了就说明增长有代价。</p></div>
-  </div>
+  <h2><span class="tag">模块 G</span>有没有副作用：一票否决</h2>
+  <p class="lede">增长是不是靠多发补贴、频繁打扰用户、挤掉别的活动换来的？模块 G 给出一组“告警灯”。分 3 步看。</p>
   <div class="story">
-    <div class="who">例子 · 一票否决</div>
-    本月框架带来的增量比上月多了 20%，看起来很好。但同时，<b>每个成交用户花掉的补贴从 1.2 元涨到了 2.6 元</b>，超过历史上 75% 的月份。补贴效率这盏灯亮了，所以“本月价值提升”这个结论不能直接报，要先解释补贴为什么涨。
+    <div class="who">打个比方</div>
+    体检报告。成绩再好，有一项指标不合格，也要先处理。告警灯只能<b>扣分</b>（否决一个结论），不能<b>加分</b>（证明有价值）。
   </div>
-  <div class="grid3">
-    <div class="card" style="margin:0"><b>补贴花得值不值</b><br><span style="font-size:13.5px;color:var(--ink-2)">补贴 ÷ 成交用户</span></div>
-    <div class="card" style="margin:0"><b>是否打扰用户</b><br><span style="font-size:13.5px;color:var(--ink-2)">推送频次、投诉、退订</span></div>
-    <div class="card" style="margin:0"><b>用户留不留得住</b><br><span style="font-size:13.5px;color:var(--ink-2)">下个月还坐不坐车</span></div>
-    <div class="card" style="margin:0"><b>货品是否太集中</b><br><span style="font-size:13.5px;color:var(--ink-2)">是否总推同几个货品</span></div>
-    <div class="card" style="margin:0"><b>是否挤掉人工活动</b><br><span style="font-size:13.5px;color:var(--ink-2)">临时活动、BD 合作的曝光</span></div>
-    <div class="card" style="margin:0"><b>风控</b><br><span style="font-size:13.5px;color:var(--ink-2)">异常领券、风险交易</span></div>
+
+  <h3><span class="stepno">1</span>六盏灯，各看什么</h3>
+  <div class="table-wrap"><table>
+    <tr><th style="width:20%">灯</th><th>看什么</th><th style="width:34%">什么时候亮</th></tr>
+    <tr><td>补贴花得值不值</td><td>每带来一个成交用户，花了多少补贴</td><td>比历史上 75% 的月份都贵</td></tr>
+    <tr><td>是否打扰用户</td><td>每人每月被推送几次；投诉、退订、关闭的比例</td><td>超过设定的上限</td></tr>
+    <tr><td>用户留不留得住</td><td>这批成交用户下个月还坐不坐车</td><td>明显比人工任务带来的用户差</td></tr>
+    <tr><td>货品是否太集中</td><td>是不是总推同几个货品</td><td>集中得过头，可能挤压其他货品</td></tr>
+    <tr><td>是否挤掉人工活动</td><td>临时活动、BD 合作这些人工独有任务，计划曝光的完成了多少</td><td>明显下降</td></tr>
+    <tr><td>风控</td><td>异常领券、风险交易的比例</td><td>按各业务线现有的风控标准</td></tr>
+  </table></div>
+
+  <h3><span class="stepno">2</span>灯亮了怎么办：一个例子</h3>
+  <div class="story">
+    <div class="who">例子 · 补贴灯亮了【虚构】</div>
+    本月框架带来的增量比上月多了 20%，看起来很好。但每带来一个成交用户的补贴，从 1.2 元涨到了 2.6 元，比历史上 75% 的月份都贵，补贴灯亮了。
+    <br>这时“本月价值提升 20%”这个结论<b>不能直接报</b>，要先说清楚补贴为什么涨、值不值。
   </div>
+
+  <h3><span class="stepno">3</span>为什么只能扣分、不能加分</h3>
+  <p>灯不亮，只说明“没发现副作用”，不能说明“带来了价值”，价值只能靠模块 B 算。所以月报里写的是“质量围栏无告警”，而不是“质量提升了多少”。</p>
+
+  <div class="note ok"><b>一句话记住模块 G：</b>六盏灯任何一盏亮了，相关的价值结论就要先停下来解释；全都不亮，也只是“没有副作用”，不代表有功劳。</div>
+  <p class="pro">原方案里这叫“业务质量围栏”；“货品是否太集中”用 HHI 指数衡量；“人工独有任务”是 H3。</p>
 </section>
 
 <!-- ================= 怎么读 ================= -->
@@ -814,7 +1048,7 @@ ol.flow li b{display:block;color:var(--accent);font-size:12px}
     <tr><td>H1 / H2 / H3 / F</td><td>人工经验任务 / BI 半自动任务 / 人工独有活动 / 框架任务</td><td>—</td></tr>
     <tr><td>权重标签</td><td>让任务排得更靠前的加权，属于展示优势</td><td>模块 D</td></tr>
     <tr><td>P10 / P25 / P50 / P90</td><td>保守 / 比较保守（用来承诺）/ 最可能 / 乐观</td><td>8.5 / 9.2 / 9.9 / 11.2 万</td></tr>
-    <tr><td>连环替代法 / 偏差拆解</td><td>一步步把预测换成实际，看差在哪一步</td><td>100 → 90 的瀑布图</td></tr>
+    <tr><td>连环替代法 / 偏差拆解</td><td>从预测出发，一次只把一关换成实际值，看差在哪一关</td><td>模块 F 第 4 步：少的 7,500 人里 7,610 来自“看到任务的人变少”</td></tr>
     <tr><td>安慰剂检验 / 密度检验 / 协变量平衡</td><td>假时间、假分数线 / 线两边人数是否平滑 / 线两边的人像不像</td><td>“怎么知道方法没出错”</td></tr>
     <tr><td>证据等级 F / E1 / E2 / C / N/A</td><td>可信度五星 / 四星 / 两星 / 一星 / 算不了</td><td>“数字的可信度怎么分”</td></tr>
   </table></div>
@@ -853,6 +1087,25 @@ ol.flow li b{display:block;color:var(--accent);font-size:12px}
   if(q){for(var k=0;k<40;k++){var sc=0.405+k*0.01, x=40+(sc-0.40)*1950, c=document.createElementNS(ns,'circle');
     c.setAttribute('cx',x);c.setAttribute('cy',96);c.setAttribute('r',7);
     c.setAttribute('fill',sc>=0.60?'var(--f)':'var(--ink-3)');q.appendChild(c);}}
+
+  // forecast band chart
+  var fb=document.getElementById('fband');
+  if(fb){
+    var acts=[96,103,108,91,115,99,86,104,97,101];
+    function fy(v){return 200-(v-80)*4;}
+    function el(t,a){var e=document.createElementNS(ns,t);for(var k in a)e.setAttribute(k,a[k]);fb.appendChild(e);return e;}
+    el('line',{x1:60,y1:200,x2:840,y2:200,stroke:'var(--line)'});
+    [90,100,110].forEach(function(v){var t=el('text',{x:52,y:fy(v)+4,'text-anchor':'end',fill:'var(--ink-3)','font-size':11});t.textContent=v;
+      el('line',{x1:60,y1:fy(v),x2:840,y2:fy(v),stroke:'var(--line)','stroke-dasharray':'2 4'});});
+    acts.forEach(function(v,i){
+      var x=110+i*76, inb=(v>=88&&v<=112);
+      el('rect',{x:x-14,y:fy(112),width:28,height:fy(88)-fy(112),rx:5,fill:'var(--muted-fill)',stroke:'var(--line)'});
+      el('line',{x1:x-14,y1:fy(100),x2:x+14,y2:fy(100),stroke:'var(--ink-3)','stroke-width':1.5});
+      el('circle',{cx:x,cy:fy(v),r:7,fill:inb?'var(--ok)':'var(--bad)',stroke:'var(--surface)','stroke-width':2});
+      var t=el('text',{x:x,y:216,'text-anchor':'middle',fill:'var(--ink-2)','font-size':11.5});t.textContent=(i+1)+' 月';
+    });
+    var t2=el('text',{x:60,y:40,fill:'var(--ink-3)','font-size':11});t2.textContent='（实际 ÷ 预测 × 100，100 = 正好说中）';
+  }
 
   // slider demo. Model: conversion = 5% + 20% × score, +1.6pp if score ≥ 0.60
   var X0=40,X1=620,Y0=180,Y1=14, C=0.60, E=0.016;
