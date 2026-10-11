@@ -750,7 +750,8 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft Y
   <div class="gcat">业务结构与角色</div>
   <div class="gl">
     <div class="g" id="g-fh"><b>F / H1 / H2 / H3</b><span class="en">task source</span><p>任务来源。F = 框架策略任务（目标 → Agent 分析 → 选人 → 拆分 → 算法配货 / 渠道）；H1 = 人工经验任务，和 F 最可比；H2 = BI 半自动任务，可能带货品权重；H3 = 人工独有任务（临时活动、BD 合作），不可比，也不应被替代。</p></div>
-    <div class="g" id="g-subgroup"><b>子人群</b><span class="en">sub-segment</span><p>框架策略选人的基本单元，每个子人群一个阈值（K2）。分析单位是“子人群 × 周期”。</p></div>
+    <div class="g" id="g-subgroup"><b>子人群</b><span class="en">sub-segment</span><p>框架策略选人的基本单元，每个子人群一个<a class="term" href="#g-yuzhi">阈值</a>（K2）。分析单位是“子人群 × 周期”。</p></div>
+    <div class="g" id="g-yuzhi"><b>子人群阈值</b><span class="en">cutoff · c₀ / c₁ / c₂</span><p>每个子人群自己的入选分数线：选人分数达到就入选，达不到就不入选。按 Top-K 选人时，第 K 名的分数就是实际阈值。例：通勤低频阈值 0.60，0.61 分入选、0.59 分不入选；流失召回阈值 0.75。每个阈值都是一个断点，各阈值落在不同分数上，连起来得到效应-分数曲线。交通的阈值每周变化。c₀ = 初始阈值，c₁ = 扩大时的相似度阈值，c₂ = 缩小时提高后的阈值。</p></div>
     <div class="g" id="g-renqunbao"><b>人群包</b><span class="en">audience package</span><p>任务定向投放的用户列表。框架人群包额外留存<a class="term" href="#g-houxuan">候选标识</a>、选人分数、是否入选、子人群 ID 四个字段，未入选的候选用户也会留存。</p></div>
     <div class="g" id="g-houxuan"><b>候选标识</b><span class="en">candidate flag</span><p>标记用户是否进入了本次选人的候选池（是否被打过分）。被打过分但没选中的用户也要留存，他们就是断点回归的对照组；没进入候选池的用户不能当对照组。例：阈值 0.60，0.59 分未入选的用户是对照组，没被打分的用户不是。</p></div>
     <div class="g" id="g-zigeceng"><b>资格层 / 曝光层</b><p>资格层 = 用户是否在某任务的人群包里，分发之前就确定；曝光层 = 用户是否真的看到了任务，受推荐算法影响。分区按资格层划分，以避开分发层的污染。</p></div>
@@ -773,7 +774,7 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft Y
   <div class="gcat">因果推断方法</div>
   <div class="gl">
     <div class="g" id="g-rdd"><b>断点回归（RDD）</b><span class="en">Regression Discontinuity Design</span><p>当是否接受处理由“分数是否超过阈值”决定时，阈值两侧紧挨着的用户几乎一样，只是一侧被选中、一侧没有。比较两侧结果的跳变，就得到阈值处的因果效应。</p></div>
-    <div class="g" id="g-yunxing"><b>运行变量 / 阈值 / 带宽</b><span class="en">running variable / cutoff / bandwidth</span><p>运行变量 = 决定分组的分数（这里是“分数 − 阈值”）；阈值 c₀ 是分界点；带宽是阈值两侧参与比较的分数范围，越窄越可比，但样本越少。</p></div>
+    <div class="g" id="g-yunxing"><b>运行变量 / <a class="term" href="#g-yuzhi">阈值</a> / 带宽</b><span class="en">running variable / cutoff / bandwidth</span><p>运行变量 = 决定分组的分数（这里是“分数 − 阈值”）；阈值 c₀ 是分界点；带宽是阈值两侧参与比较的分数范围，越窄越可比，但样本越少。</p></div>
     <div class="g" id="g-itt"><b>意向处理效应（ITT）</b><span class="en">Intention-to-Treat</span><p>按“是否被分到处理组”比较，不管用户最后有没有真的看到任务。包含了下线、未曝光等真实运营损耗，是管理层要的口径。</p></div>
     <div class="g" id="g-fuzzy"><b>模糊断点</b><span class="en">fuzzy RDD</span><p>超过阈值后被处理的概率跳变，但不是从 0 跳到 1。例如扩大把 c₀ 下方的人也拉进来了。需要用工具变量修正，否则直接比较会低估效应。</p></div>
     <div class="g" id="g-iv"><b>工具变量</b><span class="en">instrumental variable</span><p>一个只通过“处理”影响结果的变量。这里用“初始是否超过 c₀”作为工具，“周期内入选天数”作为实际处理强度，估计每单位处理的效应。</p></div>
