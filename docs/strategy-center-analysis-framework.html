@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>七个模块白话版</title>
-<meta name="description" content="用一个交通乘车码的例子，把策略中心价值分析框架第 4 章的七个模块讲成大白话。">
+<title>价值分析框架</title>
+<meta name="description" content="策略中心业务价值分析框架 v6：十个分析模块，每个模块先用交通乘车码的例子白话讲解，再附方案口径，含名词解释与落地顺序。">
 <style>
 :root{
   --bg:#f7f6f2; --surface:#ffffff; --surface-2:#f0eee8; --ink:#1d1d1b; --ink-2:#55534d; --ink-3:#8a877f;
@@ -108,65 +108,132 @@ ol.flow{list-style:none;padding:0;margin:16px 0;display:grid;grid-template-colum
 ol.flow li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--ink-2);line-height:1.5}
 ol.flow li b{display:block;color:var(--accent);font-size:12px}
 ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
-@media (max-width:800px){ol.flow,ol.flow.flow4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:800px){ol.flow,ol.flow.flow4,ol.flow.flow5{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .stepno{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--surface);font-size:14px;margin-right:8px;vertical-align:1px}
+details.spec{margin:18px 0 0;border:1px solid var(--line);border-left:4px solid var(--ink-3);border-radius:0 12px 12px 0;background:var(--surface)}
+details.spec > summary{cursor:pointer;padding:10px 16px;font-size:14px;font-weight:700;color:var(--ink-2);list-style:none}
+details.spec > summary::-webkit-details-marker{display:none}
+details.spec > summary::before{content:"▸ ";color:var(--accent)}
+details.spec[open] > summary::before{content:"▾ "}
+details.spec[open] > summary{border-bottom:1px solid var(--line)}
+.spec-body{padding:12px 16px 14px;font-size:14px}
+.kv{display:grid;grid-template-columns:88px minmax(0,1fr);gap:6px 14px;margin:0}
+.kv dt{color:var(--ink-3);font-size:13px;padding-top:2px}
+.kv dd{margin:0}
+@media (max-width:600px){.kv{grid-template-columns:minmax(0,1fr)}.kv dt{padding-top:6px}}
+.ev{display:inline-block;font-size:12px;font-weight:600;border-radius:5px;padding:0 6px;margin:0 2px;white-space:nowrap;font-family:var(--mono)}
+.ev-F{background:var(--ok-soft);color:var(--ok)} .ev-E1{background:var(--accent-soft);color:var(--accent)} .ev-E2{background:var(--warn-soft);color:var(--warn)} .ev-C{background:var(--surface-2);color:var(--ink-2)} .ev-NA{background:var(--bad-soft);color:var(--bad)}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:1px 10px}
+.gsearch{width:100%;max-width:420px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px}
+.gcat{font-size:12.5px;color:var(--ink-3);letter-spacing:.06em;margin:22px 0 6px}
+.gl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.gl{grid-template-columns:minmax(0,1fr)}}
+.g{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;scroll-margin-top:16px}
+.g:target{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.g b{font-size:14.5px} .g .en{font-size:12px;color:var(--ink-3);margin-left:6px}
+.g p{margin:4px 0 0;font-size:13.5px;color:var(--ink-2);line-height:1.65}
+.g p.pl{color:var(--ink);font-weight:600}
+.g.hide{display:none}
+ol.flow.flow5{grid-template-columns:repeat(5,minmax(0,1fr))}
 .foot{font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:16px}
 </style>
 </head>
 <body>
 
 <header class="hero">
-  <div class="kicker">策略中心业务价值分析框架 · 第 4 章 · 白话版</div>
-  <h1>七个模块，用一个例子讲明白</h1>
-  <p>原方案里的断点回归、ITT、外推、工具变量这些词，背后其实是几个很朴素的问题。这一版不先讲方法，先讲<b>要回答什么问题</b>，再<b>打个比方</b>，最后<b>用一组数字算一遍</b>。看懂之后，再看页面底部的“专业词对照表”，就知道原方案里每个词指的是什么。</p>
-  <p style="font-size:13.5px;color:var(--ink-3)">文中所有数字都是<b>虚构</b>的，只用来演示算法；例子统一用“交通 · 乘车码”。</p>
+  <div class="kicker">策略中心业务价值分析框架 · v6 · 白话讲解与方案口径合一</div>
+  <h1>策略中心业务价值分析：十个模块</h1>
+  <p>这一页把整套分析方案放在一起。每个模块先讲<b>要回答什么问题</b>，再<b>打个比方</b>，然后<b>用一组数字算一遍</b>；需要专业定义时，展开模块末尾的<b>“方案口径”</b>。v6 新增三类比较：框架自己和自己比（模块 H）、人工任务分类与迁移（模块 I）、框架和人工比（模块 J）。</p>
+  <p style="font-size:13.5px;color:var(--ink-3)">文中所有数字都是<b>虚构</b>的，只用来演示方法；例子统一用“交通 · 乘车码”。完整方法与口径见 <code>strategy-center-value-framework-overview.md</code>（总览版）和 <code>strategy-center-value-framework.md</code>（详细方案）。</p>
   <div class="toolbar">
     <button class="btn" id="themeBtn" type="button">切换深浅色</button>
-    <a class="btn" href="./strategy-center-chapter4-modules.html">查看专业版 →</a>
+    <button class="btn" id="specBtn" type="button">展开全部方案口径</button>
+    <a class="btn" href="#dict">跳到名词解释 ↓</a>
   </div>
 </header>
 
 <div class="wrap">
 <nav class="toc">
   <div class="grp">先看这里</div>
-  <a href="#onepage">一页看懂七个模块</a>
+  <a href="#onepage">一页看懂十个模块</a>
   <a href="#core">最核心的难题</a>
   <a href="#trust">数字的可信度怎么分</a>
-  <div class="grp">七个模块</div>
+  <div class="grp">底座</div>
   <a href="#a">A 谁被覆盖了</a>
+  <div class="grp">尺子一：和没被选中的人比</div>
   <a href="#b">B 一步步看懂（1–6 步）</a>
   <a href="#b-ext">　B 推到所有人（第 7 步）</a>
   <a href="#b-cal">　B 定期抽查（第 8 步）</a>
   <a href="#b-ops">　B 运营中的 7 个麻烦</a>
   <a href="#b-data">　B 附：数据与术语</a>
+  <div class="grp">尺子二：和自己的过去比</div>
+  <a href="#h">H 是不是越来越好</a>
+  <div class="grp">尺子三：和人工比</div>
   <a href="#c">C 任务内容好不好</a>
+  <a href="#i">I 人工任务分类与迁移</a>
+  <a href="#j">J 和接入前比 · 正面对决</a>
+  <div class="grp">边界与管理</div>
   <a href="#d">D 推荐算法的功劳</a>
   <a href="#e">E 省了多少人力</a>
   <a href="#f">F 预测准不准</a>
   <a href="#g">G 有没有副作用</a>
-  <div class="grp">读数字</div>
+  <div class="grp">读数字与落地</div>
   <a href="#read">管理层数字怎么读</a>
   <a href="#check">怎么知道方法没出错</a>
-  <a href="#dict">专业词对照表</a>
+  <a href="#plan">落地顺序</a>
+  <a href="#dict">名词解释</a>
 </nav>
 
 <main>
 
 <!-- ================= 一页看懂 ================= -->
 <section id="onepage">
-  <h2>一页看懂七个模块</h2>
-  <p class="lede">七个模块围绕同一个问题：<b>如果没有策略中心，交通乘车码会少多少交易用户？</b>每个模块负责这个问题的一部分。</p>
+  <h2>一页看懂十个模块</h2>
+  <p class="lede">十个模块围绕同一个问题：<b>如果没有策略中心，业务会少多少？</b>用三把“尺子”去量：和没被选中的人比、和自己的过去比、和人工比。</p>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 330" role="img" aria-label="三把尺子与十个模块的关系">
+      <g font-size="12.5" text-anchor="middle">
+        <rect x="200" y="10" width="460" height="48" rx="10" fill="var(--accent)"/>
+        <text x="430" y="32" fill="var(--surface)" font-weight="700" font-size="14">管理层主问题：策略中心带来了多少业务增量？</text>
+        <text x="430" y="50" fill="var(--surface)" font-size="11.5">它还在变好吗？比人工强吗？能承诺吗？</text>
+        <line x1="430" y1="58" x2="430" y2="76" stroke="var(--ink-3)"/>
+        <rect x="20" y="80" width="260" height="128" rx="12" fill="var(--f-soft)" stroke="var(--f)" stroke-width="2"/>
+        <text x="150" y="104" fill="var(--f)" font-weight="700">尺子一：和“没被选中的人”比</text>
+        <rect x="40" y="118" width="220" height="40" rx="8" fill="var(--surface)" stroke="var(--f)"/>
+        <text x="150" y="143" fill="var(--ink)" font-weight="700">B 到底多带来多少 ⭐</text>
+        <text x="150" y="186" fill="var(--ink-2)" font-size="11.5">增量的主证据</text>
+        <rect x="300" y="80" width="260" height="128" rx="12" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="2"/>
+        <text x="430" y="104" fill="var(--ok)" font-weight="700">尺子二：和自己的过去比</text>
+        <rect x="320" y="118" width="220" height="40" rx="8" fill="var(--surface)" stroke="var(--ok)"/>
+        <text x="430" y="143" fill="var(--ink)" font-weight="700">H 是不是越来越好</text>
+        <text x="430" y="186" fill="var(--ink-2)" font-size="11.5">主证据：B 的台阶逐月变高</text>
+        <rect x="580" y="80" width="260" height="128" rx="12" fill="var(--h-soft)" stroke="var(--h)" stroke-width="2"/>
+        <text x="710" y="104" fill="var(--h)" font-weight="700">尺子三：和人工比</text>
+        <rect x="596" y="114" width="228" height="26" rx="6" fill="var(--surface)" stroke="var(--h)"/><text x="710" y="132" fill="var(--ink)">C 同样的人，任务内容谁好</text>
+        <rect x="596" y="146" width="228" height="26" rx="6" fill="var(--surface)" stroke="var(--h)"/><text x="710" y="164" fill="var(--ink)">I 哪些人工任务该迁移</text>
+        <rect x="596" y="178" width="228" height="26" rx="6" fill="var(--surface)" stroke="var(--h)"/><text x="710" y="196" fill="var(--ink)">J 和接入前比 · 正面对决</text>
+        <rect x="20" y="226" width="820" height="40" rx="10" fill="var(--surface-2)" stroke="var(--line)"/>
+        <text x="430" y="251" fill="var(--ink)"><tspan font-weight="700">底座与边界：</tspan>A 谁被覆盖了（事实底座）　·　D 推荐算法的功劳不算我们的</text>
+        <rect x="20" y="276" width="820" height="40" rx="10" fill="var(--surface-2)" stroke="var(--line)"/>
+        <text x="430" y="301" fill="var(--ink)"><tspan font-weight="700">管理价值：</tspan>E 省了多少人力　·　F 预测准不准、能不能承诺　·　G 有没有副作用（一票否决）</text>
+      </g>
+    </svg>
+    <figcaption>三把尺子量的东西不同，结论分开写，不相加。</figcaption>
+  </figure>
   <div class="table-wrap"><table>
-    <tr><th style="width:12%">模块</th><th style="width:30%">它回答的大白话问题</th><th>打个比方</th><th style="width:16%">算不算功劳</th></tr>
-    <tr><td><b>A</b></td><td>框架任务覆盖了谁？和人工重叠多少？</td><td>先点名：哪些学生被哪位老师叫去补课了</td><td>只是事实，不算功劳</td></tr>
-    <tr><td><b>B</b> ⭐</td><td>被策略中心选中，到底<b>多带来</b>了多少交易？</td><td>及格线：比较 60 分和 59 分的学生</td><td><b>这就是功劳</b></td></tr>
-    <tr><td><b>C</b></td><td>同样一个人，看框架任务还是人工任务，哪个更容易成交？</td><td>同一位顾客，随机端上两道菜，看哪道更受欢迎</td><td>解释功劳从哪来，<b>不重复加</b></td></tr>
-    <tr><td><b>D</b></td><td>哪部分提升是推荐算法的功劳？</td><td>菜做得好是厨师的功劳，推荐得好是服务员的功劳</td><td>归推荐团队</td></tr>
-    <tr><td><b>E</b></td><td>省了多少人力和时间？</td><td>以前三个人做一周，现在一个人做一天</td><td>单独报，不和业务数字相加</td></tr>
+    <tr><th style="width:9%">模块</th><th style="width:30%">它回答的大白话问题</th><th>打个比方</th><th style="width:20%">算不算功劳</th></tr>
+    <tr><td><b>A</b></td><td>框架任务覆盖了谁？和人工重叠多少？</td><td>先点名：哪些学生被哪位老师叫去补课了</td><td>只是事实</td></tr>
+    <tr><td><b>B</b> ⭐</td><td>被选中，到底<b>多带来</b>了多少？</td><td>比较 60 分和 59 分的学生</td><td><b>这就是功劳</b></td></tr>
+    <tr><td><b>C</b></td><td>同样的人，看框架任务还是人工任务更容易成交？</td><td>随机端上两位厨师的菜</td><td>解释功劳从哪来，不相加</td></tr>
+    <tr><td><b>D</b></td><td>哪部分提升是推荐算法的？</td><td>厨师的功劳和服务员的功劳分开记</td><td>归推荐团队</td></tr>
+    <tr><td><b>E</b></td><td>省了多少人力和时间？</td><td>以前三个人做一周，现在一个人做一天</td><td>单独报</td></tr>
     <tr><td><b>F</b></td><td>月初说的数，月底能不能兑现？</td><td>天气预报准不准</td><td>体现“可承诺”</td></tr>
-    <tr><td><b>G</b></td><td>有没有用多发补贴、骚扰用户换来的增长？</td><td>体检报告，一项不合格就一票否决</td><td>只能扣分，不能加分</td></tr>
+    <tr><td><b>G</b></td><td>有没有靠多发补贴、骚扰用户换增长？</td><td>体检，一项不合格就一票否决</td><td>只能扣分</td></tr>
+    <tr><td><b>H</b></td><td>框架是不是一个月比一个月做得好？</td><td>不看考了多少分，看比上次进步了多少</td><td>“越来越好”的依据</td></tr>
+    <tr><td><b>I</b></td><td>哪些人工任务是临时的，哪些能交给框架？</td><td>搬家前先分东西</td><td>迁移进度是事实</td></tr>
+    <tr><td><b>J</b></td><td>和接入前比好了多少？和某项人工任务正面比谁强？</td><td>两位厨师同样预算比赛做同一道菜</td><td>对决结果可以认领；接入前后只作背景</td></tr>
   </table></div>
-  <div class="note info">记住一句话就够了：<b>B 算功劳，C 解释功劳从哪来，D 划掉不是我们的功劳，A/E/F 是辅助事实，G 负责一票否决。</b></div>
+  <div class="note info">记住一句话：<b>B 算功劳，H 看功劳是不是在变大，C/I/J 和人工比，D 划掉不是我们的功劳，A/E/F 是辅助事实，G 负责一票否决。</b>每个模块先讲白话，下面的“方案口径”可以展开看专业定义；页面顶部的按钮可以一次全部展开。</div>
 </section>
 
 <!-- ================= 核心难题 ================= -->
@@ -300,6 +367,15 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
 
   <div class="note ok"><b>一句话记住模块 A：</b>先把所有人按“谁圈了他”分成四组，数清楚人数和重叠。这是事实，不是功劳；功劳要到模块 B 去算。</div>
   <p class="pro">原方案里：四组叫 Z1（只有框架）、Z2（只有人工）、Z3（两边都有）、Z4（谁都没覆盖）；真新覆盖叫 Z1a，替代覆盖叫 Z1b；“被圈进名单”叫资格层，“看到了任务”叫曝光层；“承接”是指看到任务后成交。</p>
+  <details class="spec"><summary>方案口径 · 模块 A</summary><div class="spec-body">
+    <dl class="kv">
+      <dt>问题</dt><dd>框架任务覆盖了谁、曝光了谁、承接了多少；与人工重叠多少。</dd>
+      <dt>方法</dt><dd>按周期初的人群包成员关系（资格层）分 Z1 仅框架（Z1a 真新覆盖 / Z1b 替代覆盖）、Z2 仅人工、Z3 共同覆盖、Z4 均未覆盖。用户层互斥；任务层承接允许重叠，但必须同时报去重值；Z3 的结果整体标“共同”，按曝光来源的拆分只作描述【C】；F 与人工承接用相同的 N 日窗口和首次曝光规则。</dd>
+      <dt>v6</dt><dd>Z2、Z3 中的人工部分按任务性质打次级标签（临时性 / 可迁移·待迁移 / 已迁移 / 暂不可迁移，见模块 I）。Z1b 替代覆盖与“已迁移”任务对应。</dd>
+      <dt>等级</dt><dd><span class="ev ev-F">F</span>　主要风险：被当成贡献引用。</dd>
+      <dt>状态</dt><dd><span class="status">✓ 可以做</span>　P5（结果指标）、P6（任务来源字段）、P7（历史人群包）影响细节。详见详细方案 §4。</dd>
+    </dl>
+  </div></details>
 </section>
 
 
@@ -651,6 +727,19 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
     <tr><td>定期抽查</td><td>校准型留出（holdout）</td></tr>
     <tr><td>两边以前像不像 / 有没有人挤过线 / 没发券时有没有台阶</td><td>协变量平衡 / 密度检验 / 安慰剂检验</td></tr>
   </table></div>
+  <details class="spec"><summary>方案口径 · 模块 B</summary><div class="spec-body">
+    <dl class="kv">
+      <dt>运行变量</dt><dd>选人分数 − 该子人群阈值 c₀；交通用周内分位数。带宽数据驱动选择，同时报 0.5 倍和 2 倍带宽。</dd>
+      <dt>结果</dt><dd>结果窗口内是否发生目标行为（以及笔数、金额，P99 截尾），不论是否曝光（ITT）。分析单位：子人群 × 周期。</dd>
+      <dt>计算</dt><dd>① 每个“子人群 × 周期”做一次断点估计；② 带子人群固定效应合并，按是否同时被人工覆盖分层，各阈值拼成效应-分数曲线；扩大部分在相似度分（c₁）上单独估计；交通按上周入选状态分层；③ 业务增量 = 初始入选部分（带宽内直接证据 + 带宽外沿曲线外推）+ 扩大新增部分。只在观测到的阈值范围内外推，超出范围用最近一段效应并单列人数。</dd>
+      <dt>运营处理</dt><dd>下线：ITT 仍有效，作主口径。调优：一律以初始阈值 c₀ 分组；扩大把 c₀ 下方的人拉入时按模糊断点修正（初始是否超过 c₀ 为工具变量，周期内入选天数为处理）；缩小只作诊断；不能用周期内重算的分数作运行变量。交通：按上周入选状态分层（必须），“上周未入选”层合并 ≥ 4 周，入选路径法交叉检查。随机桶内 RDD 只作诊断。</dd>
+      <dt>调优质量</dt><dd>扩大决策边际增量（c₁ 处效应）【E1】、缩小决策边际增量（c₂ 处）【E1 诊断】、下线决策正确率【E2】、调优信号与真实增量一致性【F】。调优信号建议改用阈值两侧实时差，并向子人群历史效应收缩。</dd>
+      <dt>校准</dt><dd>定期留出：每个子人群按分数分位分层随机留出 5% 入选用户，一个完整产出周期；交通建议每月 1 周（全年成本约 1.25%），缴费每季度 1 个月（约 1.7%），叠加触发式校准。外推估计落在留出 95% 区间内 → 外推可信；连续同向偏离 → 修正曲线；明显超出 → 外推降为 E2。补充：阈值附近 ±2 个百分位随机入选；扩大时随机分批。</dd>
+      <dt>等级</dt><dd>阈值处 <span class="ev ev-E1">E1</span>；外推 <span class="ev ev-E1">E1 + 假设</span>；扩大决策 <span class="ev ev-E1">E1</span>；调优功能整体价值 <span class="ev ev-C">C</span>。</dd>
+      <dt>假设</dt><dd>A1 无法挤过阈值；A2 阈值处无其他干预跳变；A3 无溢出；A4 效应随分数平滑；A5 相似度分留存且不可操纵；A6/A13 交通跨周分层后可比；A11 c₀ 下方被扩大拉入的比例低；A12 截尾后方差可接受。</dd>
+      <dt>状态</dt><dd><span class="status">✓ 可以做</span>　P1、P2、P3 确认后定稿。详见总览版 §3、详细方案 §3、§5。</dd>
+    </dl>
+  </div></details>
 </section>
 
 
@@ -715,6 +804,16 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
 
   <div class="note ok"><b>一句话记住模块 C：</b>在随机组里，让同样的人随机看到框架任务或人工任务，比出来的差别就是任务内容的好坏。它用来解释 B 的效果从哪来，不能和 B 相加。</div>
   <p class="pro">原方案里：随机组叫随机桶；“框架和人工都选中的人”是 Z3；凭经验的人工任务叫 H1，BI 半自动任务叫 H2；这个模块的结论可信度是 E1。</p>
+  <details class="spec"><summary>方案口径 · 模块 C</summary><div class="spec-body">
+    <dl class="kv">
+      <dt>方法</dt><dd>随机桶内的 Z3 用户中，以“周期内第一次定向曝光是 F 任务还是人工任务”分组（等概率随机，K4），比较结果窗口内的转化。分别和 H1、H2 比较（随机桶内权重不生效）。</dd>
+      <dt>比较对象</dt><dd>v6：只比非临时性人工任务（模块 I）；临时性任务不参与比较。</dd>
+      <dt>定位</dt><dd>解释模块 B 的增量来源（组合好还是找人准），不与模块 B 相加。按任务做迁移决策用模块 J2。</dd>
+      <dt>限制</dt><dd>随机分发下的结论；测不了人群识别价值。虚构量级下单周期可检测差异约 0.8pp，合并 3 期约 0.5pp。</dd>
+      <dt>等级</dt><dd><span class="ev ev-E1">E1</span>　假设 A7 随机桶内等概率、A8 hash 与行为无关。</dd>
+      <dt>状态</dt><dd><span class="status">✓ 可以做</span>　详见详细方案 §6.2（V2 / M3）。</dd>
+    </dl>
+  </div></details>
 </section>
 
 <!-- ================= D ================= -->
@@ -775,6 +874,15 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
 
   <div class="note ok"><b>一句话记住模块 D：</b>算法组和随机组的差别是推荐算法的功劳，记给推荐团队；它不能和策略中心的增量相加，也不能拿两个组的数交叉比。</div>
   <p class="pro">原方案里：算法组叫算法桶，随机组叫随机桶，按用户 ID 分组叫 hash 分流，第 4 步叫 A/A 检验；“记在推荐团队名下”对应“分发层隔离”。</p>
+  <details class="spec"><summary>方案口径 · 模块 D</summary><div class="spec-body">
+    <dl class="kv">
+      <dt>方法</dt><dd>算法桶 − 随机桶 → 推荐算法价值，归推荐团队；某类任务在两桶中的曝光份额差 → 权重和算法对该类任务的影响，归分发层；两桶在分发前月份做 A/A 平衡检验。</dd>
+      <dt>权重</dt><dd>胜出率、曝光份额、每次曝光转化率受权重标签污染，只在同一权重档位、流量位、用户分层内比较。</dd>
+      <dt>禁止</dt><dd>跨桶比较；把策略中心增量与推荐算法提升相加。</dd>
+      <dt>等级</dt><dd><span class="ev ev-E1">E1</span>　主要风险：两个桶不平衡。</dd>
+      <dt>状态</dt><dd><span class="status">✓ 可以做</span>　详见详细方案 §7。</dd>
+    </dl>
+  </div></details>
 </section>
 
 <!-- ================= E ================= -->
@@ -808,6 +916,19 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
   <p class="pro">人日最好来自工时登记；没有登记的话只能靠抽样问卷估算，可信度会低一档。</p>
 
   <div class="note ok"><b>一句话记住模块 E：</b>数清楚“少用了多少人、快了多少天、多覆盖了多少人”。折成钱的前提是人力真的被用到了别处。</div>
+  <details class="spec"><summary>方案口径 · 模块 E</summary><div class="spec-body">
+    <div class="table-wrap"><table>
+      <tr><th>指标</th><th>定义</th><th>等级</th></tr>
+      <tr><td>自动化任务占比</td><td>F 任务上线数 ÷ 定向任务上线总数；另按曝光份额计算</td><td><span class="ev ev-F">F</span></td></tr>
+      <tr><td>目标到上线周期</td><td>目标录入 → 首个任务上线（中位数、P90）；人工“想法 → 创建”段需访谈</td><td><span class="ev ev-F">F</span> / <span class="ev ev-E2">E2</span></td></tr>
+      <tr><td>运营 / BI 人日</td><td>按 H1 / H2 / H3 / 审核框架任务拆分；可货币化，前提是释放的人力被重新配置</td><td>登记 <span class="ev ev-F">F</span>；问卷 <span class="ev ev-E2">E2</span></td></tr>
+      <tr><td>覆盖广度</td><td>定向覆盖去重人数；Z1、Z1a 人数</td><td><span class="ev ev-F">F</span></td></tr>
+      <tr><td>供给盘活率</td><td>有 ≥ 1 个任务的可投货品数 ÷ 可投货品总数</td><td><span class="ev ev-F">F</span>（无统一货品池时 <span class="ev ev-NA">N/A</span>）</td></tr>
+      <tr><td>生产稳定性</td><td>按时产出率、失败 / 人工回退次数、任务数变异系数</td><td><span class="ev ev-F">F</span></td></tr>
+      <tr><td>迁移率（v6）</td><td>见模块 I；按运营人日计算的迁移率与人日节省相互印证</td><td><span class="ev ev-F">F</span></td></tr>
+    </table></div>
+    <p style="font-size:13.5px;color:var(--ink-2);margin:6px 0 0">效率与业务结果分开报告，不合成总 ROI。人日精度取决于 P8。详见详细方案 §8。</p>
+  </div></details>
 </section>
 
 <!-- ================= F ================= -->
@@ -934,6 +1055,16 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
 
   <div class="note ok"><b>一句话记住模块 F：</b>月初把“被选中 → 能联系上 → 看到 → 坐车”四关乘起来，给出一个范围；月底一关一关换成实际值，看差在哪一关、该归谁；连续多个月大多落在范围里，才可以拿来承诺。</div>
   <p class="pro">原方案里：“保守 / 最可能 / 乐观”叫 P10 / P50 / P90，“比较保守”叫 P25；“一次只换一个数”叫连环替代法（偏差拆解）；“落进范围的次数”叫区间覆盖率；“平均偏离多少”叫 WAPE；“是不是总往一个方向偏”叫 Bias。原来那张从 100 一路加减到 90 的瀑布图，表达的就是第 4 步这张表。</p>
+  <details class="spec"><summary>方案口径 · 模块 F</summary><div class="spec-body">
+    <dl class="kv">
+      <dt>承接预测</dt><dd>Σ 子人群（入选人数 × 可投放率 × 曝光率 × 曝光后转化率）。各因子用近 3 个月同一子人群数据，稀疏格子向行业线均值收缩（经验贝叶斯）；自助抽样输出 P10 / P50 / P90。</dd>
+      <dt>增量预测</dt><dd>入选人数 × 模块 B 历史效应（含外推）；模块 B 连续 ≥ 3 个周期稳定后启用【E1】。</dd>
+      <dt>偏差拆解</dt><dd>连环替代法，固定顺序“规模 → 可投放 → 曝光 → 转化”，各段之和等于总偏差。归属：规模 → 策略中心；可投放 → 策略中心 + 渠道 / 风控；曝光 → 分发层；转化 → 策略中心 + 外部因素。调优和下线：预测以初始版本为准，影响单列说明。</dd>
+      <dt>确定性</dt><dd>WAPE = Σ|实际 − P50| ÷ Σ实际（初期 ≤ 15%）；Bias = Σ(实际 − P50) ÷ Σ实际（±5% 内且不长期同向）；区间覆盖率（接近 80%）；承诺完成率 = 实际 ≥ P25 的月数占比（≥ 80%）。</dd>
+      <dt>阶段</dt><dd>第 1–2 月试运行；第 3–5 月内部以 P25 承诺；第 6 月起对外承诺。新行业线重新计数。</dd>
+      <dt>状态</dt><dd><span class="status">✓ 可以做</span>　需要 ≥ 3 个周期。详见详细方案 §10。</dd>
+    </dl>
+  </div></details>
 </section>
 
 <!-- ================= G ================= -->
@@ -968,6 +1099,362 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
 
   <div class="note ok"><b>一句话记住模块 G：</b>六盏灯任何一盏亮了，相关的价值结论就要先停下来解释；全都不亮，也只是“没有副作用”，不代表有功劳。</div>
   <p class="pro">原方案里这叫“业务质量围栏”；“货品是否太集中”用 HHI 指数衡量；“人工独有任务”是 H3。</p>
+  <details class="spec"><summary>方案口径 · 模块 G</summary><div class="spec-body">
+    <div class="table-wrap"><table>
+      <tr><th>围栏</th><th>定义</th><th>告警逻辑</th></tr>
+      <tr><td>补贴效率</td><td>框架任务补贴 ÷ 承接转化，按行业线历史分位数比较</td><td>高于历史 P75</td></tr>
+      <tr><td>用户打扰</td><td>定向任务人均月曝光频次；退订、关闭、投诉率</td><td>高于阈值</td></tr>
+      <tr><td>转化质量</td><td>承接用户 30 日复购或留存（交通：次月乘车率）</td><td>低于同分层人工任务，标【C】说明</td></tr>
+      <tr><td>货品集中度</td><td>F 任务曝光货品的 HHI；长尾货品占比</td><td>过度集中</td></tr>
+      <tr><td>人工独有任务受挤压</td><td>临时性任务（含 H3）曝光达成率</td><td>明显下降</td></tr>
+      <tr><td>风险</td><td>风险交易、异常领券比例</td><td>按各行业线风控口径</td></tr>
+    </table></div>
+    <p style="font-size:13.5px;color:var(--ink-2);margin:6px 0 0">只用于否决价值主张，不证明价值。详见详细方案 §9。</p>
+  </div></details>
+</section>
+
+<!-- ================= H ================= -->
+<section id="h">
+  <h2><span class="tag">模块 H</span>框架自己和自己比：是不是越来越好</h2>
+  <p class="lede">框架策略自己也在迭代：选人模型、规则、货品和渠道配置都会更新。模块 H 回答：<b>它是不是一个月比一个月做得好？</b>分 5 步看。</p>
+  <ol class="flow flow5">
+    <li><b>第 1 步</b>看哪三个数</li>
+    <li><b>第 2 步</b>直接和上月比</li>
+    <li><b>第 3 步</b>三个陷阱</li>
+    <li><b>第 4 步</b>扣掉陷阱再比</li>
+    <li><b>第 5 步</b>最硬的证据</li>
+  </ol>
+
+  <h3><span class="stepno">1</span>看哪三个数</h3>
+  <p>把本月被框架运营的人（本月入选框架人群包的人），按月初的状态分成三类，每类看一个数：</p>
+  <div class="grid3">
+    <div class="card" style="margin:0"><b>老客留存率</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">老客小王上月坐过车。<b>本月还坐吗？</b>上月坐过车的老客里，本月还坐的比例。</p></div>
+    <div class="card" style="margin:0"><b>新客转化率</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">新客小林从来没坐过。<b>本月第一次坐了吗？</b>新客里本月完成首单的比例。</p></div>
+    <div class="card" style="margin:0"><b>流失召回率</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">小吴以前常坐，已经两个多月没坐了。<b>本月回来了吗？</b>流失用户里本月重新坐车的比例。</p></div>
+  </div>
+  <p class="pro">“老客 / 新客 / 流失”按月初的状态划分，月内不变。交通暂定：连续 2 个月以上没坐车算流失，具体口径待各业务线确认。</p>
+
+  <h3><span class="stepno">2</span>直接和上月比</h3>
+  <div class="table-wrap"><table>
+    <tr><th>指标【虚构】</th><th>上月（8 月）</th><th>本月（9 月）</th><th>变化</th></tr>
+    <tr><td>老客留存率</td><td>72.0%</td><td>74.5%</td><td style="color:var(--ok);font-weight:700">+2.5 个百分点</td></tr>
+    <tr><td>新客转化率</td><td>8.0%</td><td>9.2%</td><td style="color:var(--ok);font-weight:700">+1.2 个百分点</td></tr>
+    <tr><td>流失召回率</td><td>5.0%</td><td>6.5%</td><td style="color:var(--ok);font-weight:700">+1.5 个百分点</td></tr>
+  </table></div>
+  <p>三个数都涨了。能说“框架策略变强了”吗？<b>还不能。</b>先看下面三个陷阱。</p>
+
+  <h3><span class="stepno">3</span>三个陷阱</h3>
+  <div class="story">
+    <div class="who">陷阱 ① · 大家都在涨</div>
+    9 月开学，通勤恢复，所有人都多坐车。那些没被任何任务覆盖的同类老客，留存率也从 70.0% 涨到了 72.0%。这 2 个百分点和框架没关系。
+  </div>
+  <div class="story">
+    <div class="who">陷阱 ② · 人换了</div>
+    本月框架选新客时更挑了，高分新客的占比从 30% 升到 45%。高分的人本来就更容易坐车，所以转化率自然好看。反过来，如果本月扩大了人群，加进来很多分数一般的人，指标就会被拉低，哪怕策略其实变好了。
+  </div>
+  <div class="story">
+    <div class="who">陷阱 ③ · 有人本来就会回来</div>
+    刚流失的人里，有一部分不管发不发券，本来就会自己回来。召回率涨了，可能只是这个月刚流失的人多。
+  </div>
+  <p class="pro">还有一个相关的坑：不能拿“本月入选的这批人”本月和上月的表现比。他们往往是上月有变化才被选中的，下个月会自然回落一些（原方案叫均值回归）。</p>
+
+  <h3><span class="stepno">4</span>扣掉陷阱再比</h3>
+  <p>两个调整：<b>先把人群结构固定成和上月一样</b>（每个分数段、每类人按上月的比例来算），<b>再减掉没被运营的同类人同期涨了多少</b>：</p>
+  <div class="table-wrap"><table>
+    <tr><th>指标【虚构】</th><th>直接比</th><th>固定人群结构后</th><th>没被运营的同类人同期</th><th>扣掉之后</th></tr>
+    <tr><td>老客留存率</td><td>+2.5</td><td>+2.4</td><td>+2.0</td><td style="font-weight:700">+0.4</td></tr>
+    <tr><td>新客转化率</td><td>+1.2</td><td>+0.7</td><td>+0.3</td><td style="font-weight:700">+0.4</td></tr>
+    <tr><td>流失召回率</td><td>+1.5</td><td>+1.4</td><td>+1.0</td><td style="font-weight:700">+0.4</td></tr>
+  </table></div>
+  <p>单位都是百分点。扣掉之后，每个指标都只剩约 0.4 个百分点，这才更接近“策略本身变好了多少”。但对照的同类人和框架人群毕竟不完全一样，所以这一层可信度只有两星，内部看。</p>
+
+  <h3><span class="stepno">5</span>最硬的证据：台阶是不是在变高</h3>
+  <p>模块 B 每个月都会量一次分数线处的“台阶”，也就是被选中真正多带来的效果。<b>如果台阶一个月比一个月高，才说明策略本身在变强。</b>季节和人群变化影响不到它，因为它每个月比的都是线两边几乎一样的人。</p>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 250" role="img" aria-label="三类人群的台阶高度在 7 到 9 月逐月上升">
+      <g font-size="12">
+        <text x="20" y="20" fill="var(--ink)" font-size="13" font-weight="700">三类人群在分数线处的台阶高度（百分点）【虚构】</text>
+        <line x1="120" y1="210" x2="780" y2="210" stroke="var(--ink-3)"/>
+        <line x1="120" y1="140" x2="780" y2="140" stroke="var(--line)" stroke-dasharray="2 4"/>
+        <line x1="120" y1="70" x2="780" y2="70" stroke="var(--line)" stroke-dasharray="2 4"/>
+        <g fill="var(--ink-3)" font-size="11" text-anchor="end"><text x="110" y="214">0</text><text x="110" y="144">1.0</text><text x="110" y="74">2.0</text></g>
+        <g fill="var(--ink-2)" text-anchor="middle"><text x="220" y="230">7 月</text><text x="450" y="230">8 月</text><text x="680" y="230">9 月</text></g>
+        <polyline points="220,140 450,126 680,119" fill="none" stroke="var(--ink-3)" stroke-width="3"/>
+        <polyline points="220,105 450,91 680,70" fill="none" stroke="var(--f)" stroke-width="3"/>
+        <polyline points="220,84 450,77 680,56" fill="none" stroke="var(--z3)" stroke-width="3"/>
+        <g stroke="var(--surface)" stroke-width="2">
+          <circle cx="220" cy="140" r="5" fill="var(--ink-3)"/><circle cx="450" cy="126" r="5" fill="var(--ink-3)"/><circle cx="680" cy="119" r="5" fill="var(--ink-3)"/>
+          <circle cx="220" cy="105" r="5" fill="var(--f)"/><circle cx="450" cy="91" r="5" fill="var(--f)"/><circle cx="680" cy="70" r="5" fill="var(--f)"/>
+          <circle cx="220" cy="84" r="5" fill="var(--z3)"/><circle cx="450" cy="77" r="5" fill="var(--z3)"/><circle cx="680" cy="56" r="5" fill="var(--z3)"/>
+        </g>
+        <g font-weight="700"><text x="694" y="123" fill="var(--ink-2)">老客 1.0 → 1.3</text><text x="694" y="74" fill="var(--f)">新客 1.5 → 2.0</text><text x="694" y="52" fill="var(--z3)">流失 1.8 → 2.2</text></g>
+      </g>
+    </svg>
+    <figcaption>三条线都在上升，可以写“框架策略效果逐月提升”。第 2 步那几个百分点的上涨，大部分来自开学季。</figcaption>
+  </figure>
+  <div class="table-wrap"><table>
+    <tr><th style="width:36%">看到的情况</th><th>月报怎么写</th></tr>
+    <tr><td>台阶近 3 个月不下降，最近一次抽查（模块 B 第 8 步）不比上次差</td><td>“框架策略效果在提升”</td></tr>
+    <tr><td>直接比在涨，台阶没变</td><td>“指标改善主要来自季节或人群变化，策略效果持平”</td></tr>
+    <tr><td>直接比在跌，台阶在涨</td><td>“策略效果在提升，原始指标下降主要因为人群扩大或季节”</td></tr>
+  </table></div>
+
+  <div class="note ok"><b>一句话记住模块 H：</b>老客留存、新客转化、流失召回这三个数和上月比，只能当业务语言；要证明“越来越好”，看模块 B 的台阶是不是一个月比一个月高。</div>
+  <p class="pro">原方案里：“直接和上月比”叫 L1 原始环比；“固定人群结构”叫结构标准化；“扣掉没被运营的同类人”叫双重差分，扣完的结果叫 L2 调整环比；“台阶的逐月变化”叫 L3 增量趋势。</p>
+
+  <details class="spec"><summary>方案口径 · 模块 H</summary><div class="spec-body">
+    <dl class="kv">
+      <dt>问题</dt><dd>框架策略在迭代，它是不是越来越好？（K15）</dd>
+      <dt>分母</dt><dd>本月框架运营人群 = 本月入选框架人群包的用户；初始入选与扩大新增分开标记。按月初生命周期快照分层（P10）。</dd>
+      <dt>指标</dt><dd>老客留存率 = 月初为老客且上月有交易者中本月仍有交易的比例；新客转化率 = 月初为新客者中本月完成首单的比例；流失召回率 = 月初为流失用户者中本月恢复交易的比例。按子人群计算再汇总。</dd>
+      <dt>L1</dt><dd>原始环比：指标(t) − 指标(t−1)。数值【F】，“策略变好”的归因【C】。</dd>
+      <dt>L2</dt><dd>调整环比 = [框架人群(t) − 框架人群(t−1)] − [对照组(t) − 对照组(t−1)]。框架人群先按“子人群 × 分数十分位 × 生命周期”分格，以 t−1 的结构加权（结构标准化）。对照组：同生命周期、同分数段、本月未被任何定向任务覆盖的候选用户（未入选候选 + Z4 匹配）。【E2】</dd>
+      <dt>L3</dt><dd>增量趋势：模块 B 阈值处效应（按生命周期分层）与校准留出直接增量的逐月变化。【E1】，“越来越好”的主证据。</dd>
+      <dt>判定</dt><dd>L3 近 3 个月不下降，且最近一次校准留出的直接增量不低于上一次 → “越来越好”。L1/L2 同向作佐证。</dd>
+      <dt>可选</dt><dd>策略版本发布时，新旧版本在同一子人群内按用户随机并行 2 周，单独评估版本差异【E1】。</dd>
+      <dt>假设</dt><dd>A14 对照组同期变化能代表框架人群的自然变化（检验：上线前平行趋势）；A15 结构标准化后可比。</dd>
+      <dt>状态</dt><dd><span class="status">✓ 可以做</span>　P10 确认口径；L3 需要模块 B 连续 ≥ 3 期。详见详细方案 §11。</dd>
+    </dl>
+  </div></details>
+</section>
+
+<!-- ================= I ================= -->
+<section id="i">
+  <h2><span class="tag">模块 I</span>人工任务分类与迁移：哪些该交给框架</h2>
+  <p class="lede">人工任务不是一类。有的是一次性的活动，本来就该由人来做；有的是每个月都在重复做的事，可以交给框架。模块 I 回答：<b>哪些能迁、迁了多少、迁过去之后效果有没有变差？</b>分 5 步看。</p>
+  <div class="story">
+    <div class="who">打个比方</div>
+    搬家前先分东西：一次性的东西（用完就扔）不带；天天用的东西要带走；有些东西想带，但新家暂时没地方放，先记下来，等新家装好再说。
+  </div>
+  <ol class="flow flow5">
+    <li><b>第 1 步</b>分成四类</li>
+    <li><b>第 2 步</b>怎么判定</li>
+    <li><b>第 3 步</b>迁了多少</li>
+    <li><b>第 4 步</b>迁完效果变差没</li>
+    <li><b>第 5 步</b>防止乱标</li>
+  </ol>
+
+  <h3><span class="stepno">1</span>分成四类</h3>
+  <div class="grid2">
+    <div class="card" style="margin:0;border-color:var(--h)"><b>临时性</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">节日活动、BD 合作、专属资源。<b>长期保留人工</b>，不和框架比效果。</p></div>
+    <div class="card" style="margin:0;border-color:var(--f)"><b>可迁移 · 待迁移</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">每月重复在做，框架也能做。<b>进迁移清单</b>，迁移前先做一次对决（模块 J）。</p></div>
+    <div class="card" style="margin:0;border-color:var(--ok)"><b>已迁移</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">已经交给框架。<b>跟踪迁移后效果</b>有没有变差。</p></div>
+    <div class="card" style="margin:0"><b>暂不可迁移</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">想迁，但框架现在缺数据或能力。<b>记成框架的需求</b>，补齐后再判定。</p></div>
+  </div>
+
+  <h3><span class="stepno">2</span>怎么判定：按顺序问五个问题</h3>
+  <div class="table-wrap"><table>
+    <tr><th style="width:8%">顺序</th><th>问题</th><th style="width:20%">是 →</th><th style="width:20%">否 →</th></tr>
+    <tr><td>1</td><td>有效期很短（不到 14 天），或者是节日活动？</td><td>临时性</td><td>问下一个</td></tr>
+    <tr><td>2</td><td>依赖 BD 合作、专属资源，或者货品不在框架能用的货品池里？</td><td>临时性</td><td>问下一个</td></tr>
+    <tr><td>3</td><td>目标框架表达不了？</td><td>暂不可迁移</td><td>问下一个</td></tr>
+    <tr><td>4</td><td>圈人要用框架拿不到的数据？</td><td>暂不可迁移</td><td>问下一个</td></tr>
+    <tr><td>5</td><td>近 3 个月重复投放过 2 次以上？</td><td>可迁移 · 待迁移</td><td>临时性</td></tr>
+  </table></div>
+  <p>举几个例子（虚构）：</p>
+  <div class="table-wrap"><table>
+    <tr><th>人工任务</th><th>停在第几问</th><th>结果</th></tr>
+    <tr><td>国庆出行补贴</td><td>① 有效期 10 天，节日活动</td><td>临时性</td></tr>
+    <tr><td>银行联名乘车券</td><td>② BD 合作货品</td><td>临时性</td></tr>
+    <tr><td>学生卡用户专属活动</td><td>④ 需要学籍认证数据，框架拿不到</td><td>暂不可迁移</td></tr>
+    <tr><td>通勤低频用户每月唤醒</td><td>⑤ 每月都做</td><td>可迁移 · 待迁移</td></tr>
+    <tr><td>流失 60 天用户召回</td><td>⑤ 每月都做</td><td>可迁移 · 待迁移</td></tr>
+    <tr><td>新客首乘礼</td><td>已由框架接替</td><td>已迁移</td></tr>
+  </table></div>
+  <p class="pro">14 天、2 次是暂定值，需要运营确认。原方案里的 H3（人工独有任务）全部属于临时性。</p>
+
+  <h3><span class="stepno">3</span>迁了多少</h3>
+  <div class="kpi">
+    <div><div class="s">按任务数【虚构】</div><div class="big">40%</div><div class="s">可迁移的 20 项里已迁 8 项</div></div>
+    <div><div class="s">按曝光量</div><div class="big">55%</div><div class="s">迁走的多是大任务</div></div>
+    <div><div class="s">按运营人日</div><div class="big">50%</div><div class="s">对应模块 E 的人力节省</div></div>
+  </div>
+  <p>另外再看两个数：<b>临时性任务占多少</b>（应该比较稳定），以及<b>暂不可迁移的清单</b>（缺什么能力，就是框架下一步要补的）。</p>
+
+  <h3><span class="stepno">4</span>迁过去之后，效果变差了没有</h3>
+  <div class="story">
+    <div class="who">打个比方</div>
+    车队换了一位新司机，想知道新司机开得好不好。不能只看这辆车本月比上月快了多少，因为最近路况普遍变好了。要和<b>同期还没换司机的车</b>比一比。
+  </div>
+  <div class="calc">
+    <div class="row"><span>“通勤低频用户每月唤醒”迁移前 3 个月（人工做）</span><b>交易率 10.0%</b></div>
+    <div class="row"><span>迁移后 3 个月（框架做）</span><b>10.8%（+0.8）</b></div>
+    <div class="row"><span>同期还没迁移的同类任务</span><b>10.2% → 10.4%（+0.2）</b></div>
+    <div class="row tot"><span>迁移后的真实变化</span><b>+0.8 − 0.2 = +0.6 个百分点</b></div>
+  </div>
+  <p>人群按任务原来的目标人群定义来算（不管框架后来怎么选人），结果看<b>整个目标人群</b>，而不只看收到任务的人。如果同一批可迁移任务里<b>抽签决定先迁哪个</b>，这个比较会更可信。</p>
+
+  <h3><span class="stepno">5</span>防止把难比的任务都标成“临时性”</h3>
+  <ul class="tight">
+    <li>以第 2 步的规则<b>自动判定为主</b>；运营可以改判，但要写理由、留记录。</li>
+    <li>每季度复核一次，随机抽 10% 检查判得对不对。</li>
+    <li>“临时性”占比突然上升时自动告警。</li>
+  </ul>
+
+  <div class="note ok"><b>一句话记住模块 I：</b>先用规则把人工任务分成临时性、可迁移、已迁移、暂不可迁移四类；只有可迁移的才和框架比、才往框架迁；迁完之后和还没迁的同类任务比，确认效果没变差。</div>
+  <p class="pro">原方案里：“迁移后效果”的比法叫交错迁移的双重差分；“看整个目标人群”叫意向处理效应（ITT）。</p>
+
+  <details class="spec"><summary>方案口径 · 模块 I</summary><div class="spec-body">
+    <dl class="kv">
+      <dt>问题</dt><dd>区分临时性与可迁移的人工任务；跟踪迁移进度与迁移后效果（K16）。</dd>
+      <dt>分类</dt><dd>临时性（含全部 H3）/ 可迁移·待迁移 / 已迁移 / 暂不可迁移。按顺序判定，命中即停：有效期 &lt; 14 天或节日活动 → 临时性；依赖 BD、专属资源或货品不在框架货品池 → 临时性；目标不能用框架目标类型表达 → 暂不可迁移；人群规则依赖框架拿不到的数据 → 暂不可迁移；近 3 个月重复 ≥ 2 次 → 可迁移·待迁移；其余 → 临时性（阈值 P12）。</dd>
+      <dt>治理</dt><dd>规则自动判定为主；人工改判留痕；季度复核，抽检 10%，一致率 ≥ 90%；临时性曝光占比异常上升告警（A18）。</dd>
+      <dt>指标</dt><dd>迁移率 = 已迁移 ÷（已迁移 + 可迁移·待迁移），按任务数、曝光量、运营人日三种口径【F】；临时性占比【F】；暂不可迁移清单与缺失能力分布【F】。</dd>
+      <dt>迁移后效果</dt><dd>[已迁移任务：迁移后 3 个周期 − 迁移前 3 个周期] − [同类未迁移任务：同期变化]。结果按任务目标人群全体的用户层结果（ITT），目标人群定义迁移前后一致。【E2】；同批候选抽签决定迁移顺序时接近【E1】。判定：区间下界 &gt; −δ 即“迁移后效果不降”。</dd>
+      <dt>数据</dt><dd>任务表新增：任务性质、判定依据、判定人、判定日期、重复投放次数、有效期、迁移批次、迁移日期、原人工任务 ID。</dd>
+      <dt>状态</dt><dd><span class="status">✓ 可以做</span>　依赖 P6、P12。详见详细方案 §6.6。</dd>
+    </dl>
+  </div></details>
+</section>
+
+<!-- ================= J ================= -->
+<section id="j">
+  <h2><span class="tag">模块 J</span>框架和人工比：和接入前比，和人工正面对决</h2>
+  <p class="lede">“框架比人工好吗？”这个问题有三种比法，回答的问题和可信度都不一样。模块 C 已经讲了第一种，这里讲另外两种。</p>
+  <div class="table-wrap"><table>
+    <tr><th style="width:22%">比法</th><th>回答什么</th><th style="width:14%">可信度</th><th style="width:26%">用来干什么</th></tr>
+    <tr><td>C 随机组里比任务内容</td><td>同样的人，框架配的任务比人工配的好多少</td><td class="stars">★★★★☆</td><td>解释模块 B 的效果从哪来</td></tr>
+    <tr><td><b>J1 和接入前比</b></td><td>接入策略中心之后，同一类人整体变好了多少</td><td class="stars">★★☆☆☆</td><td>背景说明，不算功劳</td></tr>
+    <tr><td><b>J2 同目标对决</b></td><td>某项还没迁移的人工任务，交给框架做会不会更好</td><td class="stars">★★★★☆</td><td><b>决定要不要迁移</b></td></tr>
+  </table></div>
+
+  <h3 id="j1">J1　和接入前比</h3>
+  <ol class="flow flow4">
+    <li><b>第 1 步</b>选同一类人</li>
+    <li><b>第 2 步</b>接入前后比</li>
+    <li><b>第 3 步</b>扣掉季节</li>
+    <li><b>第 4 步</b>查接入前的趋势</li>
+  </ol>
+  <h3><span class="stepno">1</span>选同一类人</h3>
+  <p>接入前没有框架，也就没有“入选名单”。所以用<b>同一条规则</b>在接入前后各月圈人，例如“近 3 个月月均坐车 1–4 次的用户”就是“通勤低频人群”。如果选人模型能用当时的数据重新打分，也可以圈出“假如当时有框架，会被选中的人”，这样更接近。</p>
+  <h3><span class="stepno">2</span>接入前后比</h3>
+  <div class="calc">
+    <div class="row"><span>接入前 3 个月平均（通勤低频人群月交易率）【虚构】</span><b>15.0%</b></div>
+    <div class="row"><span>接入后 3 个月平均</span><b>18.0%</b></div>
+    <div class="row tot"><span>直接相减</span><b>+3.0 个百分点</b></div>
+  </div>
+  <h3><span class="stepno">3</span>扣掉季节</h3>
+  <p>交通受春节、开学、假期影响很大。接入前那 3 个月正好包含春节，本来就低。看<b>上一年同样几个月之间自然涨了多少</b>：去年同期涨了 1.8 个百分点。扣掉之后，接入后的改善约 <b>+1.2 个百分点</b>。也可以用同期还没接入的业务线、或者没被覆盖的同类用户来扣。</p>
+  <h3><span class="stepno">4</span>查接入前是不是本来就在涨</h3>
+  <p>用接入前第 4–6 个月检查：如果接入前就一直在涨，那接入后的上涨可能只是趋势的延续。把每个月扣掉季节后的结果画出来：</p>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 240" role="img" aria-label="接入前 6 个月接近 0，接入后约 1.2 个百分点">
+      <g font-size="12">
+        <text x="20" y="20" fill="var(--ink)" font-size="13" font-weight="700">扣掉季节后，各月和接入前相比的差（百分点）【虚构】</text>
+        <rect x="80" y="40" width="440" height="160" fill="var(--surface-2)" opacity=".7"/>
+        <text x="300" y="58" text-anchor="middle" fill="var(--ink-3)">接入前：应该在 0 附近，没有趋势</text>
+        <line x1="60" y1="170" x2="840" y2="170" stroke="var(--ink-3)"/>
+        <line x1="60" y1="110" x2="840" y2="110" stroke="var(--line)" stroke-dasharray="2 4"/>
+        <g fill="var(--ink-3)" font-size="11" text-anchor="end"><text x="52" y="174">0</text><text x="52" y="114">1.0</text></g>
+        <line x1="560" y1="36" x2="560" y2="200" stroke="var(--ink)" stroke-dasharray="5 4"/>
+        <text x="566" y="50" fill="var(--ink)" font-weight="700">接入</text>
+        <polyline points="100,164 180,176 260,170 340,164 420,176 500,170" fill="none" stroke="var(--ink-3)" stroke-width="2.5"/>
+        <polyline points="620,110 700,98 780,86" fill="none" stroke="var(--f)" stroke-width="3"/>
+        <g stroke="var(--surface)" stroke-width="2">
+          <circle cx="100" cy="164" r="5" fill="var(--ink-3)"/><circle cx="180" cy="176" r="5" fill="var(--ink-3)"/><circle cx="260" cy="170" r="5" fill="var(--ink-3)"/><circle cx="340" cy="164" r="5" fill="var(--ink-3)"/><circle cx="420" cy="176" r="5" fill="var(--ink-3)"/><circle cx="500" cy="170" r="5" fill="var(--ink-3)"/>
+          <circle cx="620" cy="110" r="6" fill="var(--f)"/><circle cx="700" cy="98" r="6" fill="var(--f)"/><circle cx="780" cy="86" r="6" fill="var(--f)"/>
+        </g>
+        <g fill="var(--ink-2)" font-size="11" text-anchor="middle">
+          <text x="100" y="216">前 6 月</text><text x="180" y="216">前 5 月</text><text x="260" y="216">前 4 月</text><text x="340" y="216">前 3 月</text><text x="420" y="216">前 2 月</text><text x="500" y="216">前 1 月</text>
+          <text x="620" y="216">后 1 月</text><text x="700" y="216">后 2 月</text><text x="780" y="216">后 3 月</text>
+        </g>
+        <text x="700" y="76" text-anchor="middle" fill="var(--f)" font-weight="700">平均约 +1.2</text>
+        <text x="300" y="234" text-anchor="middle" fill="var(--ink-3)" font-size="11">前 4–6 月用来查趋势，前 1–3 月是比较的基线</text>
+      </g>
+    </svg>
+    <figcaption>接入前各月都在 0 附近、没有上升趋势，说明接入后的上涨不是原有趋势的延续。如果接入前就在一路上涨，这个比较要降级。</figcaption>
+  </figure>
+  <div class="note"><b>这 1.2 个百分点不能写成“策略中心带来的”。</b>接入之后，人工任务、供给、推荐算法也都可能变了。它只能说明“接入后，这类人整体变好了”，作为背景放在月报里，<b>不和模块 B 的增量相加</b>。</div>
+
+  <h3 id="j2">J2　和还没迁移的长期人工任务正面对决</h3>
+  <p>这是回答“框架能不能接替某项人工任务”最直接的办法，也是<b>迁移前的“考试”</b>。</p>
+  <div class="story">
+    <div class="who">打个比方</div>
+    两位厨师比赛做同一道菜：同样的食材预算、同样的时间、同一批评委，评委随机分两组，各尝一位厨师的菜。比的是同一件事，所以结果最公平。
+  </div>
+  <ol class="flow">
+    <li><b>第 1 步</b>选题</li>
+    <li><b>第 2 步</b>抽签分两组</li>
+    <li><b>第 3 步</b>各做各的</li>
+    <li><b>第 4 步</b>条件对齐</li>
+    <li><b>第 5 步</b>比结果</li>
+    <li><b>第 6 步</b>怎么判</li>
+  </ol>
+  <h3><span class="stepno">1</span>选题</h3>
+  <p>从模块 I 的“可迁移 · 待迁移”清单里，按曝光量或运营投入从大到小选。也可以在同一批候选里抽签，<b>避免只挑框架容易赢的任务</b>。</p>
+  <h3><span class="stepno">2</span>抽签分两组</h3>
+  <p>把这项任务的目标人群（例如“流失 60 天用户”20 万人）按用户 ID 随机分成两半。第一次对决或者风险较高时，可以先给框架 20%，人工 80%。</p>
+  <h3><span class="stepno">3</span>各做各的</h3>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 210" role="img" aria-label="目标人群随机分成人工组和框架组，各自执行后比较">
+      <g font-size="12.5">
+        <rect x="20" y="70" width="180" height="72" rx="10" fill="var(--surface-2)" stroke="var(--line)"/>
+        <text x="110" y="100" text-anchor="middle" fill="var(--ink)" font-weight="700">流失 60 天用户</text>
+        <text x="110" y="120" text-anchor="middle" fill="var(--ink-2)">目标人群 20 万</text>
+        <path d="M200,106 L252,106" stroke="var(--ink-3)"/>
+        <circle cx="282" cy="106" r="28" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+        <text x="282" y="103" text-anchor="middle" fill="var(--ink)" font-size="12">抽签</text>
+        <text x="282" y="119" text-anchor="middle" fill="var(--ink-3)" font-size="11">按用户 ID</text>
+        <path d="M308,94 L388,52" stroke="var(--ink-3)"/><path d="M308,118 L388,160" stroke="var(--ink-3)"/>
+        <rect x="392" y="16" width="260" height="72" rx="10" fill="var(--h-soft)" stroke="var(--h)"/>
+        <text x="522" y="40" text-anchor="middle" fill="var(--ink)" font-weight="700">人工组 10 万：照常执行人工任务</text>
+        <text x="522" y="62" text-anchor="middle" fill="var(--h)" font-weight="700">召回 6.0%</text>
+        <text x="522" y="80" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">每召回 1 人补贴 2.0 元</text>
+        <rect x="392" y="124" width="260" height="72" rx="10" fill="var(--f-soft)" stroke="var(--f)"/>
+        <text x="522" y="148" text-anchor="middle" fill="var(--ink)" font-weight="700">框架组 10 万：框架自己选人、配货</text>
+        <text x="522" y="170" text-anchor="middle" fill="var(--f)" font-weight="700">召回 6.6%</text>
+        <text x="522" y="188" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">每召回 1 人补贴 1.8 元</text>
+        <path d="M652,52 L708,96" stroke="var(--ink-3)"/><path d="M652,160 L708,116" stroke="var(--ink-3)"/>
+        <rect x="712" y="70" width="134" height="72" rx="10" fill="var(--surface)" stroke="var(--line)"/>
+        <text x="779" y="96" text-anchor="middle" fill="var(--ink)" font-weight="700">+0.6 个百分点</text>
+        <text x="779" y="116" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">范围 0.4 到 0.8</text>
+        <text x="779" y="134" text-anchor="middle" fill="var(--ok)" font-size="11.5" font-weight="700">→ 优先迁移</text>
+      </g>
+    </svg>
+    <figcaption>两组人是随机分的，本来一样；唯一的区别是“谁来做这项任务”。数字为虚构。</figcaption>
+  </figure>
+  <p>框架组里，框架可以<b>自己决定</b>给谁发、发什么货品、走什么渠道，因为要比的就是框架的整体能力。结果按<b>每组全部 10 万人</b>算，不管框架最后给了多少人发任务。</p>
+  <h3><span class="stepno">4</span>条件对齐</h3>
+  <ul class="tight">
+    <li>同一个时间段、同一个结果窗口。</li>
+    <li><b>同样的人均补贴预算上限</b>：不然框架靠多发券赢了，不算本事。</li>
+    <li>同样的流量位；BI 任务带的权重标签，两组要么都给、要么都不给。</li>
+    <li>人工组按平时的方式做，不额外加码；运营的修改照常记录。</li>
+  </ul>
+  <p>两组都有任务，没有人被“晾着”，所以<b>不浪费流量</b>。</p>
+  <h3><span class="stepno">5</span>比结果</h3>
+  <p>比三样东西：效果（召回率，以及笔数、金额）、成本（每带来一个人花多少补贴）、打扰（推送次数、投诉）。上图例子里框架组召回率高 0.6 个百分点，补贴更省，投诉持平。</p>
+  <h3><span class="stepno">6</span>怎么判</h3>
+  <p>先定一个“可以接受的差距”，比如框架比人工最多差 0.5 个百分点也能接受（这个数待业务确认）。然后看“框架组 − 人工组”的范围：</p>
+  <div class="table-wrap"><table>
+    <tr><th style="width:40%">范围落在哪</th><th style="width:18%">结论</th><th>怎么办</th></tr>
+    <tr><td>整个范围都大于 0</td><td style="color:var(--ok);font-weight:700">框架更好</td><td>优先迁移</td></tr>
+    <tr><td>范围的下限比 −0.5 高</td><td style="color:var(--ok)">不比人工差</td><td>可以迁移</td></tr>
+    <tr><td>整个范围都小于 0</td><td style="color:var(--bad);font-weight:700">框架更差</td><td>先不迁，记下框架缺什么</td></tr>
+    <tr><td>其他情况</td><td>说不准</td><td>延长时间或扩大人数再比</td></tr>
+  </table></div>
+  <p>就算效果赢了，如果成本或打扰明显变差，也不算“更好”。</p>
+
+  <div class="note ok"><b>一句话记住模块 J：</b>和接入前比，只能说明“这类人整体变好了”，是背景；要说“框架比某项人工任务做得好”，就把这项任务的目标人群抽签分两半，让框架和人工在同样条件下各做一半，比完再决定迁不迁。</div>
+  <p class="pro">原方案里：J1 用到的是季节调整、双重差分和事件研究图，可信度 E2；J2 是随机对照实验，“可以接受的差距”叫非劣效容忍度 δ，可信度 E1。J2 和模块 C 的区别：C 常设、只比任务内容；J2 按任务做、比框架的整体能力，用来决定迁移。</p>
+
+  <details class="spec"><summary>方案口径 · 模块 J</summary><div class="spec-body">
+    <dl class="kv">
+      <dt>J1 问题</dt><dd>同口径人群接入策略中心后，比接入前 3–6 个月改善了多少（K17）。</dd>
+      <dt>J1 人群</dt><dd>规则定义的同口径人群；选人模型可回溯打分时，用历史月初快照圈出“假如当时有框架会入选的人”（P11）。</dd>
+      <dt>J1 计算</dt><dd>接入后改善 = [同口径人群：接入后 − 接入前 3 个月均值] − [季节（上一年同期同月份变化）或对照组（未接入业务线 / 未覆盖相似用户）同期变化]。接入前第 4–6 个月检查前趋势；画事件研究图（−6 … +6 月）。</dd>
+      <dt>J1 定位</dt><dd>【E2】。包含人工、供给、推荐算法等其他变化，只作背景；不写成策略中心增量，不与模块 B 相加。假设 A14、A16。</dd>
+      <dt>J2 选题</dt><dd>“可迁移·待迁移”清单按曝光量或运营人日排序；同批候选可抽签。</dd>
+      <dt>J2 分组</dt><dd>user_id hash，每次换新随机盐，按生命周期和框架分数分层；默认 50/50，首次或高风险用 80/20（人工/框架）。</dd>
+      <dt>J2 处理</dt><dd>人工组按日常方式执行原任务；框架组由框架针对同一目标自行选人、配货、配渠道。</dd>
+      <dt>J2 对齐</dt><dd>同一周期、结果窗口、人均补贴预算上限、流量位；H2 权重标签两组同等处理。</dd>
+      <dt>J2 结果</dt><dd>两组全体目标人群的 ITT：三口径；每成交用户补贴成本；打扰（频次、投诉）。时长 ≥ 一个完整产出周期。样本量：<code>power_calc.py rct --p &lt;基础率&gt; --n1 &lt;人工组&gt; --n2 &lt;框架组&gt;</code>（虚构：各 10 万、基础率 6% 时可检测约 0.3pp）。</dd>
+      <dt>J2 判定</dt><dd>框架 − 人工的 95% 区间：下界 &gt; 0 → 更好，优先迁移；下界 &gt; −δ → 不劣于，可迁移；上界 &lt; 0 → 更差，暂不迁移并记录能力缺口；其他 → 延长或扩样。δ 暂定 0.5pp 或相对 5%（P13）。成本或打扰明显变差时不判定为更好。</dd>
+      <dt>J2 风险</dt><dd>运营在对决中额外加码（记录人工修改）；结果含推荐算法对两类任务的偏好（真实上线也存在，必要时在随机桶内单独报告）；两组分组前 A/A 平衡（A17）。</dd>
+      <dt>等级</dt><dd>J1【E2】；J2【E1】，结论只代表做过对决的任务。</dd>
+      <dt>状态</dt><dd>J1 <span class="status">✓ 可以做</span>（P11）；J2 需要运营配合排期（P13）。详见详细方案 §6.7、§6.8。</dd>
+    </dl>
+  </div></details>
 </section>
 
 <!-- ================= 怎么读 ================= -->
@@ -984,6 +1471,17 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
     <tr><td>直接证据 0.2–1.3 万</td><td>最硬的那部分：分数线两边真实比出来的。哪怕推算全错，这部分也站得住</td></tr>
     <tr><td>主要来自人工没覆盖的用户</td><td>框架真正的价值在于“找到了人工没找到的人”，而不是和人工抢同一批人</td></tr>
   </table></div>
+  <h3>还会看到的两句话</h3>
+  <div class="card" style="border-color:var(--ok);font-size:15.5px">“9 月框架策略的增量继续提升：老客、新客、流失三类人群在分数线处的台阶分别为 1.3、2.0、2.2 个百分点，连续 3 个月上升（★★★★☆）。老客留存率环比 +2.5 个百分点，其中大部分来自开学季。”</div>
+  <div class="card" style="border-color:var(--h);font-size:15.5px">“本月完成 1 项同目标对决：‘流失 60 天召回’框架组比人工组高 0.6 个百分点（0.4–0.8），补贴更低，判定为优先迁移。可迁移人工任务的迁移率 40%（按曝光 55%）。接入以来，通勤低频人群扣掉季节后整体改善约 1.2 个百分点（★★☆☆☆，背景）。”</div>
+  <div class="table-wrap"><table>
+    <tr><th style="width:30%">这两句话里的</th><th>意思是</th></tr>
+    <tr><td>台阶连续 3 个月上升</td><td>模块 H 的主证据：策略本身在变强，不是季节或人群带来的</td></tr>
+    <tr><td>其中大部分来自开学季</td><td>原始环比只是业务语言，要如实说明它里面有多少是季节</td></tr>
+    <tr><td>同目标对决，优先迁移</td><td>模块 J2：同样的人、同样的预算，框架做得比人工好，所以这项任务交给框架</td></tr>
+    <tr><td>迁移率 40%（按曝光 55%）</td><td>模块 I：可迁移的人工任务里，已经交给框架的比例</td></tr>
+    <tr><td>整体改善约 1.2（背景）</td><td>模块 J1：接入后这类人整体变好了，但其中还有别的因素，<b>不能算成策略中心的增量</b></td></tr>
+  </table></div>
   <h3>三个口径为什么不一样“显著”</h3>
   <p>同一套方法，可以算三种增量：多了多少<b>交易用户</b>、多了多少<b>交易笔数</b>、多了多少<b>交易金额</b>。</p>
   <ul class="tight">
@@ -995,6 +1493,8 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
   <ul class="tight">
     <li>“策略中心贡献了业务目标的 X%”：业务总盘里自然增长、新商户、新场景各占多少，目前拆不开。</li>
     <li>“策略中心增量 + 推荐算法提升 = 总提升”：两者有重叠，不能相加。</li>
+    <li>“接入后改善了 1.2 个百分点，所以策略中心带来了 1.2 个百分点”：接入前后对比里混着别的变化，只能作背景。</li>
+    <li>“框架整体比人工好 X%”：只能一项任务一项任务地对决，报“做过对决的任务里，框架胜出或不比人工差的比例”。</li>
   </ul>
 </section>
 
@@ -1010,51 +1510,111 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
     <tr><td>两边像不像（协变量平衡）</td><td>比较线两边的人过去的活跃度、交易次数等</td><td>几乎一样</td></tr>
     <tr><td>曲线顺不顺（平滑性）</td><td>去掉一个点，看其他点连成的线能不能预测它</td><td>能预测准；否则推算降级</td></tr>
     <tr><td>校准留出</td><td>每月随机留 5% 不发任务，直接比</td><td>推算值落在直接测出的范围内</td></tr>
+    <tr><td>对照组走势一致（平行趋势）</td><td>模块 H、J1 用来“扣掉”的对照组，在框架上线之前和框架人群是不是同涨同跌</td><td>上线前走势差不多；否则只能说方向</td></tr>
+    <tr><td>接入前有没有趋势</td><td>模块 J1：接入前第 4–6 个月和第 1–3 个月比</td><td>没有明显上涨；否则降级</td></tr>
+    <tr><td>对决两组一样不一样（A/A）</td><td>模块 J2：分组之后、开始之前，比两组以前的交易和活跃</td><td>几乎一样；否则重新分组</td></tr>
+    <tr><td>任务分类抽检</td><td>模块 I：每季度随机抽 10% 的分类结果复核</td><td>九成以上判得对；否则修改规则重判</td></tr>
   </table></div>
   <div class="note ok">这套方案能成立，有两个关键前提已经确认：<b>① 没被选中的人不会被其他子人群选走；② 运营不能手动删人。</b>这保证了“刚过线”和“差一点没过线”的人确实只差在被没被选中，没有人为操纵。</div>
 </section>
 
-<!-- ================= 对照表 ================= -->
-<section id="dict">
-  <h2>专业词对照表</h2>
-  <p class="lede">看原方案或专业版页面时，遇到这些词可以回来查。</p>
+<!-- ================= 落地顺序 ================= -->
+<section id="plan">
+  <h2>落地顺序</h2>
+  <p class="lede">先把已有数据跑一遍，确认方法在你们的数据上站得住，再逐步加上新的比较。</p>
   <div class="table-wrap"><table>
-    <tr><th style="width:22%">原方案里的词</th><th style="width:38%">大白话</th><th>本页对应的例子</th></tr>
-    <tr><td>承接 / 承接转化</td><td>看到任务后成交了，“参与了”</td><td>100 人里 30 人坐车</td></tr>
-    <tr><td>增量</td><td>因为被选中才多出来的，“带来了”</td><td>30 − 25 = 5 人</td></tr>
-    <tr><td>反事实</td><td>“假如没选中，会怎样”那个看不到的平行世界</td><td>本来会坐车的 25 人</td></tr>
-    <tr><td>断点回归（RDD）</td><td>只比分数线两边紧挨着的人</td><td>0.59 分 vs 0.60 分：17.0% vs 18.6%</td></tr>
-    <tr><td>子人群阈值（c₀ / c₁ / c₂）</td><td>每个班自己的入选分数线；按名额选时，最后一名的分数就是线</td><td>通勤低频 0.60、流失召回 0.75</td></tr>
-    <tr><td>阈值 / 运行变量 / 带宽</td><td>分数线 / 打的那个分 / 线两边各取多宽来比</td><td>0.60 / 选人分数 / 滑块</td></tr>
-    <tr><td>带宽</td><td>线两边各取多宽的人来比；窄了人少、宽了可能偏</td><td>±0.03：比 0.57–0.60 和 0.60–0.63 的人</td></tr>
-    <tr><td>pp（百分点）</td><td>两个百分比直接相减</td><td>17.0% → 18.6% = +1.6pp</td></tr>
-    <tr><td>意向处理效应（ITT）</td><td>按“被没被选中”分组，不管有没有真看到</td><td>小周没看到券也算选中组</td></tr>
-    <tr><td>子人群</td><td>各自有一条分数线的一个“班”</td><td>一班、二班、三班、四班</td></tr>
-    <tr><td>候选标识</td><td>有没有进入候选池、被打过分；没选中的也要记</td><td>小张（0.59 分，对照组）vs 小赵（没打分）</td></tr>
-    <tr><td>效应-分数曲线 / 外推</td><td>把各班“刚过线”的效果连成线，推算高分用户</td><td>1.0 → 1.4 → 1.8 → 2.0</td></tr>
-    <tr><td>直接证据 / 外推占比</td><td>真比过的部分 / 推算出来的部分占多少</td><td>直接证据约 9%</td></tr>
-    <tr><td>置信区间 / 95% 区间</td><td>“很有把握真实值在这个范围里”</td><td>3.1–7.8 万</td></tr>
-    <tr><td>显著 / 不显著</td><td>差距是否大到能和运气区分开</td><td>随机组单周 0.8pp 不一定显著</td></tr>
-    <tr><td>校准型留出 / holdout</td><td>定期随机留一小撮人不发，直接测</td><td>5 万人：22.0% vs 20.1%</td></tr>
-    <tr><td>模糊断点 / 工具变量</td><td>分组被后来的调整“污染”时，按实际被选中的天数折算</td><td>扩大时拉进了没过线的人</td></tr>
-    <tr><td>相似度分</td><td>扩大人群时，“和样板人群像不像”的分</td><td>扩大部分单独算一笔 B</td></tr>
-    <tr><td>周内分位数</td><td>本周候选人里排第几，而不是原始分数</td><td>曲线横轴的 40%、55%…</td></tr>
-    <tr><td>按上周入选分层</td><td>把“新面孔”和“老面孔”分开比</td><td>小李连续入选</td></tr>
-    <tr><td>遗留效应</td><td>本周的券让下周也多坐车</td><td>月度数字因此偏保守</td></tr>
-    <tr><td>入选路径法</td><td>从第一次被选中开始，看之后 4 周一共多了多少</td><td>交叉检查周度相加</td></tr>
-    <tr><td>随机桶 / 算法桶</td><td>随机展示的 5% 用户 / 算法挑选展示的 95% 用户</td><td>15.0% vs 18.0%</td></tr>
-    <tr><td>Z1 / Z2 / Z3 / Z4</td><td>只有框架 / 只有人工 / 两边都有 / 都没有</td><td>240 / 150 / 180 / 430 万</td></tr>
-    <tr><td>Z1a 真新 / Z1b 替代</td><td>人工从没圈过 / 以前人工圈过、现在交给框架</td><td>150 / 90 万</td></tr>
-    <tr><td>H1 / H2 / H3 / F</td><td>人工经验任务 / BI 半自动任务 / 人工独有活动 / 框架任务</td><td>—</td></tr>
-    <tr><td>权重标签</td><td>让任务排得更靠前的加权，属于展示优势</td><td>模块 D</td></tr>
-    <tr><td>P10 / P25 / P50 / P90</td><td>保守 / 比较保守（用来承诺）/ 最可能 / 乐观</td><td>8.5 / 9.2 / 9.9 / 11.2 万</td></tr>
-    <tr><td>连环替代法 / 偏差拆解</td><td>从预测出发，一次只把一关换成实际值，看差在哪一关</td><td>模块 F 第 4 步：少的 7,500 人里 7,610 来自“看到任务的人变少”</td></tr>
-    <tr><td>安慰剂检验 / 密度检验 / 协变量平衡</td><td>假时间、假分数线 / 线两边人数是否平滑 / 线两边的人像不像</td><td>“怎么知道方法没出错”</td></tr>
-    <tr><td>证据等级 F / E1 / E2 / C / N/A</td><td>可信度五星 / 四星 / 两星 / 一星 / 算不了</td><td>“数字的可信度怎么分”</td></tr>
+    <tr><th style="width:8%">步骤</th><th>做什么</th><th style="width:26%">需要先确认</th></tr>
+    <tr><td>1</td><td>确认调优信号的基线、扩大和缩小的规则；选定校准频率</td><td>P1–P4</td></tr>
+    <tr><td>2</td><td>摸底数据量级，用脚本算“能分辨多小的差别”</td><td>步骤 1</td></tr>
+    <tr><td>3</td><td><b>用历史数据回溯</b>：跑模块 A、B、C、D 和全部自检，重点看曲线顺不顺、推算占比多大</td><td>步骤 2</td></tr>
+    <tr><td>4</td><td>定下管理层版的写法；发布第一版内部诊断月报</td><td>步骤 3</td></tr>
+    <tr><td>5</td><td>与业务方对齐口径；增量预测试运行 3 个周期后用“比较保守”的数承诺</td><td>步骤 4</td></tr>
+    <tr><td>6</td><td>建立老客 / 新客 / 流失的月初快照，输出模块 H 的三个数；模块 B 满 3 期后看台阶趋势</td><td>P10</td></tr>
+    <tr><td>7</td><td>人工任务按规则分类，形成迁移清单；回溯接入前 6 个月（J1）</td><td>P6、P11、P12</td></tr>
+    <tr><td>8</td><td>首批 1–2 项同目标对决（J2），按结果迁移；之后每月排期</td><td>步骤 7、P13</td></tr>
   </table></div>
+  <div class="table-wrap"><table>
+    <tr><th style="width:8%">编号</th><th>还需要确认的信息（v6 新增）</th><th style="width:34%">没有时先这样做</th></tr>
+    <tr><td>P10</td><td>老客 / 新客 / 流失用户的口径（流失按几个月没交易算）</td><td>交通暂定：连续 2 个月以上没交易</td></tr>
+    <tr><td>P11</td><td>各业务线的接入日期；接入前 6 个月数据能否回溯；选人模型能否用历史数据重新打分</td><td>用规则定义的同一类人代替</td></tr>
+    <tr><td>P12</td><td>人工任务分类的阈值和负责人</td><td>有效期不到 14 天算临时；近 3 个月重复 2 次以上算周期性</td></tr>
+    <tr><td>P13</td><td>首批对决任务、分组比例、“可以接受的差距”</td><td>按曝光量选前 2 项；50/50；0.5 个百分点</td></tr>
+  </table></div>
+  <p class="pro">P1–P9 见总览版 §1.2。</p>
 </section>
 
-<p class="foot">内容来源：<code>docs/strategy-center-value-framework-overview.md</code>（总览版 v5）第 4 章，以及详细方案中的相关口径。本页所有数字均为虚构，只用于说明方法；专业表述见 <a href="./strategy-center-chapter4-modules.html">专业版页面</a>。</p>
+<!-- ================= 对照表 ================= -->
+<section id="dict">
+  <h2>名词解释</h2>
+  <p class="lede">每个词先给一句大白话，再给方案里的定义。可以输入关键词筛选。</p>
+  <input class="gsearch" id="gsearch" type="search" placeholder="搜索名词，例如：断点、留存、对决">
+  <div class="gcat">业务结构与分组</div>
+  <div class="gl">
+    <div class="g" id="g-fh"><b>F / H1 / H2 / H3</b><span class="en">task source</span><p class="pl">框架任务 / 人工凭经验的任务 / BI 半自动任务 / 人工独有活动</p><p>任务来源。H1 与 F 最可比；H2 可能带货品权重；H3（临时活动、BD 合作、特殊货品）不可比，全部属于临时性任务。</p></div>
+    <div class="g" id="g-subgroup"><b>子人群</b><span class="en">sub-segment</span><p class="pl">各自有一条分数线的一个“班”</p><p>框架选人的基本单元，每个子人群一个阈值（K2）。分析单位是“子人群 × 周期”。</p></div>
+    <div class="g" id="g-renqunbao"><b>人群包 / 候选标识</b><span class="en">audience package · candidate flag</span><p class="pl">任务要投放的名单；“候选标识”记录这个人有没有被打过分</p><p>框架人群包额外留存候选标识、选人分数、是否入选、子人群 ID。被打过分但没选中的人就是对照组；没进候选池的人不能当对照组。</p></div>
+    <div class="g" id="g-zigeceng"><b>资格层 / 曝光层</b><p class="pl">被圈进名单 / 真的看到了任务</p><p>资格层在分发前确定，不受推荐算法影响；分区按资格层划分。</p></div>
+    <div class="g" id="g-zone"><b>Z1 / Z2 / Z3 / Z4</b><span class="en">coverage zones</span><p class="pl">只有框架 / 只有人工 / 两边都有 / 谁都没覆盖</p><p>用户层互斥。Z1a 真新覆盖：过去 6 个月未进过人工人群；Z1b 替代覆盖：以前人工覆盖、现在只有框架。</p></div>
+    <div class="g" id="g-quanzhong"><b>权重标签</b><span class="en">boost weight</span><p class="pl">让任务排得更靠前的加权</p><p>属于展示优势（分发层）；胜出率、曝光份额跨来源比较时要在同一权重档位内比。</p></div>
+    <div class="g" id="g-tiaoyou"><b>调优 / 下线 / 相似度分</b><p class="pl">中途扩大、缩小人群或让任务下线；扩大时用“像不像”打的分</p><p>扩大以当前人群为种子找相似人群，按相似度分选人（阈值 c₁），单独估计；缩小的阈值 c₂；下线只降低处理强度。</p></div>
+  </div>
+  <div class="gcat">结果与口径</div>
+  <div class="gl">
+    <div class="g" id="g-zengliang"><b>业务增量</b><span class="en">incrementality</span><p class="pl">因为被选中才多出来的</p><p>其他一切照常时，框架选中这批用户带来的额外目标行为。不含推荐算法价值、自然转化、新供给。</p></div>
+    <div class="g" id="g-chengjie"><b>承接</b><span class="en">attributed conversion</span><p class="pl">看到任务后成交了，“参与了”</p><p>首次曝光后 N 日内发生目标行为（交通暂定 7 日）。事实，但不等于增量。</p></div>
+    <div class="g" id="g-koujing"><b>三个口径 / P99 截尾</b><p class="pl">多了多少交易用户、交易笔数、交易金额 / 把极端大额压到第 99 百分位</p><p>交易用户最稳，作第一口径；金额波动最大，同时列补贴成本。</p></div>
+    <div class="g" id="g-pp"><b>pp（百分点）</b><span class="en">percentage point</span><p class="pl">两个百分比直接相减</p><p>17.0% → 18.6% = +1.6pp，即每 100 人多 1.6 人。</p></div>
+    <div class="g" id="g-evidence"><b>证据等级 F / E1 / E2 / C / N/A</b><p class="pl">五星 / 四星 / 两星 / 一星 / 算不了</p><p>事实 / 准实验估算 / 观测估算 / 相关性 / 当前无法可靠计算。只有 F 给单点；E1、E2 给区间；C 只说方向。</p></div>
+    <div class="g" id="g-shengming"><b>老客 / 新客 / 流失用户</b><span class="en">lifecycle</span><p class="pl">近期坐过车的 / 从没坐过的 / 以前坐、最近两个多月没坐的</p><p>按月初快照划分，月内不变（交通暂定，P10）。</p></div>
+    <div class="g" id="g-liucun"><b>老客留存率 / 新客转化率 / 流失召回率</b><p class="pl">老客本月还坐吗 / 新客本月第一次坐了吗 / 流失的人本月回来了吗</p><p>分母都是本月框架运营人群中对应的那一类人（模块 H）。</p></div>
+  </div>
+  <div class="gcat">增量的算法（模块 B）</div>
+  <div class="gl">
+    <div class="g" id="g-rdd"><b>断点回归（RDD）</b><span class="en">regression discontinuity</span><p class="pl">量分数线处的“台阶”有多高</p><p>选中与否由“分数是否过线”决定时，比较线两侧紧挨着的用户，结果的跳变就是阈值处的因果效应。</p></div>
+    <div class="g" id="g-yuzhi"><b>阈值（c₀ / c₁ / c₂）</b><span class="en">cutoff</span><p class="pl">分数线</p><p>每个子人群的入选分数线；Top-K 选人时第 K 名的分数即阈值。c₀ 初始、c₁ 扩大时的相似度阈值、c₂ 缩小后的阈值。</p></div>
+    <div class="g" id="g-yunxing"><b>运行变量</b><span class="en">running variable</span><p class="pl">打的那个分</p><p>选人分数 − 阈值；交通用周内分位数（本周候选人里排第几）。</p></div>
+    <div class="g" id="g-daikuan"><b>带宽</b><span class="en">bandwidth</span><p class="pl">线两边各取多宽的人来比</p><p>越窄越可比但人越少；数据驱动选择，同时报 0.5 倍和 2 倍带宽。带宽内是直接证据，带宽外靠外推。</p></div>
+    <div class="g" id="g-itt"><b>意向处理效应（ITT）</b><span class="en">intention-to-treat</span><p class="pl">没看到券也算“选中”</p><p>按是否被分到处理组比较，不管是否真的曝光；包含下线、未曝光等真实损耗。</p></div>
+    <div class="g" id="g-fuzzy"><b>模糊断点 / 工具变量</b><span class="en">fuzzy RDD · IV</span><p class="pl">分组被后来的调整“污染”时，按实际被选中几天来折算</p><p>扩大把 c₀ 下方的人拉入时，以“初始是否超过 c₀”为工具变量，“周期内入选天数”为实际处理。</p></div>
+    <div class="g" id="g-curve"><b>效应-分数曲线 / 外推</b><p class="pl">把各班的台阶连成线，推算高分用户</p><p>只在观测到的阈值范围内外推；超出范围用最近一段效应。依赖 A4（效应随分数平滑变化）。</p></div>
+    <div class="g" id="g-holdout"><b>校准型留出</b><span class="en">calibration holdout</span><p class="pl">定期随机留一小撮人不发，直接测</p><p>每个子人群按分数分位分层留出 5% 入选用户一个完整周期，用来检验外推。</p></div>
+    <div class="g" id="g-yiliu"><b>遗留效应 / 入选路径法</b><span class="en">carry-over</span><p class="pl">本周的券让下周也多坐车 / 从第一次被选中开始看 4 周</p><p>周度累加不含遗留效应，偏保守；入选路径法用于交叉检查。</p></div>
+  </div>
+  <div class="gcat">演进、迁移与人工对比（模块 H / I / J）</div>
+  <div class="gl">
+    <div class="g" id="g-l123"><b>L1 / L2 / L3</b><p class="pl">直接和上月比 / 扣掉季节和人群变化再比 / 看台阶是不是在变高</p><p>L1 原始环比【F/C】；L2 调整环比（结构标准化 + 双重差分）【E2】；L3 增量趋势【E1】，“越来越好”的主证据。</p></div>
+    <div class="g" id="g-jiegou"><b>结构标准化</b><span class="en">standardization</span><p class="pl">把人群结构固定成和上月一样再比</p><p>按“子人群 × 分数十分位 × 生命周期”分格，以上月结构加权，消除人群构成变化的影响。</p></div>
+    <div class="g" id="g-did"><b>双重差分（DiD）</b><span class="en">difference-in-differences</span><p class="pl">我变了多少，减去别人同期变了多少</p><p>（处理组后 − 前）−（对照组后 − 前）。用于 L2、迁移后效果、接入前后对比；依赖平行趋势假设。</p></div>
+    <div class="g" id="g-junzhi"><b>均值回归</b><span class="en">regression to the mean</span><p class="pl">上个月特别好或特别差的人，这个月会自然回到平常水平</p><p>因此不用“同一批入选的人本月 vs 上月”作结论。</p></div>
+    <div class="g" id="g-linshi"><b>临时性任务 / 可迁移任务</b><p class="pl">一次性的活动 / 每月重复、框架也能做的事</p><p>四类：临时性、可迁移·待迁移、已迁移、暂不可迁移。按规则依次判定；只有非临时性任务参与效果比较。</p></div>
+    <div class="g" id="g-qianyi"><b>迁移率 / 交错迁移</b><p class="pl">可迁移的任务里已经交给框架的比例 / 分批迁移，没迁的当对照</p><p>迁移率按任务数、曝光、人日三种口径。迁移后效果用交错迁移的双重差分，抽签决定迁移顺序更可信。</p></div>
+    <div class="g" id="g-jieru"><b>接入前后对比 / 事件研究图</b><span class="en">event study</span><p class="pl">和接入策略中心之前比 / 把接入前后每个月画出来，看接入前是不是本来就在涨</p><p>同口径人群；接入前 3 个月为基线，第 4–6 个月查趋势；季节调整或对照组调整。【E2】，只作背景。</p></div>
+    <div class="g" id="g-huisu"><b>回溯打分</b><span class="en">backfill scoring</span><p class="pl">用现在的模型给过去的人重新打分</p><p>圈出“假如当时有框架会入选的人”，让接入前后的人群更可比（P11）。</p></div>
+    <div class="g" id="g-duijue"><b>同目标对决</b><span class="en">head-to-head test</span><p class="pl">把一项人工任务的目标人群抽签分两半，框架和人工各做一半</p><p>同周期、同预算、同流量位、同权重；按两组全体 ITT 比较。【E1】，迁移决策的门槛。</p></div>
+    <div class="g" id="g-feilie"><b>非劣效 / 容忍度 δ</b><span class="en">non-inferiority</span><p class="pl">可以接受框架比人工差多少</p><p>差值区间下界 > −δ 即“不劣于”；> 0 即“更好”。δ 暂定 0.5pp 或相对 5%（P13）。</p></div>
+  </div>
+  <div class="gcat">分发与实验</div>
+  <div class="gl">
+    <div class="g" id="g-bucket"><b>算法桶 / 随机桶</b><p class="pl">算法挑着展示的 95% / 随机展示的 5%</p><p>按 user_id hash 分流；随机桶在用户所属人群的任务中等概率随机，权重不生效。</p></div>
+    <div class="g" id="g-aa"><b>A/A 检验</b><p class="pl">在不该有差别的时候比一次，确认两组本来一样</p><p>用于两个桶、对决两组的分组平衡检查。</p></div>
+    <div class="g" id="g-jixian"><b>调优信号的基线</b><p class="pl">判断“效果好坏”时拿来对比的对象</p><p>只有“未被选中的相似用户”接近增量；和大盘平均比会系统性偏向扩大。</p></div>
+    <div class="g" id="g-tingchu"><b>胜出率 / 挤出</b><p class="pl">进入候选后真被展示的比例 / 框架任务胜出让别的任务没被看到</p><p>判断挤出看用户层总结果，不看任务层承接之和。</p></div>
+  </div>
+  <div class="gcat">统计与预测</div>
+  <div class="gl">
+    <div class="g" id="g-ci"><b>置信区间 / 显著</b><span class="en">confidence interval</span><p class="pl">“很有把握真实值在这个范围里” / 差距大到能和运气区分开</p><p>“不显著”不等于“没效果”。</p></div>
+    <div class="g" id="g-bootstrap"><b>自助抽样</b><span class="en">bootstrap</span><p class="pl">反复从样本里有放回地抽、重算，看结果的波动</p><p>用于给估计值和预测值算区间。</p></div>
+    <div class="g" id="g-pq"><b>P10 / P25 / P50 / P90</b><p class="pl">保守 / 比较保守（用来承诺）/ 最可能 / 乐观</p><p>预测分布的分位数；[P10, P90] 为 80% 区间。</p></div>
+    <div class="g" id="g-shrink"><b>收缩（经验贝叶斯）</b><span class="en">shrinkage</span><p class="pl">样本少的数，向大群体的平均值拉近一点</p><p>降低噪声，用于稀疏的转化率格子和调优信号。</p></div>
+    <div class="g" id="g-lianhuan"><b>连环替代法 / 偏差拆解</b><p class="pl">从预测出发，一次只把一关换成实际值，看差在哪一关</p><p>固定顺序：规模 → 可投放 → 曝光 → 转化；各段之和等于总偏差。</p></div>
+    <div class="g" id="g-wape"><b>WAPE / Bias / 区间覆盖率</b><p class="pl">平均偏离多少 / 是不是总往一个方向偏 / 10 次里落进范围几次</p><p>WAPE 初期 ≤ 15%；Bias 在 ±5% 内；覆盖率接近 80%。</p></div>
+    <div class="g" id="g-mde"><b>统计功效 / MDE</b><span class="en">minimum detectable effect</span><p class="pl">这么多人能分辨出多小的差别</p><p>用 tools/power_calc.py 计算（rdd / rct / holdout）。</p></div>
+    <div class="g" id="g-placebo"><b>安慰剂 / 密度 / 协变量平衡检验</b><p class="pl">没发券时有没有台阶 / 有没有人挤过线 / 两边以前像不像</p><p>模块 B 的三项核心自检。</p></div>
+    <div class="g" id="g-hhi"><b>HHI</b><span class="en">Herfindahl–Hirschman index</span><p class="pl">是不是总推同几个货品</p><p>各货品曝光份额的平方和，越接近 1 越集中。</p></div>
+  </div>
+</section>
+
+<p class="foot">内容来源：<code>docs/strategy-center-value-framework-overview.md</code>（总览版 v6）与 <code>docs/strategy-center-value-framework.md</code>（详细方案）。两者与本页不一致时，以总览版为准。本页所有数字均为虚构，只用于说明方法。</p>
 </main>
 </div>
 
@@ -1129,6 +1689,20 @@ ol.flow.flow4{grid-template-columns:repeat(4,minmax(0,1fr))}
     v.innerHTML='线两边各取 ±'+w.toFixed(2)+' 分。真实效果是 <b>1.6</b> 个百分点，其中 <b style="color:var(--bad)">'+(fake*100).toFixed(1)+'</b> 个百分点是“分高的人本来就爱坐车”混进来的。'+(w<=0.03?' 范围很窄，几乎没有混进来。':(w>=0.25?' 范围太宽，算出来的“效果”严重虚高。':''));
   }
   bw.addEventListener('input',upd); upd();
+
+  // expand / collapse all spec blocks
+  var sb=document.getElementById('specBtn');
+  if(sb){sb.addEventListener('click',function(){
+    var ds=document.querySelectorAll('details.spec'), anyClosed=[].some.call(ds,function(d){return !d.open;});
+    ds.forEach(function(d){d.open=anyClosed;});
+    sb.textContent=anyClosed?'收起全部方案口径':'展开全部方案口径';
+  });}
+  // glossary filter
+  var gq=document.getElementById('gsearch');
+  if(gq){gq.addEventListener('input',function(){
+    var v=gq.value.trim().toLowerCase();
+    document.querySelectorAll('.g').forEach(function(el){el.classList.toggle('hide', !!v && el.textContent.toLowerCase().indexOf(v)<0);});
+  });}
 
   // toc highlight
   var links=[].slice.call(document.querySelectorAll('.toc a'));
