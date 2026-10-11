@@ -313,7 +313,7 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft Y
       <text x="18" y="135" fill="var(--ink-2)" font-size="12" transform="rotate(-90 18 135)" text-anchor="middle">结果窗口内转化率</text>
       <!-- bandwidth -->
       <rect x="185" y="20" width="90" height="230" fill="var(--accent-soft)" opacity=".7"/>
-      <text x="230" y="36" text-anchor="middle" fill="var(--accent)" font-size="11.5">带宽</text>
+      <text x="230" y="36" text-anchor="middle" fill="var(--accent)" font-size="11.5">带宽（比较范围）</text>
       <!-- threshold -->
       <line x1="230" y1="20" x2="230" y2="250" stroke="var(--ink)" stroke-dasharray="5 4"/>
       <text x="230" y="266" text-anchor="middle" fill="var(--ink)" font-size="12" font-weight="700">c₀</text>
@@ -774,7 +774,8 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft Y
   <div class="gcat">因果推断方法</div>
   <div class="gl">
     <div class="g" id="g-rdd"><b>断点回归（RDD）</b><span class="en">Regression Discontinuity Design</span><p>当是否接受处理由“分数是否超过阈值”决定时，阈值两侧紧挨着的用户几乎一样，只是一侧被选中、一侧没有。比较两侧结果的跳变，就得到阈值处的因果效应。</p></div>
-    <div class="g" id="g-yunxing"><b>运行变量 / <a class="term" href="#g-yuzhi">阈值</a> / 带宽</b><span class="en">running variable / cutoff / bandwidth</span><p>运行变量 = 决定分组的分数（这里是“分数 − 阈值”）；阈值 c₀ 是分界点；带宽是阈值两侧参与比较的分数范围，越窄越可比，但样本越少。</p></div>
+    <div class="g" id="g-yunxing"><b>运行变量 / <a class="term" href="#g-yuzhi">阈值</a> / <a class="term" href="#g-daikuan">带宽</a></b><span class="en">running variable / cutoff / bandwidth</span><p>运行变量 = 决定分组的分数（这里是“分数 − 阈值”）；阈值 c₀ 是分界点；带宽是阈值两侧参与比较的分数范围，越窄越可比，但样本越少。</p></div>
+    <div class="g" id="g-daikuan"><b>带宽</b><span class="en">bandwidth</span><p>阈值两侧参与比较的分数范围。例：阈值 0.60、带宽 ±0.03，就比较 0.57–0.60 和 0.60–0.63 的用户。越窄越可比但人越少、区间越宽；越宽人越多但可能有偏。主口径用数据驱动方法自动选，同时报 0.5 倍和 2 倍带宽的结果作敏感性检验。带宽内的入选用户是“直接证据”，带宽外靠外推。交通用周内分位数表示。不同于 §3.6.5 的随机入选窄带。</p></div>
     <div class="g" id="g-itt"><b>意向处理效应（ITT）</b><span class="en">Intention-to-Treat</span><p>按“是否被分到处理组”比较，不管用户最后有没有真的看到任务。包含了下线、未曝光等真实运营损耗，是管理层要的口径。</p></div>
     <div class="g" id="g-fuzzy"><b>模糊断点</b><span class="en">fuzzy RDD</span><p>超过阈值后被处理的概率跳变，但不是从 0 跳到 1。例如扩大把 c₀ 下方的人也拉进来了。需要用工具变量修正，否则直接比较会低估效应。</p></div>
     <div class="g" id="g-iv"><b>工具变量</b><span class="en">instrumental variable</span><p>一个只通过“处理”影响结果的变量。这里用“初始是否超过 c₀”作为工具，“周期内入选天数”作为实际处理强度，估计每单位处理的效应。</p></div>
