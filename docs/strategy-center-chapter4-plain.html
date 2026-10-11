@@ -104,6 +104,11 @@ code{font-family:var(--mono);font-size:.9em;background:var(--surface-2);padding:
 .steps li{counter-increment:s;position:relative;padding:0 0 12px 40px}
 .steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--surface);font-weight:700;font-size:13.5px;display:flex;align-items:center;justify-content:center}
 ul.tight{margin:6px 0;padding-left:20px} ul.tight li{margin:4px 0}
+ol.flow{list-style:none;padding:0;margin:16px 0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;counter-reset:none}
+ol.flow li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--ink-2);line-height:1.5}
+ol.flow li b{display:block;color:var(--accent);font-size:12px}
+@media (max-width:800px){ol.flow{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.stepno{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--surface);font-size:14px;margin-right:8px;vertical-align:1px}
 .foot{font-size:12.5px;color:var(--ink-3);border-top:1px solid var(--line);padding-top:16px}
 </style>
 </head>
@@ -128,11 +133,11 @@ ul.tight{margin:6px 0;padding-left:20px} ul.tight li{margin:4px 0}
   <a href="#trust">数字的可信度怎么分</a>
   <div class="grp">七个模块</div>
   <a href="#a">A 谁被覆盖了</a>
-  <a href="#b">B 到底多带来多少</a>
-  <a href="#b-ext">　B 高分用户怎么算</a>
-  <a href="#b-cal">　B 怎么验证推算</a>
-  <a href="#b-ops">　B 运营调整怎么办</a>
-  <a href="#b-week">　B 交通按周怎么办</a>
+  <a href="#b">B 一步步看懂（1–6 步）</a>
+  <a href="#b-ext">　B 推到所有人（第 7 步）</a>
+  <a href="#b-cal">　B 定期抽查（第 8 步）</a>
+  <a href="#b-ops">　B 运营中的 7 个麻烦</a>
+  <a href="#b-data">　B 附：数据与术语</a>
   <a href="#c">C 任务内容好不好</a>
   <a href="#d">D 推荐算法的功劳</a>
   <a href="#e">E 省了多少人力</a>
@@ -274,44 +279,141 @@ ul.tight{margin:6px 0;padding-left:20px} ul.tight li{margin:4px 0}
 
 <!-- ================= B ================= -->
 <section id="b">
-  <h2><span class="tag">模块 B</span>到底多带来多少（最核心）</h2>
-  <div class="trio">
-    <div class="q"><div class="lab">要回答的问题</div><p>被策略中心选中的人，比“没被选中的自己”多交易了多少？</p></div>
-    <div class="m"><div class="lab">打个比方</div><p>考试 60 分及格进补习班。考 60 分和考 59 分的学生水平几乎一样，只是一个进了班、一个没进。下个月比一比他俩，差距就是补习班的效果。</p></div>
-    <div class="w"><div class="lab">得到什么</div><p>管理层要的“业务增量”，可信度 ★★★★☆。</p></div>
+  <h2><span class="tag">模块 B</span>到底多带来多少：一步一步看懂</h2>
+  <p class="lede">模块 B 只回答一个问题：<b>这批人被策略中心选中之后，比“假如没被选中”多坐了多少次车？</b>下面分 6 步讲清楚它是怎么算的。</p>
+
+  <div class="note info"><b>这一部分只用 5 个词：</b>
+    <b>分数</b>（策略中心给每个人打的分，越高越可能坐车）、
+    <b>分数线</b>（达到就选中）、
+    <b>线附近</b>（分数离线很近的人）、
+    <b>台阶</b>（结果在分数线处突然高出一截）、
+    <b>推算</b>（用已知的规律估计没直接比过的人）。
+    原方案里的专业名词，统一放在每一步最后的灰色小字里，可以跳过不看。</div>
+
+  <ol class="flow">
+    <li><b>第 1 步</b>难在哪</li>
+    <li><b>第 2 步</b>直接比为什么错</li>
+    <li><b>第 3 步</b>线附近的人几乎一样</li>
+    <li><b>第 4 步</b>比一比</li>
+    <li><b>第 5 步</b>看台阶</li>
+    <li><b>第 6 步</b>检查有没有被骗</li>
+  </ol>
+
+  <!-- 1 -->
+  <h3><span class="stepno">1</span>难在哪：看不到“假如没被选中”</h3>
+  <p>小李被选中了，这个月坐了 5 次车。如果他没被选中，会坐几次？<b>没人知道</b>，因为同一个人不可能既被选中、又没被选中。（这一点在前面<a href="#core">“最核心的难题”</a>里讲过。）</p>
+  <p>所以要做的事只有一件：<b>找一群人，他们和被选中的人几乎一模一样，唯一的区别是没被选中。</b>这群人的表现，就是“假如没被选中”的样子。</p>
+
+  <!-- 2 -->
+  <h3><span class="stepno">2</span>最直接的比法，为什么是错的</h3>
+  <p>最容易想到的：拿“所有被选中的人”和“所有没被选中的人”比。</p>
+  <div class="calc">
+    <div class="row"><span>所有被选中的人（分数 0.60–1.00）本月坐车比例</span><b>22.6%</b></div>
+    <div class="row"><span>所有没被选中的人（分数 0–0.60）本月坐车比例</span><b>11.0%</b></div>
+    <div class="row tot" style="color:var(--bad)"><span>相差</span><b>11.6 个百分点 ✗ 太高了</b></div>
+  </div>
+  <p>问题在于：策略中心挑的<b>本来就是最爱坐车的人</b>。就算一张券都不发，高分的人也比低分的人坐车多。这 11.6 个百分点里，绝大部分是“人本来就不一样”，不是券的作用。</p>
+  <div class="story">
+    <div class="who">打个比方</div>
+    学校让考 60 分以上的学生进补习班。期末一看，补习班学生平均 85 分，没进班的平均 45 分，差了 40 分。能说补习班让人提高了 40 分吗？不能：进班的本来就是成绩好的。
   </div>
 
-  <h3>为什么不能直接比“选中的”和“没选中的”？</h3>
-  <p>策略中心给每个候选用户打一个分（0–1，越高越可能交易），分数 ≥ 0.60 的人被选中。如果直接拿两组的平均值比：</p>
+  <!-- 3 -->
+  <h3><span class="stepno">3</span>关键一招：分数线附近的人，几乎一模一样</h3>
+  <p>把所有候选人按分数从低到高排成一排。离分数线很远的两头，人确实差很多；但<b>就在分数线两边</b>，0.59 分和 0.61 分的人有什么区别？</p>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 200" role="img" aria-label="候选人按分数排队，分数线附近两边的人几乎一样">
+      <line x1="30" y1="96" x2="830" y2="96" stroke="var(--line)" stroke-width="2"/>
+      <g id="queue"></g>
+      <rect x="370" y="52" width="120" height="78" rx="10" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <line x1="430" y1="40" x2="430" y2="142" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="430" y="34" text-anchor="middle" fill="var(--ink)" font-size="12.5" font-weight="700">分数线 0.60</text>
+      <g font-size="12" text-anchor="middle">
+        <text x="40" y="128" fill="var(--ink-3)">0.40</text><text x="820" y="128" fill="var(--ink-3)">0.80</text>
+        <text x="400" y="122" fill="var(--ink-2)">0.59</text><text x="460" y="122" fill="var(--ink-2)">0.61</text>
+        <text x="180" y="66" fill="var(--ink-2)">分低：本来就不太坐车</text>
+        <text x="680" y="66" fill="var(--f)">分高：本来就爱坐车</text>
+        <text x="430" y="166" fill="var(--accent)" font-weight="700">线附近：两边几乎一样，只差“被没被选中”</text>
+        <text x="180" y="190" fill="var(--ink-3)">● 灰色：没被选中</text>
+        <text x="680" y="190" fill="var(--f)">● 蓝色：被选中</text>
+      </g>
+    </svg>
+    <figcaption>每个圆点是一个候选人，按分数排队。蓝框里是分数线两边紧挨着的人。</figcaption>
+  </figure>
+  <p>把蓝框里的人拿出来，看看他们<b>被选中之前</b>的样子（数字为虚构）：</p>
+  <div class="table-wrap"><table>
+    <tr><th></th><th>差一点没选上<br><span style="font-weight:400">0.57–0.60 分</span></th><th>刚好选上<br><span style="font-weight:400">0.60–0.63 分</span></th></tr>
+    <tr><td>人数</td><td>1.0 万</td><td>1.0 万</td></tr>
+    <tr><td>过去 3 个月，平均每月坐车次数</td><td>6.1 次</td><td>6.2 次</td></tr>
+    <tr><td>近 30 天打开 App 的天数</td><td>11.7 天</td><td>11.8 天</td></tr>
+    <tr><td>同时被人工也圈中的比例</td><td>43%</td><td>43%</td></tr>
+  </table></div>
+  <p><b>两边几乎一样。</b>差的那 0.02 分，可能只是模型对某个细节多算了一点点，近似于“运气”。也就是说，在分数线附近，<b>谁被选中、谁没被选中，几乎就像抛硬币决定的</b>。</p>
+  <div class="story">
+    <div class="who">回到补习班</div>
+    考 60 分和考 59 分的两个学生，水平没什么差别，可能只是一个多蒙对了一道选择题。但一个进了补习班，一个没进。下学期再比他俩，差距就只能是补习班带来的。
+  </div>
+  <p class="pro">原方案里：“分数”叫运行变量，“分数线”叫阈值（c₀），“线附近的范围”叫带宽。</p>
+
+  <!-- 4 -->
+  <h3><span class="stepno">4</span>比一比：线附近的人本月坐车多少</h3>
+  <div class="calc">
+    <div class="row"><span>差一点没选上的 1 万人，本月坐车比例</span><b>17.0%（1,700 人）</b></div>
+    <div class="row"><span>刚好选上的 1 万人，本月坐车比例</span><b>18.6%（1,860 人）</b></div>
+    <div class="row tot" style="color:var(--ok)"><span>多出来的</span><b>160 人 = 1.6 个百分点 ✓</b></div>
+  </div>
+  <p>意思是：<b>每 100 个被选中的人里，有 1.6 个人是因为被选中才坐车的。</b>这就是策略中心在分数线附近的真实效果，比第 2 步的 11.6 小得多，但它是真的。</p>
+  <p class="pro">“百分点”就是两个百分比直接相减：18.6% − 17.0% = 1.6 个百分点。被选中的人里，有人因为任务下线根本没看到券，也照样算在“选中”这一边，因为要算的是真实运营情况下的效果（原方案叫意向处理效应 ITT）。</p>
+
+  <!-- 5 -->
+  <h3><span class="stepno">5</span>看“台阶”：把整条线画出来</h3>
+  <p>第 4 步只比了两个平均数。更稳妥的看法是把<b>分数和坐车比例的关系画成一条线</b>。分数越高，坐车比例本来就越高，所以这条线是一个缓慢上升的斜坡。</p>
   <div class="grid2">
-    <div class="calc">
-      <div class="row"><span>全部被选中的人（0.60–1.00 分）</span><b>转化 22.6%</b></div>
-      <div class="row"><span>全部没选中的人（0–0.60 分）</span><b>转化 11.0%</b></div>
-      <div class="row tot" style="color:var(--bad)"><span>直接相减</span><b>11.6 个百分点 ✗</b></div>
-    </div>
-    <div class="calc">
-      <div class="row"><span>刚过线的人（0.60 分左右）</span><b>转化 18.6%</b></div>
-      <div class="row"><span>差一点没过线的人（0.59 分左右）</span><b>转化 17.0%</b></div>
-      <div class="row tot" style="color:var(--ok)"><span>只比线附近的人</span><b>1.6 个百分点 ✓</b></div>
-    </div>
+    <figure class="fig" style="margin:0">
+      <svg viewBox="0 0 420 230" role="img" aria-label="策略有效时，分数线处出现台阶">
+        <text x="20" y="22" fill="var(--ok)" font-size="13.5" font-weight="700">如果券有用：线上出现一个台阶</text>
+        <line x1="40" y1="200" x2="400" y2="200" stroke="var(--ink-3)"/><line x1="40" y1="200" x2="40" y2="36" stroke="var(--ink-3)"/>
+        <line x1="220" y1="40" x2="220" y2="200" stroke="var(--ink)" stroke-dasharray="4 3"/>
+        <path d="M40,178 L220,130" stroke="var(--ink-3)" stroke-width="3" fill="none"/>
+        <path d="M220,104 L400,56" stroke="var(--f)" stroke-width="3" fill="none"/>
+        <line x1="232" y1="130" x2="232" y2="106" stroke="var(--bad)" stroke-width="2.5"/>
+        <polygon points="227,110 232,102 237,110" fill="var(--bad)"/>
+        <text x="242" y="124" fill="var(--bad)" font-size="12.5" font-weight="700">台阶 = 1.6 个百分点</text>
+        <text x="220" y="216" text-anchor="middle" fill="var(--ink)" font-size="11.5">分数线</text>
+        <text x="120" y="216" text-anchor="middle" fill="var(--ink-3)" font-size="11.5">没选中</text>
+        <text x="320" y="216" text-anchor="middle" fill="var(--f)" font-size="11.5">选中</text>
+      </svg>
+    </figure>
+    <figure class="fig" style="margin:0">
+      <svg viewBox="0 0 420 230" role="img" aria-label="策略无效时，线是平滑的斜坡，没有台阶">
+        <text x="20" y="22" fill="var(--ink-2)" font-size="13.5" font-weight="700">如果券没用：一条平滑的斜坡</text>
+        <line x1="40" y1="200" x2="400" y2="200" stroke="var(--ink-3)"/><line x1="40" y1="200" x2="40" y2="36" stroke="var(--ink-3)"/>
+        <line x1="220" y1="40" x2="220" y2="200" stroke="var(--ink)" stroke-dasharray="4 3"/>
+        <path d="M40,178 L220,130" stroke="var(--ink-3)" stroke-width="3" fill="none"/>
+        <path d="M220,130 L400,82" stroke="var(--f)" stroke-width="3" fill="none"/>
+        <text x="236" y="150" fill="var(--ink-2)" font-size="12.5">没有台阶 = 没有效果</text>
+        <text x="220" y="216" text-anchor="middle" fill="var(--ink)" font-size="11.5">分数线</text>
+        <text x="120" y="216" text-anchor="middle" fill="var(--ink-3)" font-size="11.5">没选中</text>
+        <text x="320" y="216" text-anchor="middle" fill="var(--f)" font-size="11.5">选中</text>
+      </svg>
+    </figure>
   </div>
-  <p>左边那 11.6 个百分点里，绝大部分是“高分的人本来就爱坐车”，不是策略的功劳。右边只比分数线两边紧挨着的人，他们本来差不多，<b>唯一的区别就是被没被选中</b>，所以 1.6 个百分点才是真效果。</p>
-  <p style="font-size:14px;color:var(--ink-2)">“百分点”就是两个百分比直接相减：17.0% → 18.6% 是多了 1.6 个百分点，意思是<b>每 100 个人里多了 1.6 个人坐车</b>。</p>
-
+  <p>横轴是分数，纵轴是本月坐车比例。斜坡本身是“高分的人本来就爱坐车”，<b>和券无关</b>；只有在分数线那个位置<b>突然高出来的一截</b>，才是券的作用。所以整套方法其实就是：<b>量这个台阶有多高。</b></p>
+  <p>为什么要画线，而不是只比平均数？因为就算在线附近，0.62 分的人也比 0.58 分的人稍微爱坐车一点。直接求平均，会把这一点点“斜坡”也算成效果。下面可以自己试试：</p>
   <div class="demo" id="demo">
-    <b>动手试一试：比较的范围越宽，算出来的“效果”越虚高</b>
-    <p style="margin:6px 0 4px;font-size:14px;color:var(--ink-2)">拖动滑块，改变“分数线两边各取多宽的人来比”。</p>
+    <b>动手试一试：“线附近”取得越宽，算出来的效果越虚高</b>
+    <p style="margin:6px 0 4px;font-size:14px;color:var(--ink-2)">拖动滑块，改变“分数线两边各取多宽的人来比”。蓝线比灰线高出的那一截，就是真实的台阶（1.6 个百分点）。</p>
     <input id="bw" type="range" min="1" max="40" value="3" aria-label="比较范围">
     <svg viewBox="0 0 640 210" role="img" aria-label="分数与转化率示意，阴影为比较范围" style="width:100%;height:auto;margin-top:6px">
       <line x1="40" y1="180" x2="620" y2="180" stroke="var(--ink-3)"/>
       <line x1="40" y1="180" x2="40" y2="14" stroke="var(--ink-3)"/>
       <text x="180" y="204" text-anchor="middle" fill="var(--ink-2)" font-size="12">选人分数（0 → 1）</text>
-      <text x="14" y="100" fill="var(--ink-2)" font-size="12" transform="rotate(-90 14 100)" text-anchor="middle">转化率</text>
+      <text x="14" y="100" fill="var(--ink-2)" font-size="12" transform="rotate(-90 14 100)" text-anchor="middle">坐车比例</text>
       <rect id="band" x="0" y="14" width="0" height="166" fill="var(--accent)" opacity=".14"/>
       <path id="lineL" fill="none" stroke="var(--ink-3)" stroke-width="2.5"/>
       <path id="lineR" fill="none" stroke="var(--f)" stroke-width="2.5"/>
       <line id="cut" y1="14" y2="180" stroke="var(--ink)" stroke-dasharray="5 4"/>
-      <text id="cutT" y="194" text-anchor="middle" fill="var(--ink)" font-size="11.5" font-weight="700">及格线 0.60</text>
+      <text id="cutT" y="194" text-anchor="middle" fill="var(--ink)" font-size="11.5" font-weight="700">分数线 0.60</text>
       <text x="60" y="34" fill="var(--ink-3)" font-size="12">灰线：没选中</text>
       <text x="60" y="52" fill="var(--f)" font-size="12">蓝线：被选中（多了 1.6 个百分点）</text>
     </svg>
@@ -322,10 +424,143 @@ ul.tight{margin:6px 0;padding-left:20px} ul.tight li{margin:4px 0}
     </div>
     <div class="verdict" id="verdict"></div>
   </div>
-  <p class="pro">实际计算时不会只求平均，而是在线两边各画一条趋势线，看线在及格线处“断开”了多少（上图中蓝线比灰线高出的那一截）。这样即使范围稍宽也不容易虚高。这个方法在原方案里叫<b>断点回归（RDD）</b>，那条“分数线”叫阈值，“线两边各取多宽”叫带宽。</p>
+  <p class="pro">原方案把“量台阶的高度”这个方法叫<b>断点回归（RDD）</b>。“断点”就是台阶的位置，“回归”就是画那两段线。</p>
 
+  <!-- 6 -->
+  <h3><span class="stepno">6</span>检查有没有被骗</h3>
+  <p>“线附近的人几乎一样”是整套方法的前提。万一不成立，台阶就可能是假的。所以每个月都做三项检查：</p>
+  <div class="grid3">
+    <div class="card" style="margin:0"><b>① 两边以前像不像</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">比较两边的人<b>被选中之前</b>的坐车次数、活跃天数（就是第 3 步那张表）。应该几乎一样。</p></div>
+    <div class="card" style="margin:0"><b>② 有没有人被“挤”过线</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">如果有人能把自己的分数刚好调过线，线上方的人数会突然变多。人数应该平滑过渡。运营不能手动删人或加人，这一点已确认。</p></div>
+    <div class="card" style="margin:0"><b>③ 没发券时有没有台阶</b><p style="margin:4px 0 0;font-size:14px;color:var(--ink-2)">拿策略中心上线<b>之前</b>的月份，在同样位置划线再看一次。那时没有券，应该没有台阶；如果也有，说明方法有问题。</p></div>
+  </div>
+  <p class="pro">原方案里分别叫：协变量平衡检验、密度检验、安慰剂检验。</p>
+
+  <div class="note ok" style="font-size:15.5px"><b>一句话记住模块 B 的核心逻辑：</b>在分数线附近，“差一点没选上的人”就是“选上的人假如没被选中”的样子。比较这两拨人，量出分数线处的台阶，就是策略中心真正带来的效果。</div>
+</section>
+
+<!-- ================= B 推到所有人 ================= -->
+<section id="b-ext">
+  <h2><span class="tag">模块 B</span>第 7 步：从线附近的人，推到所有被选中的人</h2>
+  <p class="lede">台阶只告诉我们“刚过线那批人”的效果。可是被选中的人里，大部分分数远高于分数线，比如 0.85 分的小王，他的效果是多少？</p>
+  <div class="story">
+    <div class="who">打个比方</div>
+    不同的班，补习班的入班线不一样：一班 55 分、二班 60 分、三班 70 分、四班 80 分。每个班都能在自己的入班线上量出一个台阶。把这四个台阶的高度连起来，就能看出“分数越高、补习效果越大还是越小”，再用这个规律估计 75 分、85 分学生的效果。
+  </div>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 280" role="img" aria-label="四个子人群的及格线效应连成曲线">
+      <line x1="70" y1="230" x2="820" y2="230" stroke="var(--ink-3)"/>
+      <line x1="70" y1="230" x2="70" y2="20" stroke="var(--ink-3)"/>
+      <text x="445" y="266" text-anchor="middle" fill="var(--ink-2)" font-size="12.5">用户分数在当周候选人里排第几（越右分越高）</text>
+      <text x="22" y="125" fill="var(--ink-2)" font-size="12.5" transform="rotate(-90 22 125)" text-anchor="middle">台阶高度（百分点）</text>
+      <!-- y: 0pp at 230, 1pp = 70px -->
+      <g font-size="11" fill="var(--ink-3)"><text x="60" y="234" text-anchor="end">0</text><text x="60" y="164" text-anchor="end">1.0</text><text x="60" y="94" text-anchor="end">2.0</text></g>
+      <line x1="70" y1="160" x2="820" y2="160" stroke="var(--line)" stroke-dasharray="2 4"/>
+      <line x1="70" y1="90" x2="820" y2="90" stroke="var(--line)" stroke-dasharray="2 4"/>
+      <!-- x: 0% at 70, 100% at 820 → 7.5px per % -->
+      <rect x="370" y="20" width="337" height="210" fill="var(--f-soft)" opacity=".5"/>
+      <text x="538" y="38" text-anchor="middle" fill="var(--f)" font-size="12">有分数线的范围（可以推算）</text>
+      <path d="M370,160 C450,135 540,105 707,90" fill="none" stroke="var(--accent)" stroke-width="3"/>
+      <line x1="707" y1="90" x2="815" y2="90" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="7 5"/>
+      <text x="760" y="80" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">更高分：用最近的值</text>
+      <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2.5">
+        <circle cx="370" cy="160" r="7"/><circle cx="482" cy="132" r="7"/><circle cx="595" cy="104" r="7"/><circle cx="707" cy="90" r="7"/>
+      </g>
+      <g font-size="12" fill="var(--ink)" font-weight="700" text-anchor="middle">
+        <text x="370" y="185">一班 1.0</text><text x="482" y="157">二班 1.4</text><text x="595" y="129">三班 1.8</text><text x="707" y="115">四班 2.0</text>
+      </g>
+      <g font-size="11" fill="var(--ink-3)" text-anchor="middle">
+        <text x="370" y="246">40%</text><text x="482" y="246">55%</text><text x="595" y="246">70%</text><text x="707" y="246">85%</text>
+      </g>
+    </svg>
+    <figcaption>每个点是一个班在自己分数线上量出的台阶高度，连成一条线。这个例子里分越高效果越大，就用这条线推算高分用户。超出范围的更高分用户，用最近一个点的值。数字为虚构。</figcaption>
+  </figure>
+  <h3>把总数算一遍</h3>
+  <p>假设本月一共选中 100 万人：</p>
+  <div class="calc">
+    <div class="row"><span>① 线附近的 10 万人 × 1.6 个百分点（<b>真的比过</b>）</span><b>≈ 1,600 人</b></div>
+    <div class="row"><span>② 离线较远的 90 万人 × 曲线上平均约 1.9 个百分点（<b>推算</b>）</span><b>≈ 17,100 人</b></div>
+    <div class="row tot"><span>合计多带来的坐车用户</span><b>≈ 1.87 万人</b></div>
+    <div class="row"><span>其中真的比过的部分</span><b>约 9%</b></div>
+  </div>
+  <div class="note"><b>这是整套方法最大的弱点，原方案也直接承认了：</b>总数里大部分是推算出来的。所以每个月都要报“推算部分占多少”，并且定期用下一步的办法抽查推算准不准。</div>
+  <p class="pro">原方案里：各个“班”叫子人群；连起来的线叫效应-分数曲线；“推算”叫外推；“真的比过的部分”叫直接证据。</p>
+</section>
+
+<!-- ================= B 抽查 ================= -->
+<section id="b-cal">
+  <h2><span class="tag">模块 B</span>第 8 步：定期抽查推算准不准</h2>
+  <div class="story">
+    <div class="who">打个比方</div>
+    体重秤准不准，偶尔拿一个标准砝码称一下就知道，不需要每天称。
+  </div>
+  <p><b>做法：</b>每月挑一周，从被选中的人里<b>随机抽 5% 不发框架任务</b>。因为是随机抽的，这 5% 和其他 95% 一模一样，直接比就是这一周的真实效果，不需要任何推算。</p>
+  <div class="calc">
+    <div class="row"><span>正常发任务的 95 万人</span><b>坐车比例 22.0%</b></div>
+    <div class="row"><span>随机抽出来、不发任务的 5 万人</span><b>坐车比例 20.1%</b></div>
+    <div class="row tot"><span>直接测出的效果（大概在 1.5–2.3 之间）</span><b>1.9 个百分点</b></div>
+    <div class="row"><span>同一周用“台阶 + 推算”得出的效果</span><b>1.85 个百分点</b></div>
+    <div class="row" style="color:var(--ok);font-weight:700"><span>推算值落在直接测出的范围里</span><b>✓ 推算靠得住</b></div>
+  </div>
+  <div class="table-wrap"><table>
+    <tr><th>抽查结果</th><th>怎么办</th></tr>
+    <tr><td>推算值落在直接测出的范围里</td><td>推算靠得住，其他周继续用</td></tr>
+    <tr><td>连续两次往同一个方向偏</td><td>按抽查结果修正那条曲线</td></tr>
+    <tr><td>差得很远</td><td>推算不再可信，给管理层只报“真的比过”的部分，并查原因</td></tr>
+  </table></div>
+  <p><b>代价：</b>抽出来的人这一周少了框架任务。交通每月只抽 1 周，相当于全年少了约 1.25% 的增量。<b>为什么不一直留一组不发？</b>因为人工任务越来越少，被留出来的人基本什么定向任务都看不到，流量就白白浪费了。</p>
+  <p class="pro">原方案里这叫校准型留出。还有两个更省钱的补充办法：在分数线上下很窄的一段里抛硬币决定选不选；扩大人群时把新加的人随机分两批、晚 1–2 天生效。原理都是人为制造“抛硬币分组”。</p>
+</section>
+
+<!-- ================= B 运营中的麻烦 ================= -->
+<section id="b-ops">
+  <h2><span class="tag">模块 B</span>实际运营中的 7 个麻烦，怎么处理</h2>
+  <p class="lede">前面讲的是理想情况。实际运营中会有各种调整，每一种都有对应的处理规则。核心原则只有一条：<b>谁算“选中”、谁算“没选中”，永远按第 1 天的分数线来定，后面怎么调整都不改。</b></p>
+  <figure class="fig">
+    <svg class="wide" viewBox="0 0 860 190" role="img" aria-label="周期内调整时间线">
+      <line x1="40" y1="80" x2="830" y2="80" stroke="var(--ink-3)" stroke-width="2"/>
+      <polygon points="830,74 842,80 830,86" fill="var(--ink-3)"/>
+      <g text-anchor="middle" font-size="12.5">
+        <circle cx="100" cy="80" r="13" fill="var(--f)"/><text x="100" y="85" fill="var(--surface)" font-weight="700">1</text>
+        <text x="100" y="50" fill="var(--ink)" font-weight="700">第 1 天：按 0.60 选人</text>
+        <text x="100" y="112" fill="var(--ink-2)">分组<tspan font-weight="700">永远以这一刻为准</tspan></text>
+        <circle cx="320" cy="80" r="13" fill="var(--ok)"/><text x="320" y="85" fill="var(--surface)" font-weight="700">2</text>
+        <text x="320" y="32" fill="var(--ok)">效果好</text>
+        <text x="320" y="50" fill="var(--ink)" font-weight="700">第 3 天：扩大人群</text>
+        <text x="320" y="112" fill="var(--ink-2)">找“长得像”的人加进来</text>
+        <text x="320" y="130" fill="var(--ink-2)">新加的人<tspan font-weight="700">单独算一笔</tspan></text>
+        <circle cx="540" cy="80" r="13" fill="var(--warn)"/><text x="540" y="85" fill="var(--surface)" font-weight="700">3</text>
+        <text x="540" y="32" fill="var(--warn)">效果差</text>
+        <text x="540" y="50" fill="var(--ink)" font-weight="700">缩小人群</text>
+        <text x="540" y="112" fill="var(--ink-2)">只作内部参考</text>
+        <rect x="737" y="67" width="26" height="26" rx="4" fill="var(--bad)"/><text x="750" y="85" fill="var(--surface)" font-weight="700">×</text>
+        <text x="750" y="32" fill="var(--bad)">还是差</text>
+        <text x="750" y="50" fill="var(--ink)" font-weight="700">下线</text>
+        <text x="750" y="112" fill="var(--ink-2)">照样算在“被选中”组</text>
+      </g>
+      <rect x="40" y="152" width="790" height="28" rx="7" fill="var(--f-soft)"/>
+      <text x="435" y="171" text-anchor="middle" fill="var(--f)" font-size="12.5">最终算的是：“第 1 天被选中，并经历后面所有调整”的整体效果，也就是这套自动调优流程的真实效果</text>
+    </svg>
+  </figure>
+  <div class="table-wrap"><table>
+    <tr><th style="width:24%">麻烦</th><th style="width:36%">怎么处理</th><th>为什么</th></tr>
+    <tr><td><b>① 任务中途下线</b><br><span style="color:var(--ink-3);font-size:13px">小周被选中了，但第二天任务下线，他没看到券</span></td><td>小周<b>照样算“选中”</b></td><td>要算的是真实运营下的效果，下线也是运营的一部分</td></tr>
+    <tr><td><b>② 第 5 天重新打分</b><br><span style="color:var(--ink-3);font-size:13px">小陈用券坐了几次车，分数从 0.61 涨到 0.85</span></td><td>分组<b>只看第 1 天的分数</b></td><td>新分数已经被券影响了，再用它来证明券有效，就成了循环论证</td></tr>
+    <tr><td><b>③ 效果好，扩大人群</b><br><span style="color:var(--ink-3);font-size:13px">拿选中的人当样板，找“长得像”的人加进来</span></td><td>新加的人用“像不像”这把尺子<b>单独量一次台阶</b>，单独算一笔，最后加到总数</td><td>“像不像”是另一把尺子，和原来的分数不能混着算</td></tr>
+    <tr><td><b>④ 效果差，缩小人群</b></td><td>只作内部参考，不进管理层的数</td><td>缩小时剔除谁，往往已经受前几天券的影响</td></tr>
+    <tr><td><b>⑤ 人工也圈了这个人</b></td><td>分开算：只被框架选中的 1.6 个百分点，人工也圈了的 0.7 个百分点</td><td>就算框架没选他，人工也会发券，所以框架多带来的少。算出来的已经是人工之外多出来的部分，不会和人工抢功劳</td></tr>
+    <tr><td><b>⑥ 交通每周重新选人</b><br><span style="color:var(--ink-3);font-size:13px">小李上周被选中、多坐了车，本周分数更高又被选中</span></td><td>把“上周没被选中的新面孔”和“上周也被选中的老面孔”<b>分开量台阶</b>，再把 4 周加起来</td><td>上周的券让本周分数变高，混在一起比，线两边就不一样了。本周的券对下周的影响没算进去，所以月度数字偏保守</td></tr>
+    <tr><td><b>⑦ 调优时和谁比</b><br><span style="color:var(--ink-3);font-size:13px">选中人群坐车比例 20%</span></td><td>和<b>刚好没选上的人</b>（18.5%）比，好了 1.5 个百分点；<b>不要</b>和全行业平均（10%）比</td><td>选中的人本来就比平均水平爱坐车。和平均比永远显得“效果很好”，运营就会不停扩大人群，真正的增量反而下降</td></tr>
+  </table></div>
+  <p class="pro">原方案里：①叫意向处理效应（ITT）；③里“像不像”的分叫相似度分，那条线叫 c₁；扩大把第 1 天没过线的人也拉进来时，用“模糊断点 + 工具变量”按实际入选天数折算；⑥叫“按上周入选状态分层”，另用“入选路径法”交叉检查；⑦是调优信号的“基线”选择。</p>
+</section>
+
+<!-- ================= B 附：数据与术语 ================= -->
+<section id="b-data">
+  <h2><span class="tag">模块 B</span>附：需要什么数据，以及三个常见词</h2>
+  <p class="lede">想更细地了解“线附近的人从哪找”“分数线怎么定”“线附近到底多近”，看这一节。</p>
   <h3>前提：没被选中的人也要“记下来”</h3>
-  <p>上面要比的“0.59 分、差一点没过线的人”，必须在数据里找得到。人工人群包只记“最后选中了谁”，没选中的人就找不到了。所以框架人群包<b>额外多存 4 个字段</b>：</p>
+  <p>第 3 步要比的“0.59 分、差一点没选上的人”，必须在数据里找得到。人工人群包只记“最后选中了谁”，没选中的人就找不到了。所以框架人群包<b>额外多存 4 个字段</b>：</p>
   <div class="table-wrap"><table>
     <tr><th style="width:18%">字段</th><th>大白话</th><th style="width:34%">用来干什么</th></tr>
     <tr><td><b>候选标识</b></td><td>这个人有没有进入这次选人的候选池，也就是有没有被打过分。<b>没选中的也要记</b></td><td>分清“被考虑过但没选上”和“根本没被考虑”</td></tr>
@@ -355,14 +590,14 @@ ul.tight{margin:6px 0;padding-left:20px} ul.tight li{margin:4px 0}
   </table></div>
   <ul class="tight">
     <li><b>线有两种定法</b>：直接定“≥ 0.60 入选”；或者按名额“只选最高的 10 万人”。按名额选时，排第 10 万名的人是 0.63 分，那 0.63 就是这条线。两种定法效果一样，都会在某个分数上切一刀。</li>
-    <li><b>每条线都能做一次“刚过线 vs 差一点”的对比。</b>线越多、落的位置越分散，下一节那条“效果随分数变化”的曲线就画得越准。</li>
+    <li><b>每条线都能做一次“刚过线 vs 差一点”的对比。</b>线越多、落的位置越分散，第 7 步那条“台阶高度随分数变化”的线就画得越准。</li>
     <li><b>没过线的人不会被别的班捡走</b>（原方案 K2），所以线下方的人是干净的对照组。</li>
     <li><b>交通的线每周都变</b>：每周重新打分、重新划线，所以每周单独比。</li>
     <li>原方案里的 c₀、c₁、c₂：c₀ 是第 1 天的分数线；c₁ 是扩大人群时“像不像”那把尺子上的线；c₂ 是缩小人群时提高后的线。</li>
   </ul>
 
   <h3>线两边各取多宽来比（带宽）</h3>
-  <p>“只比线附近的人”，到底多近算附近？这个范围在原方案里叫<b>带宽</b>。比如分数线 0.60、带宽 ±0.03，就是拿 <b>0.57–0.60 分（没选中）</b>和 <b>0.60–0.63 分（选中）</b>的人来比。上面的滑块拖的就是带宽。</p>
+  <p>“只比线附近的人”，到底多近算附近？这个范围在原方案里叫<b>带宽</b>。比如分数线 0.60、带宽 ±0.03，就是拿 <b>0.57–0.60 分（没选中）</b>和 <b>0.60–0.63 分（选中）</b>的人来比。第 5 步的滑块拖的就是带宽。</p>
   <p>带宽是个取舍：</p>
   <div class="table-wrap"><table>
     <tr><th>带宽【虚构】</th><th>两边各多少人</th><th>算出的效果</th><th>大白话</th></tr>
@@ -373,196 +608,25 @@ ul.tight{margin:6px 0;padding-left:20px} ul.tight li{margin:4px 0}
   <ul class="tight">
     <li><b>带宽不能人为挑。</b>主口径用统计方法自动选，避免“哪个结果好看就用哪个”。</li>
     <li><b>换几个带宽再算一遍。</b>同时报一半宽、两倍宽的结果，三个数方向一致、大小接近，结论才算站得住。</li>
-    <li><b>带宽里的人 = 直接证据；带宽外的人 = 靠推算。</b>后面“直接证据只占约 9%”说的就是带宽里的这部分。</li>
+    <li><b>带宽里的人 = 直接证据；带宽外的人 = 靠推算。</b>第 7 步“真的比过的部分只占约 9%”说的就是带宽里的这部分。</li>
     <li>交通每周重新打分，带宽用“排名”表示，例如分数线上下各 5 个百分位。</li>
   </ul>
 
-  <h3>一个细节：没看到券的人也要算进去</h3>
-  <div class="story">
-    <div class="who">例子 · 小周</div>
-    小周被选中了，但第二天运营把这个任务下线了，他根本没看到券。
-    <br>算增量时，小周<b>照样算在“被选中”那一组</b>。因为管理层要的是“在真实运营情况下（有人看不到、任务会下线），选中这批人带来了多少”，而不是“理想情况下每个人都看到券能带来多少”。
-  </div>
-  <p class="pro">原方案把这个口径叫<b>意向处理效应（ITT）</b>：按“是否被选中”分组，而不是按“是否真的看到”分组。</p>
-
-  <h3>再一个细节：人工也圈了的人，效果更小</h3>
-  <div class="calc">
-    <div class="row"><span>只被框架选中的人（线附近）</span><b>多 1.6 个百分点</b></div>
-    <div class="row"><span>框架和人工都选中的人（线附近）</span><b>多 0.7 个百分点</b></div>
-  </div>
-  <p>原因很简单：就算框架没选中这些人，人工的券也会发给他们，所以框架“多带来”的就少。好处是，这样算出来的已经是<b>人工之外再多出来</b>的部分，不会和人工重复抢功劳。</p>
-</section>
-
-<!-- ================= B 外推 ================= -->
-<section id="b-ext">
-  <h2><span class="tag">模块 B</span>高分用户的效果怎么算</h2>
-  <p class="lede">上面的方法只能算出“刚过线那批人”的效果。可是被选中的 420 万人里，大部分人分数远高于及格线，他们的效果是多少？</p>
-
-  <div class="trio">
-    <div class="q"><div class="lab">问题</div><p>只知道 60 分附近学生的补习效果，80 分、90 分学生的效果呢？</p></div>
-    <div class="m"><div class="lab">打个比方</div><p>不同班级的及格线不一样：一班 55 分、二班 60 分、三班 70 分、四班 80 分。每个班都能算出“刚过线”的效果，把这几个点连成一条线，就能估计 75 分、85 分学生的效果。</p></div>
-    <div class="w"><div class="lab">得到什么</div><p>远离分数线的人也有了估计值，但这部分是<b>推算</b>的，可信度低一档。</p></div>
-  </div>
-
-  <figure class="fig">
-    <svg class="wide" viewBox="0 0 860 280" role="img" aria-label="四个子人群的及格线效应连成曲线">
-      <line x1="70" y1="230" x2="820" y2="230" stroke="var(--ink-3)"/>
-      <line x1="70" y1="230" x2="70" y2="20" stroke="var(--ink-3)"/>
-      <text x="445" y="266" text-anchor="middle" fill="var(--ink-2)" font-size="12.5">用户分数在当周候选人里排第几（越右分越高）</text>
-      <text x="22" y="125" fill="var(--ink-2)" font-size="12.5" transform="rotate(-90 22 125)" text-anchor="middle">被选中带来的效果（百分点）</text>
-      <!-- y: 0pp at 230, 1pp = 70px -->
-      <g font-size="11" fill="var(--ink-3)"><text x="60" y="234" text-anchor="end">0</text><text x="60" y="164" text-anchor="end">1.0</text><text x="60" y="94" text-anchor="end">2.0</text></g>
-      <line x1="70" y1="160" x2="820" y2="160" stroke="var(--line)" stroke-dasharray="2 4"/>
-      <line x1="70" y1="90" x2="820" y2="90" stroke="var(--line)" stroke-dasharray="2 4"/>
-      <!-- x: 0% at 70, 100% at 820 → 7.5px per % -->
-      <rect x="370" y="20" width="337" height="210" fill="var(--f-soft)" opacity=".5"/>
-      <text x="538" y="38" text-anchor="middle" fill="var(--f)" font-size="12">有及格线的范围（可以推算）</text>
-      <path d="M370,160 C450,135 540,105 707,90" fill="none" stroke="var(--accent)" stroke-width="3"/>
-      <line x1="707" y1="90" x2="815" y2="90" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="7 5"/>
-      <text x="760" y="80" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">更高分：用最近的值</text>
-      <g fill="var(--surface)" stroke="var(--ink)" stroke-width="2.5">
-        <circle cx="370" cy="160" r="7"/><circle cx="482" cy="132" r="7"/><circle cx="595" cy="104" r="7"/><circle cx="707" cy="90" r="7"/>
-      </g>
-      <g font-size="12" fill="var(--ink)" font-weight="700" text-anchor="middle">
-        <text x="370" y="185">一班 1.0</text><text x="482" y="157">二班 1.4</text><text x="595" y="129">三班 1.8</text><text x="707" y="115">四班 2.0</text>
-      </g>
-      <g font-size="11" fill="var(--ink-3)" text-anchor="middle">
-        <text x="370" y="246">40%</text><text x="482" y="246">55%</text><text x="595" y="246">70%</text><text x="707" y="246">85%</text>
-      </g>
-    </svg>
-    <figcaption>四个“班”（原方案叫子人群）的及格线落在不同位置，各自算出一个点，连成曲线。分越高效果越大，这个规律就可以用来推算高分用户。数字为虚构。</figcaption>
-  </figure>
-
-  <h3>把总增量算一遍</h3>
-  <p>假设本月一共选中 100 万人：</p>
-  <div class="calc">
-    <div class="row"><span>① 分数在及格线附近的 10 万人 × 1.6 个百分点</span><b>≈ 1,600 人</b></div>
-    <div class="row"><span>　　→ 这部分有<b>直接证据</b>（线两边真的比过）</span><b></b></div>
-    <div class="row"><span>② 分数较高的 90 万人 × 曲线上平均约 1.9 个百分点</span><b>≈ 17,100 人</b></div>
-    <div class="row"><span>　　→ 这部分是<b>沿曲线推算</b>的</span><b></b></div>
-    <div class="row tot"><span>合计增量</span><b>≈ 1.87 万人</b></div>
-    <div class="row"><span>其中直接证据占比</span><b>约 9%</b></div>
-  </div>
-  <div class="note"><b>这是整套方案最大的弱点，原方案也直接承认了：</b>总增量里大部分是推算出来的。所以每个月都要报“推算部分占多少”，并且定期用下一节的办法验证推算准不准。</div>
-</section>
-
-<!-- ================= B 校准 ================= -->
-<section id="b-cal">
-  <h2><span class="tag">模块 B</span>怎么验证推算准不准</h2>
-  <div class="trio">
-    <div class="q"><div class="lab">问题</div><p>沿曲线推算出来的数，会不会差得很远？</p></div>
-    <div class="m"><div class="lab">打个比方</div><p>体重秤准不准，偶尔拿一个标准砝码称一下就知道。不需要每天称砝码，定期检查就行。</p></div>
-    <div class="w"><div class="lab">做法</div><p>每月挑一周，从被选中的人里<b>随机抽 5% 不发框架任务</b>，直接和正常发的人比。</p></div>
-  </div>
-  <div class="calc">
-    <div class="row"><span>正常发任务的入选用户（95 万人）</span><b>转化 22.0%</b></div>
-    <div class="row"><span>随机抽出来、不发任务的入选用户（5 万人）</span><b>转化 20.1%</b></div>
-    <div class="row tot"><span>直接测出的效果（范围约 1.5–2.3 个百分点）</span><b>1.9 个百分点</b></div>
-    <div class="row"><span>同一周用“及格线 + 推算”算出的平均效果</span><b>1.85 个百分点</b></div>
-    <div class="row" style="color:var(--ok);font-weight:700"><span>推算值落在直接测出的范围内</span><b>✓ 推算可信</b></div>
-  </div>
+  <h3>专业词和白话的对照</h3>
   <div class="table-wrap"><table>
-    <tr><th>校准结果</th><th>怎么处理</th></tr>
-    <tr><td>推算值落在直接测出的范围内</td><td>推算可信，其他周继续用推算，标“已校准”</td></tr>
-    <tr><td>连续两次往同一个方向偏</td><td>按校准结果修正曲线</td></tr>
-    <tr><td>差得很远</td><td>推算降为 ★★☆☆☆，管理层版只报直接证据部分，并查原因</td></tr>
+    <tr><th>本页说法</th><th>原方案里的叫法</th></tr>
+    <tr><td>分数</td><td>选人分数 / 运行变量</td></tr>
+    <tr><td>分数线</td><td>子人群阈值（c₀；扩大时 c₁，缩小时 c₂）</td></tr>
+    <tr><td>线附近（多近算附近）</td><td>带宽</td></tr>
+    <tr><td>量台阶的高度</td><td>断点回归（RDD），台阶高度叫阈值处效应</td></tr>
+    <tr><td>没看到券也算“选中”</td><td>意向处理效应（ITT）</td></tr>
+    <tr><td>真的比过的部分 / 推算的部分</td><td>直接证据 / 外推</td></tr>
+    <tr><td>把各班的台阶连成线</td><td>效应-分数曲线</td></tr>
+    <tr><td>定期抽查</td><td>校准型留出（holdout）</td></tr>
+    <tr><td>两边以前像不像 / 有没有人挤过线 / 没发券时有没有台阶</td><td>协变量平衡 / 密度检验 / 安慰剂检验</td></tr>
   </table></div>
-  <p><b>代价：</b>抽出来的 5% 人这一周少了框架任务。交通每月只做 1 周，相当于全年增量少了约 1.25%。<b>为什么不常年留一组不发？</b>因为人工任务越来越少，被留出的人基本什么定向任务都看不到，流量白白浪费。</p>
-  <p class="pro">原方案还有两个更省钱的补充办法：在及格线上下一个很窄的分数段里抛硬币决定选不选（几乎零成本）；扩大人群时把新加的人随机分两批、晚 1–2 天生效。原理一样，都是人为制造“抛硬币分组”，让对比更干净。</p>
 </section>
 
-<!-- ================= B 运营 ================= -->
-<section id="b-ops">
-  <h2><span class="tag">模块 B</span>运营中途调整怎么办</h2>
-  <p class="lede">实际运营中，策略上线后几天就会调整：效果好就扩大人群，效果差就缩小，还不行就下线。这会不会把对比搞乱？</p>
-
-  <figure class="fig">
-    <svg class="wide" viewBox="0 0 860 190" role="img" aria-label="周期内调整时间线">
-      <line x1="40" y1="80" x2="830" y2="80" stroke="var(--ink-3)" stroke-width="2"/>
-      <polygon points="830,74 842,80 830,86" fill="var(--ink-3)"/>
-      <g text-anchor="middle" font-size="12.5">
-        <circle cx="100" cy="80" r="13" fill="var(--f)"/><text x="100" y="85" fill="var(--surface)" font-weight="700">1</text>
-        <text x="100" y="50" fill="var(--ink)" font-weight="700">第 1 天：按 0.60 选人</text>
-        <text x="100" y="112" fill="var(--ink-2)">分组<tspan font-weight="700">永远以这一刻为准</tspan></text>
-        <circle cx="320" cy="80" r="13" fill="var(--ok)"/><text x="320" y="85" fill="var(--surface)" font-weight="700">2</text>
-        <text x="320" y="32" fill="var(--ok)">效果好</text>
-        <text x="320" y="50" fill="var(--ink)" font-weight="700">第 3 天：扩大人群</text>
-        <text x="320" y="112" fill="var(--ink-2)">找“长得像”的人加进来</text>
-        <text x="320" y="130" fill="var(--ink-2)">新加的人<tspan font-weight="700">单独算一笔</tspan></text>
-        <circle cx="540" cy="80" r="13" fill="var(--warn)"/><text x="540" y="85" fill="var(--surface)" font-weight="700">3</text>
-        <text x="540" y="32" fill="var(--warn)">效果差</text>
-        <text x="540" y="50" fill="var(--ink)" font-weight="700">缩小人群</text>
-        <text x="540" y="112" fill="var(--ink-2)">只作内部参考</text>
-        <rect x="737" y="67" width="26" height="26" rx="4" fill="var(--bad)"/><text x="750" y="85" fill="var(--surface)" font-weight="700">×</text>
-        <text x="750" y="32" fill="var(--bad)">还是差</text>
-        <text x="750" y="50" fill="var(--ink)" font-weight="700">下线</text>
-        <text x="750" y="112" fill="var(--ink-2)">照样算在“被选中”组</text>
-      </g>
-      <rect x="40" y="152" width="790" height="28" rx="7" fill="var(--f-soft)"/>
-      <text x="435" y="171" text-anchor="middle" fill="var(--f)" font-size="12.5">最终算的是：“第 1 天被选中，并经历后面所有调整”的整体效果，也就是这套自动调优流程的真实效果</text>
-    </svg>
-  </figure>
-
-  <h3>规则一：分组只看第 1 天</h3>
-  <div class="story">
-    <div class="who">反例 · 为什么不能用第 5 天的分数</div>
-    小陈第 1 天被选中，用券坐了几次车。第 5 天重新打分时，因为他最近坐车多，分数涨到了 0.85。
-    <br>如果用第 5 天的分数来分组，“被选中的人分数更高”有一部分是<b>券造成的</b>，再拿来证明券有效，就成了循环论证。所以分组只能用第 1 天、还没受影响的分数。
-  </div>
-
-  <h3>规则二：扩大进来的人单独算</h3>
-  <p>扩大人群的做法是：拿已经选中的人当“样板”，找和他们相似的人，按“像不像”重新打一个<b>相似度分</b>，超过某条线就加进来。这是另一把尺子，所以在“相似度”这把尺子上再找一次及格线，单独算一笔增量，最后再加到总数上：</p>
-  <div class="calc">
-    <div class="row"><span>初始选中部分的增量</span><b>A</b></div>
-    <div class="row"><span>扩大加进来部分的增量（用相似度分单独算）</span><b>B</b></div>
-    <div class="row tot"><span>总增量</span><b>A + B</b></div>
-  </div>
-  <p class="pro">如果扩大时把第 1 天“没过线”的人也拉了进来，第 1 天的对照组就被“污染”了，算出的 A 会偏小（偏保守）。原方案用“模糊断点 + 工具变量”修正这一点。白话讲就是：按每个人实际被选中了几天来折算效果。</p>
-
-  <h3>规则三：调优时“和谁比”很关键</h3>
-  <p>运营判断“效果好不好”时，如果拿错了比较对象，会被系统性误导：</p>
-  <div class="calc">
-    <div class="row"><span>被选中人群的转化率</span><b>20.0%</b></div>
-    <div class="row" style="color:var(--bad)"><span>和全行业线平均（10.0%）比：“好了 10 个百分点！”</span><b>✗ 误导</b></div>
-    <div class="row" style="color:var(--ok)"><span>和刚好没过线的相似用户（18.5%）比：“好了 1.5 个百分点”</span><b>✓ 真实</b></div>
-  </div>
-  <p>被选中的人本来就比平均水平爱坐车。和大盘比，永远显得“效果很好”，运营就会不停扩大人群，结果越来越多地选中“本来就会坐车”的人，真正的增量反而下降。<b>建议：调优时也用“线两边的差”来判断</b>，这样调优追求的目标和管理层考核的目标是同一个。</p>
-</section>
-
-<!-- ================= B 交通周 ================= -->
-<section id="b-week">
-  <h2><span class="tag">模块 B</span>交通按周产出怎么办</h2>
-  <p class="lede">交通每周重新打分、重新选人，很多人会连续几周都被选中。这带来一个麻烦。</p>
-  <div class="story">
-    <div class="who">例子 · 小李</div>
-    小李上周被选中，用券多坐了几次车。本周重新打分时，因为他最近坐车多，分数更高，又被选中了。
-    <br>结果本周“刚过线”的人里，上周拿过券的人特别多；“差一点没过线”的人里，上周拿过券的人很少。两边不再“几乎一样”了。
-  </div>
-  <p><b>解决办法：先按“上周有没有被选中”分成两拨人，每拨人内部各自比较。</b></p>
-  <figure class="fig">
-    <svg class="wide" viewBox="0 0 860 200" role="img" aria-label="按上周是否入选分层后再按月相加">
-      <g font-size="12.5">
-        <rect x="20" y="20" width="330" height="70" rx="10" fill="var(--surface-2)" stroke="var(--line)"/>
-        <text x="36" y="46" fill="var(--ink)" font-weight="700">新面孔：上周没被选中</text>
-        <text x="36" y="70" fill="var(--ink-2)">算“第一次被选中”的效果 · 人少，要攒 4 周</text>
-        <rect x="20" y="106" width="330" height="70" rx="10" fill="var(--f-soft)" stroke="var(--f)"/>
-        <text x="36" y="132" fill="var(--ink)" font-weight="700">老面孔：上周也被选中</text>
-        <text x="36" y="156" fill="var(--ink-2)">算“继续被选中”的额外效果</text>
-        <path d="M350,55 L440,92" stroke="var(--ink-3)" fill="none"/><path d="M350,141 L440,104" stroke="var(--ink-3)" fill="none"/>
-        <rect x="444" y="68" width="160" height="60" rx="10" fill="var(--surface)" stroke="var(--line)"/>
-        <text x="524" y="94" text-anchor="middle" fill="var(--ink)" font-weight="700">本周增量</text>
-        <text x="524" y="114" text-anchor="middle" fill="var(--ink-2)" font-size="11.5">两拨人分别算，再相加</text>
-        <path d="M604,98 L650,98" stroke="var(--ink-3)"/>
-        <rect x="654" y="68" width="186" height="60" rx="10" fill="var(--accent)"/>
-        <text x="747" y="94" text-anchor="middle" fill="var(--surface)" font-weight="700">月度增量</text>
-        <text x="747" y="114" text-anchor="middle" fill="var(--surface)" font-size="11.5">= 4 周相加</text>
-        <text x="747" y="152" text-anchor="middle" fill="var(--warn)" font-size="11.5">本周的券让下周也多坐车，</text>
-        <text x="747" y="170" text-anchor="middle" fill="var(--warn)" font-size="11.5">这部分没算进去 → 偏保守</text>
-      </g>
-    </svg>
-  </figure>
-  <p class="pro">原方案还用“入选路径法”做交叉检查：从每个人第一次被选中那周开始，看他之后 4 周一共多坐了多少次车。这个数应该不低于每周相加的结果；如果高很多，说明“本周券影响下周”的部分很大。缴费按月产出，没有这个问题。</p>
-</section>
 
 <!-- ================= C ================= -->
 <section id="c">
@@ -783,6 +847,12 @@ ul.tight{margin:6px 0;padding-left:20px} ul.tight li{margin:4px 0}
     g.appendChild(r);
   }
   // shift grid lower rows: two rows of 50 → y 36 and 58; rest of svg spacing ok
+
+  // queue of candidates
+  var q=document.getElementById('queue');
+  if(q){for(var k=0;k<40;k++){var sc=0.405+k*0.01, x=40+(sc-0.40)*1950, c=document.createElementNS(ns,'circle');
+    c.setAttribute('cx',x);c.setAttribute('cy',96);c.setAttribute('r',7);
+    c.setAttribute('fill',sc>=0.60?'var(--f)':'var(--ink-3)');q.appendChild(c);}}
 
   // slider demo. Model: conversion = 5% + 20% × score, +1.6pp if score ≥ 0.60
   var X0=40,X1=620,Y0=180,Y1=14, C=0.60, E=0.016;
