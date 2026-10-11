@@ -299,6 +299,7 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft Y
     <dt>运行变量</dt><dd>选人分数 − 该子人群阈值（交通用<a class="term" href="#g-fenwei">周内分位数</a>）</dd>
     <dt>结果</dt><dd>用户在结果窗口内是否发生目标行为（或笔数、金额），<b>不论有没有被曝光</b>，也就是<a class="term" href="#g-itt">意向处理效应 ITT</a></dd>
     <dt>分析单位</dt><dd>子人群 × 周期</dd>
+    <dt>数据前提</dt><dd>框架人群包留存全部候选用户（含未入选者）的<a class="term" href="#g-houxuan">候选标识</a>、选人分数、是否入选、子人群 ID（K1 已确认）</dd>
     <dt>等级</dt><dd>阈值处 <span class="ev ev-E1">E1</span>；外推 <span class="ev ev-E1">E1 + 假设</span>；扩大决策 <span class="ev ev-E1">E1</span>；调优功能整体价值 <span class="ev ev-C">C</span></dd>
     <dt>状态</dt><dd><span class="status">✓ 可以做</span>　P1、P2、P3 确认后定稿</dd>
   </dl></div>
@@ -750,7 +751,8 @@ svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft Y
   <div class="gl">
     <div class="g" id="g-fh"><b>F / H1 / H2 / H3</b><span class="en">task source</span><p>任务来源。F = 框架策略任务（目标 → Agent 分析 → 选人 → 拆分 → 算法配货 / 渠道）；H1 = 人工经验任务，和 F 最可比；H2 = BI 半自动任务，可能带货品权重；H3 = 人工独有任务（临时活动、BD 合作），不可比，也不应被替代。</p></div>
     <div class="g" id="g-subgroup"><b>子人群</b><span class="en">sub-segment</span><p>框架策略选人的基本单元，每个子人群一个阈值（K2）。分析单位是“子人群 × 周期”。</p></div>
-    <div class="g" id="g-renqunbao"><b>人群包</b><span class="en">audience package</span><p>任务定向投放的用户列表。框架人群包额外留存候选标识、选人分数、是否入选、子人群 ID。</p></div>
+    <div class="g" id="g-renqunbao"><b>人群包</b><span class="en">audience package</span><p>任务定向投放的用户列表。框架人群包额外留存<a class="term" href="#g-houxuan">候选标识</a>、选人分数、是否入选、子人群 ID 四个字段，未入选的候选用户也会留存。</p></div>
+    <div class="g" id="g-houxuan"><b>候选标识</b><span class="en">candidate flag</span><p>标记用户是否进入了本次选人的候选池（是否被打过分）。被打过分但没选中的用户也要留存，他们就是断点回归的对照组；没进入候选池的用户不能当对照组。例：阈值 0.60，0.59 分未入选的用户是对照组，没被打分的用户不是。</p></div>
     <div class="g" id="g-zigeceng"><b>资格层 / 曝光层</b><p>资格层 = 用户是否在某任务的人群包里，分发之前就确定；曝光层 = 用户是否真的看到了任务，受推荐算法影响。分区按资格层划分，以避开分发层的污染。</p></div>
     <div class="g" id="g-zone"><b>Z1 / Z2 / Z3 / Z4 覆盖分区</b><p>Z1 仅框架覆盖（Z1a 真新覆盖：过去 6 个月没进过人工人群；Z1b 替代覆盖：过去被人工覆盖、本月只有框架）；Z2 仅人工；Z3 共同覆盖；Z4 均未覆盖。用户层互斥。</p></div>
     <div class="g" id="g-quanzhong"><b>权重标签</b><span class="en">boost weight</span><p>H2 任务货品上可带的排序加权，会提高曝光和胜出率，所以这两个指标跨来源比较时会被“污染”。随机桶内权重不生效。</p></div>
